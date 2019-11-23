@@ -1,0 +1,34 @@
+{
+    "name": "jade/jade",
+    "description": "jade",
+    "type": "project",
+    "keywords": [
+        "jade"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "zimings",
+            "email": "18562516608@163.com",
+            "homepage": "https://blog.zimings.top",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.10",
+        "monolog/monolog": "^1.24",
+        "symfony/symfony": "^3.4.35",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jade\\": "src/"
+        }
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    }
+}
