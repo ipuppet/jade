@@ -6,7 +6,7 @@ namespace Jade\Logger;
 
 use DateTime;
 use Exception;
-use Jade\Kernel\Path;
+use Jade\Foundation\Path;
 use Jade\Logger\Exception\LoggerException;
 
 class Logger

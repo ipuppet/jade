@@ -1,7 +1,7 @@
 {
     "name": "jade/jade",
-    "description": "jade",
-    "type": "project",
+    "description": "从symfony中取出了一些较为常用的部分组成了api框架，感谢优秀的symfony!",
+    "type": "library",
     "keywords": [
         "jade"
     ],
@@ -16,8 +16,6 @@
     ],
     "require": {
         "php": ">=7.0.10",
-        "monolog/monolog": "^1.24",
-        "symfony/symfony": "^3.4.35",
         "ext-json": "*"
     },
     "autoload": {

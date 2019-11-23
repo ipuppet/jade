@@ -4,7 +4,7 @@
 namespace Jade\Http;
 
 
-use Jade\Extension\Logger\Logger;
+use Jade\Logger\Logger;
 
 class Request
 {

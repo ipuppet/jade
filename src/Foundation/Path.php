@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Jade\Kernel;
+namespace Jade\Foundation;
 
 
-use Jade\Kernel\Exception\PathSeparatorException;
+use Jade\Foundation\Exception\PathSeparatorException;
 
 class Path
 {

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Jade\Kernel\Exception;
+namespace Jade\Foundation\Exception;
 
 
 use Exception;

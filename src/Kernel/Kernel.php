@@ -4,6 +4,8 @@
 namespace Jade\Kernel;
 
 
+use Jade\Foundation\Path;
+
 abstract class Kernel
 {
     /**
