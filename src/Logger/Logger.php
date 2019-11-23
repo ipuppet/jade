@@ -2,226 +2,122 @@
 
 
 namespace Jade\Logger;
-
+include '../../vendor/autoload.php';
 
 use DateTime;
-use Exception;
+use DateTimeInterface;
+use DateTimeZone;
 use Jade\Foundation\Path;
-use Jade\Logger\Exception\LoggerException;
+use Psr\Log\AbstractLogger;
+use Psr\Log\InvalidArgumentException;
 
-class Logger
+class Logger extends AbstractLogger
 {
-    const DEFAULT_ERROR_CODE = 0;
-    const LEVEL_INFO = 'INFO';
-    const LEVEL_NOTE = 'NOTE';
-    const LEVEL_WARNING = 'WARNING';
-    const LEVEL_ERROR = 'ERROR';
+    const OUTPUT_STDERR = 'php://stderr';
+    const OUTPUT_STDOUT = 'php://stdout';
+    const DATE_FORMAT = 'Y-m-d H:i:s';
+    const DATE_TIME_ZONE = 'PRC';
 
-    /**
-     * @var Path
-     */
-    protected $basePath;
+    private $name;
 
-    /**
-     * @var Path
-     */
-    protected $path;
+    private $handle;
 
-    protected $level;
+    private $formatter;
 
-    protected $name;
-
-    /**
-     * @var array
-     */
-    protected $lines;
+    private $output;
 
     /**
      * Logger constructor.
      * @param string $name
+     * @param $formatter
      */
-    public function __construct(string $name)
-    {
-        $this->setName($name);
-        $this->lines = [];
-    }
-
-    /**
-     * @throws LoggerException
-     * @throws Exception
-     */
-    public function __destruct()
-    {
-        if ($this->lines !== []) {
-            try {
-                $this->write();
-            } catch (LoggerException $e) {
-                throw $e;
-            } catch (Exception $e) {
-                throw $e;
-            }
-        }
-    }
-
-    protected function setLevel($level)
-    {
-        $this->level = $level;
-    }
-
-    protected function setByString(string $string)
-    {
-        $this->addToLines($string, self::DEFAULT_ERROR_CODE);
-    }
-
-    protected function setByException(Exception $e)
-    {
-        $this->addToLines($e->getMessage(), $e->getCode() ?? self::DEFAULT_ERROR_CODE);
-    }
-
-    protected function setByArray(array $array)
-    {
-        if (key_exists('code', $array) && key_exists('message', $array)) {
-            $code = $array['code'];
-            $message = $array['message'];
-        } else {
-            if (is_numeric($array[0])) {
-                $code = $array[0];
-                $message = $array[1];
-            } else {
-                $code = $array[1];
-                $message = $array[0];
-            }
-        }
-        $this->addToLines($message, $code);
-    }
-
-    protected function addToLines($message, $code)
-    {
-        $date = new DateTime();
-        $line = "[{$date->format('Y-m-d H:i:s')}] {$this->name}.{$this->level} $message [{$code}]";
-        $this->lines[] = $line;
-    }
-
-    /**
-     * 设置日志记录器名字
-     * @param string $name
-     * @return $this
-     */
-    public function setName(string $name)
+    public function __construct(string $name, callable $formatter = null)
     {
         $this->name = $name;
-        return $this;
+        $this->formatter = $formatter ?: [$this, 'format'];
     }
 
     /**
-     * @param Path $path
+     * @param $output
      * @return $this
      */
-    public function setPath(Path $path)
+    public function setOutput($output)
     {
-        $this->path = $path;
-        $this->path .= $this->name . '.log';
+        if ($output instanceof Path) {
+            $output .= $this->name . '.log';
+        }
+        if (false === $this->handle = is_resource($output) ? $output : @fopen($output, 'a')) {
+            throw new InvalidArgumentException(sprintf('Unable to open "%s".', $output));
+        }
         return $this;
     }
 
-    /**
-     * @return $this
-     * @throws LoggerException
-     * @throws Exception
-     */
-    public function write()
+    private function format($level, $message, array $context = [])
     {
-        if (empty($this->path)) {
-            throw new LoggerException('日志路径为空');
-        }
-        if (empty($this->lines)) {
-            return $this;
-        }
-        $handle = fopen($this->path, 'a');
-        try {
-            $str = '';
-            foreach ($this->lines as $line) {
-                $str .= $line . "\n";
+        if ($context !== []) {
+            $replace = [];
+            foreach ($context as $key => $val) {
+                if (null === $val || is_scalar($val) || (is_object($val) && method_exists($val, '__toString'))) {
+                    $replace["{{$key}}"] = $val;
+                } elseif ($val instanceof DateTimeInterface) {
+                    $val->setTimezone(new DateTimeZone(self::DATE_TIME_ZONE));
+                    $replace["{{$key}}"] = $val->format(self::DATE_FORMAT);
+                } elseif (is_object($val)) {
+                    $replace["{{$key}}"] = '[object ' . get_class($val) . ']';
+                } else {
+                    $replace["{{$key}}"] = '[' . gettype($val) . ']';
+                }
             }
-            fwrite($handle, $str);
-            $this->lines = [];
-        } catch (Exception $e) {
-            throw $e;
-        } finally {
-            fclose($handle);
+            $message = strtr($message, $replace);
         }
-        return $this;
+        $date = new DateTime();
+        $date->setTimezone(new DateTimeZone(self::DATE_TIME_ZONE));
+        return sprintf('[%s] %s.%s %s', $date->format(self::DATE_FORMAT), $this->name, $level, $message) . PHP_EOL;
     }
 
-    /**
-     * @param $level
-     * @param $content
-     * @param null $closure
-     */
-    protected function set($level, $content, $closure = null)
+    public function print($message, array $context = [])
     {
-        $this->setLevel($level);
-        if ($closure === null) {
-            if ($content instanceof Exception) {
-                $this->setByException($content);
-            } else if (is_array($content)) {
-                $this->setByArray($content);
-            } else if (is_string($content)) {
-                $this->setByString($content);
-            }
-        } else {
-            /** @var string $closure */
-            $closure();
+        echo "output: {$this->output}\n";
+        echo "name: {$this->name}\n";
+        echo "message before format: {$message}\n";
+        echo "message after format: {$this->format($message, $context)}\n";
+        echo "context: \n";
+        foreach ($context as $key => $value) {
+            echo "    [{$key}] {$value}\n";
         }
     }
 
     /**
-     * @param $info
-     * @return $this
+     * Logs with an arbitrary level.
+     *
+     * @param mixed $level
+     * @param string $message
+     * @param array $context
+     *
+     * @return void
+     *
+     * @throws InvalidArgumentException
      */
-    public function setInfo($info)
+    public function log($level, $message, array $context = [])
     {
-        $this->set(self::LEVEL_INFO, $info);
-        return $this;
-    }
-
-    /**
-     * @param $note
-     * @return $this
-     */
-    public function setNote($note)
-    {
-        $this->set(self::LEVEL_NOTE, $note);
-        return $this;
-    }
-
-    /**
-     * @param $warning
-     * @return $this
-     */
-    public function setWarning($warning)
-    {
-        $this->set(self::LEVEL_WARNING, $warning);
-        return $this;
-    }
-
-    /**
-     * @param $error
-     * @return $this
-     */
-    public function setError($error)
-    {
-        $this->set(self::LEVEL_ERROR, $error);
-        return $this;
-    }
-
-    public function debug()
-    {
-        echo '$this->path: ', $this->path . "\n";
-        echo '$this->level: ', $this->level . "\n";
-        echo '$this->lines: ' . "\n";
-        foreach ($this->lines as $line) {
-            echo '    ', $line . "\n";
-        }
+        $formatter = $this->formatter;
+        fwrite($this->handle, $formatter($level, $message, $context));
     }
 }
+
+$logger = new Logger('test');
+$logger->setOutput(new Path('.'))
+    ->info('info test');
+$logger->debug('debug test');
+$logger->warning('warning test');
+$logger->notice('notice test');
+$logger->alert('alert test');
+$logger->emergency('emergency test');
+
+$logger->setOutput(Logger::OUTPUT_STDOUT)
+    ->info('info test');
+$logger->debug('debug test');
+$logger->warning('warning test');
+$logger->notice('notice test');
+$logger->alert('alert test');
+$logger->emergency('emergency test');
