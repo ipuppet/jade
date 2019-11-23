@@ -5,6 +5,7 @@ namespace Jade\Foundation;
 
 
 use Jade\Foundation\Exception\PathSeparatorException;
+use Symfony\Component\Dotenv\Exception\PathException;
 
 class Path
 {
@@ -25,6 +26,9 @@ class Path
 
     public function set(string $path)
     {
+        if (is_file($path)) {
+            throw new PathException('路径不能是文件');
+        }
         $this->path = $path;
     }
 
