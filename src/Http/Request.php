@@ -19,11 +19,6 @@ class Request
     public $request;
 
     /**
-     * @var Parameter
-     */
-    public $attributes;
-
-    /**
      * @var File
      */
     public $files;
@@ -50,18 +45,17 @@ class Request
 
     protected $logger;
 
-    public function __construct(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)
+    public function __construct(array $query = [], array $request = [], array $cookies = [], array $files = [], array $server = [], $content = null)
     {
-        $this->init($query, $request, $attributes, $cookies, $files, $server, $content);
+        $this->init($query, $request, $cookies, $files, $server, $content);
         //日志记录器
         $this->logger = new Logger(__CLASS__);
     }
 
-    public function init(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)
+    public function init(array $query = [], array $request = [], array $cookies = [], array $files = [], array $server = [], $content = null)
     {
         $this->query = new Parameter($query);
         $this->request = new Parameter($request);
-        $this->attributes = new Parameter($attributes);
         $this->cookies = new Parameter($cookies);
         $this->files = new File($files);
         $this->server = new Server($server);
@@ -80,9 +74,6 @@ class Request
             return $result;
         }
         if ($this !== $result = $this->request->get($key, $this)) {
-            return $result;
-        }
-        if ($this !== $result = $this->attributes->get($key, $this)) {
             return $result;
         }
 
@@ -147,7 +138,7 @@ class Request
         }
 
         if (!preg_match('/^[A-Z]++$/D', $method)) {
-            $this->logger->setError('参数错误');
+            $this->logger->error('参数错误');
         }
 
         return $this->method = $method;
@@ -157,7 +148,7 @@ class Request
     {
         $currentContentIsResource = is_resource($this->content);
         if (PHP_VERSION_ID < 50600 && false === $this->content) {
-            $this->logger->setError('getContent() can only be called once when using the resource return type and PHP below 5.6.');
+            $this->logger->error('getContent() can only be called once when using the resource return type and PHP below 5.6.');
         }
 
         if (true === $asResource) {

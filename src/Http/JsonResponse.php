@@ -95,7 +95,7 @@ class JsonResponse extends Response
                 try {
                     $data = json_encode($data, $this->encodingOptions);
                 } catch (Exception $e) {
-                    $this->logger->setError($e);
+                    $this->logger->error($e->getMessage());
                 }
 
                 if (PHP_VERSION_ID >= 70300 && (JSON_THROW_ON_ERROR & $this->encodingOptions)) {
