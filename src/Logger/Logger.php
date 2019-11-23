@@ -2,7 +2,7 @@
 
 
 namespace Jade\Logger;
-include '../../vendor/autoload.php';
+
 
 use DateTime;
 use DateTimeInterface;
@@ -104,20 +104,3 @@ class Logger extends AbstractLogger
         fwrite($this->handle, $formatter($level, $message, $context));
     }
 }
-
-$logger = new Logger('test');
-$logger->setOutput(new Path('.'))
-    ->info('info test');
-$logger->debug('debug test');
-$logger->warning('warning test');
-$logger->notice('notice test');
-$logger->alert('alert test');
-$logger->emergency('emergency test');
-
-$logger->setOutput(Logger::OUTPUT_STDOUT)
-    ->info('info test');
-$logger->debug('debug test');
-$logger->warning('warning test');
-$logger->notice('notice test');
-$logger->alert('alert test');
-$logger->emergency('emergency test');
