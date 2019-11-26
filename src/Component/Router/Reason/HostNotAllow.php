@@ -6,30 +6,15 @@ namespace Jade\Component\Router\Reason;
 
 use Jade\Component\Http\Response;
 
-class HostNotAllow implements ReasonInterface
+class HostNotAllow extends Reason implements ReasonInterface
 {
-    /**
-     * @var string
-     */
-    private $content;
-
-    public function __construct(string $content = 'Host Not Allow')
-    {
-        $this->content = $content;
-    }
-
-    public function setContent(string $content)
-    {
-        $this->content = $content;
-    }
-
-    public function getContent(): string
-    {
-        return $this->content;
-    }
-
     public function getHttpStatus(): int
     {
         return Response::HTTP_403;
+    }
+
+    public function getDefaultContent(): string
+    {
+        return 'Host Not Allow';
     }
 }

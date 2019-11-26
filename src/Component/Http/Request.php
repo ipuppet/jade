@@ -5,6 +5,7 @@ namespace Jade\Component\Http;
 
 
 use Jade\Component\Logger\Logger;
+use Jade\Foundation\Parameter;
 
 class Request
 {

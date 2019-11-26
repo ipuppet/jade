@@ -91,7 +91,8 @@ abstract class Kernel
         $router = new Router();
         $router->setRequest($request)
             ->setLogger($logger)
-            ->setRouteContainer($this->getRouteContainer());
+            ->setRouteContainer($this->getRouteContainer())
+            ->setKernel($this);
 
         if ($router->matchAll()) {
             $controller = $controllerResolver->getController($request);
@@ -117,7 +118,8 @@ abstract class Kernel
         $loader = $this->getConfigLoader()
             ->setPath($path)
             ->setName('routes')
-            ->setParser(new JsonParser());
+            ->setParser(new JsonParser())
+            ->loadFromFile();
         $routes = $loader->all();
         return RouteContainer::createByArray($routes);
     }

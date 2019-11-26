@@ -70,7 +70,7 @@ class Loader
             throw new ConfigLoaderException('path属性必须instanceof PathInterface');
         }
         if ($this->config === null) {
-            $this->loadFromFile();
+            throw new ConfigLoaderException('是否忘记调用loadFromFile方法？');
         }
         return true;
     }
@@ -81,23 +81,7 @@ class Loader
             ->setName($this->name)
             ->setPath($this->path)
             ->loadAsArray();
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     */
-    public function set($key, $value)
-    {
-        $this->config[$key] = $value;
-    }
-
-    /**
-     * @param array $config
-     */
-    public function add(array $config = [])
-    {
-        $this->config = array_replace($this->config, $config);
+        return $this;
     }
 
     /**

@@ -4,6 +4,8 @@
 namespace Jade\Component\Http;
 
 
+use Jade\Foundation\Parameter;
+
 class Server extends Parameter
 {
     public function getHeaders()

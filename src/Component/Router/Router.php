@@ -5,6 +5,8 @@ namespace Jade\Component\Router;
 
 
 use Jade\Component\Http\Request;
+use Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
+use Jade\Component\Kernel\Kernel;
 use Jade\Component\Router\Exception\MatcherNoneRequestException;
 use Jade\Component\Router\Matcher\Matcher;
 use Jade\Component\Router\Reason\HostNotAllow;
@@ -34,6 +36,11 @@ class Router
      * @var ReasonInterface
      */
     private $reason;
+
+    /**
+     * @var Kernel
+     */
+    private $kernel;
 
     public function __construct(Request $request = null, RouteContainer $routeContainer = null)
     {
@@ -80,6 +87,7 @@ class Router
     /**
      * @return bool
      * @throws MatcherNoneRequestException
+     * @throws ConfigLoaderException
      */
     public function matchAll(): bool
     {
@@ -99,22 +107,37 @@ class Router
             }
         }
         //未成功匹配
-        $this->reason = new NoMatch();
+        $this->reason = new NoMatch($this->kernel);
         return false;
     }
 
+    /**
+     * @param Route $route
+     * @return bool
+     * @throws ConfigLoaderException
+     */
     public function beforeMatch(Route $route): bool
     {
         //方法是否允许
         if ($route->getMethods() !== [] && !in_array($this->request->getMethod(), $route->getMethods())) {
-            $this->reason = new MethodNotAllow();
+            $this->reason = new MethodNotAllow($this->kernel);
             return false;
         }
         //host是否允许 未规定则视为全都允许
         if ($route->getHost() !== '' && $this->request->headers->get('host') !== $route->getHost()) {
-            $this->reason = new HostNotAllow();
+            $this->reason = new HostNotAllow($this->kernel);
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param Kernel $kernel
+     * @return Router
+     */
+    public function setKernel(Kernel $kernel)
+    {
+        $this->kernel = $kernel;
+        return $this;
     }
 }

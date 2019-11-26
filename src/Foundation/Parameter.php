@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Jade\Component\Http;
+namespace Jade\Foundation;
 
 
 use ArrayIterator;
