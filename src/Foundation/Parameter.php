@@ -100,6 +100,6 @@ class Parameter
 
     public function empty(): bool
     {
-        return $this->parameters === null || $this->parameters === [];
+        return $this->parameters === [];
     }
 }
