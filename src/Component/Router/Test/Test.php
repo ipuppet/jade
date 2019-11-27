@@ -6,6 +6,9 @@ namespace Jade\Component\Router\Test;
 
 use Jade\Component\Http\RequestFactory;
 use Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
+use Jade\Component\Router\Exception\NoMatcherException;
+use Jade\Component\Router\Matcher\MatchByArray;
+use Jade\Component\Router\Matcher\MatchByRegexPath;
 use Jade\Component\Router\Route;
 use Jade\Component\Router\RouteContainer;
 use Jade\Component\Router\Router;
@@ -49,6 +52,7 @@ class Test
         $endTime = microtime(true);
         $time = $endTime - $startTime;
         echo 'path success created, use: ' . $time . PHP_EOL;
+
         echo 'start match...' . PHP_EOL;
         $server = $_SERVER;
         $success = [];
@@ -60,15 +64,17 @@ class Test
                 [], [], [], [], [], $server
             );
             $router = new Router($request, $routeContainer);
+            //$router->setMatcher(new MatchByArray());
+            $router->setMatcher(new MatchByRegexPath());
             try {
-                $placeholders = $router->matchAll();
+                if ($router->matchAll()) {
+                    $success[] = "success: \n        {$path}\n        {$request->getPathInfo()}";
+                } else {
+                    $error[] = "error: \n        {$path}\n        {$request->getPathInfo()}";
+                }
             } catch (ConfigLoaderException $e) {
             } catch (PathException $e) {
-            }
-            if ($placeholders) {
-                $success[] = "success: \n        {$path}\n        {$request->getPathInfo()}";
-            } else {
-                $error[] = "error: \n        {$path}\n        {$request->getPathInfo()}";
+            } catch (NoMatcherException $e) {
             }
         }
         $endTime = microtime(true);

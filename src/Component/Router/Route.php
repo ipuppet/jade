@@ -316,6 +316,8 @@ class Route implements RouteInterface
                 //匹配花括号中的内容
                 preg_match_all('/(?<={)[^}]+/', $this->getPath(), $this->placeholder);
                 $this->placeholder = $this->placeholder[0];
+            } else {
+                $this->placeholder = [];
             }
         }
         return $this->placeholder;
