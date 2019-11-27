@@ -7,8 +7,8 @@ namespace Jade\Component\Router;
 use Jade\Component\Http\Request;
 use Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
 use Jade\Component\Kernel\Kernel;
-use Jade\Component\Router\Exception\MatcherNoneRequestException;
-use Jade\Component\Router\Matcher\Matcher;
+use Jade\Component\Router\Exception\NoMatcherException;
+use Jade\Component\Router\Matcher\MatcherInterface;
 use Jade\Component\Router\Reason\HostNotAllow;
 use Jade\Component\Router\Reason\MethodNotAllow;
 use Jade\Component\Router\Reason\ReasonInterface;
@@ -43,12 +43,21 @@ class Router
      */
     private $kernel;
 
+    /**
+     * @var MatcherInterface
+     */
+    private $matcher;
+
     public function __construct(Request $request = null, RouteContainer $routeContainer = null)
     {
         $this->request = $request;
         $this->routeContainer = $routeContainer;
     }
 
+    /**
+     * @param LoggerInterface $logger
+     * @return $this
+     */
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
@@ -56,8 +65,18 @@ class Router
     }
 
     /**
+     * @param Kernel $kernel
+     * @return $this
+     */
+    public function setKernel(Kernel $kernel)
+    {
+        $this->kernel = $kernel;
+        return $this;
+    }
+
+    /**
      * @param RouteContainer $routeContainer
-     * @return Router
+     * @return $this
      */
     public function setRouteContainer(RouteContainer $routeContainer)
     {
@@ -66,8 +85,18 @@ class Router
     }
 
     /**
-     * @param Request $request
-     * @return Router
+     * @param MatcherInterface $matcher
+     * @return $this
+     */
+    public function setMatcher(MatcherInterface $matcher)
+    {
+        $this->matcher = $matcher;
+        return $this;
+    }
+
+    /**
+     * @param Request|null $request
+     * @return $this
      */
     public function setRequest(Request $request = null)
     {
@@ -87,20 +116,24 @@ class Router
 
     /**
      * @return bool
-     * @throws MatcherNoneRequestException
      * @throws ConfigLoaderException
      * @throws PathException
+     * @throws NoMatcherException
      */
     public function matchAll(): bool
     {
-        $matcher = new Matcher();
-        $matcher->setRequest($this->request);
-        $routes = $this->routeContainer->getRoutes();
-        foreach ($routes as $name => $route) {
+        if ($this->matcher === null)
+            throw new NoMatcherException('是否忘记调用setMatcher？');
+        $routeNames = $this->routeContainer->getNames();
+        foreach ($routeNames as $name) {
+            $route = $this->routeContainer->getRoute($name);
             if ($this->beforeMatch($route)) {
-                $request = $matcher->match($route);
-                if ($request) {
-                    $this->setRequest($matcher->getRequest());
+                if ($this->matcher->match(
+                    $route,
+                    $this->request->getPathInfo()
+                )) {
+                    $this->request->request->add($this->matcher->getAttributes());
+                    $this->request->attributes->set('_controller', $route->getOption('_controller'));
                     return true;
                 }
             } else {
@@ -114,12 +147,12 @@ class Router
     }
 
     /**
-     * @param Route $route
+     * @param RouteInterface $route
      * @return bool
      * @throws ConfigLoaderException
      * @throws PathException
      */
-    public function beforeMatch(Route $route): bool
+    public function beforeMatch(RouteInterface $route): bool
     {
         //方法是否允许
         if ($route->getMethods() !== [] && !in_array($this->request->getMethod(), $route->getMethods())) {
@@ -132,15 +165,5 @@ class Router
             return false;
         }
         return true;
-    }
-
-    /**
-     * @param Kernel $kernel
-     * @return Router
-     */
-    public function setKernel(Kernel $kernel)
-    {
-        $this->kernel = $kernel;
-        return $this;
     }
 }

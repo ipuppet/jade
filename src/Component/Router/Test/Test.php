@@ -6,7 +6,6 @@ namespace Jade\Component\Router\Test;
 
 use Jade\Component\Http\RequestFactory;
 use Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
-use Jade\Component\Router\Exception\MatcherNoneRequestException;
 use Jade\Component\Router\Route;
 use Jade\Component\Router\RouteContainer;
 use Jade\Component\Router\Router;
@@ -63,8 +62,6 @@ class Test
             $router = new Router($request, $routeContainer);
             try {
                 $placeholders = $router->matchAll();
-            } catch (MatcherNoneRequestException $e) {
-                echo $e->getMessage();
             } catch (ConfigLoaderException $e) {
             } catch (PathException $e) {
             }

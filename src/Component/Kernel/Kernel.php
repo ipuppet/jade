@@ -11,7 +11,9 @@ use Jade\Component\Kernel\ConfigLoader\JsonParser;
 use Jade\Component\Kernel\ConfigLoader\Loader;
 use Jade\Component\Kernel\Controller\ControllerResolver;
 use Jade\Component\Logger\Logger;
-use Jade\Component\Router\Exception\MatcherNoneRequestException;
+use Jade\Component\Router\Exception\NoMatcherException;
+use Jade\Component\Router\Matcher\MatchByArray;
+use Jade\Component\Router\Matcher\MatchByRegexPath;
 use Jade\Component\Router\RouteContainer;
 use Jade\Component\Router\Router;
 use Jade\Foundation\Path\Exception\PathException;
@@ -73,8 +75,8 @@ abstract class Kernel
      * @param Request $request
      * @return Response
      * @throws PathException
-     * @throws MatcherNoneRequestException
      * @throws ConfigLoaderException
+     * @throws NoMatcherException
      */
     public function handle(Request $request): Response
     {
@@ -89,12 +91,15 @@ abstract class Kernel
         $logger->setName('Router')->setOutput($this->getLogDir());
 
         $router = new Router();
+        $matcher = new MatchByArray();
         $router->setRequest($request)
             ->setLogger($logger)
             ->setRouteContainer($this->getRouteContainer())
-            ->setKernel($this);
+            ->setKernel($this)
+            ->setMatcher($matcher);
 
         if ($router->matchAll()) {
+            $request = $router->getRequest();
             $controller = $controllerResolver->getController($request);
             //调用
             $response = call_user_func_array($controller, $request->request->all());
@@ -102,6 +107,7 @@ abstract class Kernel
                 return $response;
             }
         }
+        //响应错误信息
         $reason = $router->getReason();
         $response = new Response($reason->getContent(), $reason->getHttpStatus());
         return $response;

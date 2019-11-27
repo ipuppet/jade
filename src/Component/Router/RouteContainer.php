@@ -35,14 +35,19 @@ class RouteContainer
         }
     }
 
-    public function addRoute($name, Route $route)
+    public function addRoute($name, RouteInterface $route)
     {
         $this->routes[$name] = $route;
     }
 
-    public function getRoute($name): Route
+    public function getRoute($name): RouteInterface
     {
         return $this->routes[$name];
+    }
+
+    public function getNames()
+    {
+        return array_keys($this->routes);
     }
 
     public function getRoutes()
@@ -57,7 +62,7 @@ class RouteContainer
             $name = $route['name'];
             $path = $route['path'];
             $defaults = $route['defaults'] ?? [];
-            $requirements = $route['requirements'] ?? [];
+            $tokens = $route['tokens'] ?? [];
             $host = $route['host'] ?? '';
             $methods = [];
             if (isset($route['methods'])) {
@@ -71,7 +76,7 @@ class RouteContainer
             }
             $options['_controller'] = $route['_controller'];
             //转换为Route对象
-            $route = new Route($path, $defaults, $requirements, $options, $host, $methods);
+            $route = new Route($path, $defaults, $tokens, $options, $host, $methods);
             $routeContainer->addRoute($name, $route);
         }
         return $routeContainer;

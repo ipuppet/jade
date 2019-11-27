@@ -22,7 +22,7 @@
     "autoload": {
         "psr-4": {
             "Jade\\": "src/",
-            "HelloWorldModule\\": "module/HelloWorldModule/"
+            "AppModule\\": "module/AppModule/"
         },
         "classmap": [
             "app/AppKernel.php"
