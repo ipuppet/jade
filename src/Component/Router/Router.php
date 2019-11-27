@@ -13,6 +13,7 @@ use Jade\Component\Router\Reason\HostNotAllow;
 use Jade\Component\Router\Reason\MethodNotAllow;
 use Jade\Component\Router\Reason\ReasonInterface;
 use Jade\Component\Router\Reason\NoMatch;
+use Jade\Foundation\Path\Exception\PathException;
 use Psr\Log\LoggerInterface;
 
 class Router
@@ -88,6 +89,7 @@ class Router
      * @return bool
      * @throws MatcherNoneRequestException
      * @throws ConfigLoaderException
+     * @throws PathException
      */
     public function matchAll(): bool
     {
@@ -115,6 +117,7 @@ class Router
      * @param Route $route
      * @return bool
      * @throws ConfigLoaderException
+     * @throws PathException
      */
     public function beforeMatch(Route $route): bool
     {
