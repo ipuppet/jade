@@ -55,8 +55,8 @@ class Test
 
         echo 'start match...' . PHP_EOL;
         $server = $_SERVER;
-        $success = [];
-        $error = [];
+        //$success = [];
+        //$error = [];
         $startTime = microtime(true);
         foreach ($test as $path) {
             $server['REQUEST_URI'] = $path;
@@ -67,11 +67,12 @@ class Test
             //$router->setMatcher(new MatchByArray());
             $router->setMatcher(new MatchByRegexPath());
             try {
-                if ($router->matchAll()) {
+                $router->matchAll();
+                /*if ($router->matchAll()) {
                     $success[] = "success: \n        {$path}\n        {$request->getPathInfo()}";
                 } else {
                     $error[] = "error: \n        {$path}\n        {$request->getPathInfo()}";
-                }
+                }*/
             } catch (ConfigLoaderException $e) {
             } catch (PathException $e) {
             } catch (NoMatcherException $e) {
@@ -79,7 +80,7 @@ class Test
         }
         $endTime = microtime(true);
         $time = $endTime - $startTime;
-        print_r($success);
+        //print_r($success);
         echo 'match finished, use: ' . $time . PHP_EOL;
     }
 
