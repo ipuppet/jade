@@ -102,7 +102,7 @@ class Test
             $name = $route['name'];
             $path = $route['path'];
             $defaults = $route['defaults'] ?? [];
-            $requirements = $route['requirements'] ?? [];
+            $tokens = $route['tokens'] ?? [];
             $host = $route['host'] ?? '';
             if (isset($route['methods'])) {
                 if (is_array($route['methods'])) {
@@ -116,7 +116,7 @@ class Test
                 $methods = [];
             }
             //转换为Route对象
-            $route = new Route($path, $defaults, $requirements, [], $host, $methods);
+            $route = new Route($path, $defaults, $tokens, [], $host, $methods);
             $routeContainer->addRoute($name, $route);
         }
         return $routeContainer;
