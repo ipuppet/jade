@@ -8,6 +8,7 @@ use Jade\Component\Http\Response;
 use Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
 use Jade\Component\Kernel\ConfigLoader\JsonParser;
 use Jade\Component\Kernel\Kernel;
+use Jade\Foundation\Path\Exception\PathException;
 
 abstract class Reason implements ReasonInterface
 {
@@ -20,7 +21,7 @@ abstract class Reason implements ReasonInterface
      * Reason constructor.
      * @param Kernel|null $kernel
      * @throws ConfigLoaderException
-     * @throws \Jade\Foundation\Path\Exception\PathException
+     * @throws PathException
      */
     public function __construct(Kernel $kernel = null)
     {
