@@ -21,8 +21,15 @@
     },
     "autoload": {
         "psr-4": {
-            "Jade\\": "src/"
-        }
+            "Jade\\": "src/",
+            "HelloWorldModule\\": "module/HelloWorldModule/"
+        },
+        "classmap": [
+            "app/AppKernel.php"
+        ],
+        "exclude-from-classmap": [
+            "**/Test/"
+        ]
     },
     "repositories": {
         "packagist": {

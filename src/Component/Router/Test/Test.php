@@ -5,10 +5,12 @@ namespace Jade\Component\Router\Test;
 
 
 use Jade\Component\Http\RequestFactory;
+use Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
 use Jade\Component\Router\Exception\MatcherNoneRequestException;
 use Jade\Component\Router\Route;
 use Jade\Component\Router\RouteContainer;
 use Jade\Component\Router\Router;
+use Jade\Foundation\Path\Exception\PathException;
 
 include '../../../../vendor/autoload.php';
 
@@ -58,6 +60,8 @@ class Test
                 $placeholders = $router->matchAll();
             } catch (MatcherNoneRequestException $e) {
                 echo $e->getMessage();
+            } catch (ConfigLoaderException $e) {
+            } catch (PathException $e) {
             }
             if ($placeholders) {
                 $success[] = "success: \n        {$path}\n        {$request->getPathInfo()}";
