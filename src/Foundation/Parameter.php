@@ -97,4 +97,9 @@ class Parameter
     {
         return count($this->parameters);
     }
+
+    public function empty(): bool
+    {
+        return $this->parameters === null || $this->parameters === [];
+    }
 }
