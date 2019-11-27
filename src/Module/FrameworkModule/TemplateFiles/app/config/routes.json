@@ -1,0 +1,11 @@
+[
+    {
+        "methods": "get",
+        "name": "App_say",
+        "path": "/{name}",
+        "requirements": {
+            "name": "/[a-zA-Z]*/"
+        },
+        "_controller": "AppModule\\Controller\\AppController::sayAction"
+    }
+]

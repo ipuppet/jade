@@ -16,12 +16,14 @@ include '../../../../vendor/autoload.php';
 
 class Test
 {
-    const TEST_TIMES = 10000;
+    const TEST_TIMES = 2000;
 
     public function test()
     {
         $routes = [];
         $test = [];
+        echo 'start create path...' . PHP_EOL;
+        $startTime = microtime(true);
         for ($i = 0; $i < self::TEST_TIMES; $i++) {
             $route['name'] = $this->getRandStr(6);
             $placeholderNum = mt_rand(1, 6);
@@ -45,7 +47,10 @@ class Test
             $routes[] = $route;
         }
         $routeContainer = $this->createRouteContainerByArray($routes);
-
+        $endTime = microtime(true);
+        $time = $endTime - $startTime;
+        echo 'path success created, use: ' . $time . PHP_EOL;
+        echo 'start match...' . PHP_EOL;
         $server = $_SERVER;
         $success = [];
         $error = [];
@@ -72,7 +77,7 @@ class Test
         $endTime = microtime(true);
         $time = $endTime - $startTime;
         print_r($success);
-        echo "\n{$time}\n";
+        echo 'match finished, use: ' . $time . PHP_EOL;
     }
 
     public function getRandStr($length)
