@@ -6,7 +6,7 @@
 //项目名称
 $name = 'App';
 //项目根路径
-$rootPath = dirname('../../..');
+$rootPath = dirname(dirname(dirname(dirname(__DIR__))));;
 
 //接收参数
 $param = getopt('n:d:');

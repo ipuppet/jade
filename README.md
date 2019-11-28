@@ -2,10 +2,10 @@
 > 从symfony中取出了一些较为常用的部分组成了api框架，感谢优秀的symfony!
 
 ### 创建项目
-使用`vendor/zimings/jade/src`目录下的`bin`脚本创建新项目，可在其中更改项目名称，默认为App
+使用`vendor/zimings/jade/src`目录下的`build`脚本创建新项目，可在其中更改项目名称，默认为App
 您可以在该脚本位置运行
 
-`php bin.php -n 项目名称`
+`php build.php -n 项目名称`
 
 同时您还可以通过指定`-d`参数来规定项目根目录（默认与vendor同级）
 
