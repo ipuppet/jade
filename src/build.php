@@ -3,18 +3,17 @@
  * 用于创建新项目
  */
 
-//项目名称
-$name = 'App';
-//项目根路径
-$rootPath = dirname(dirname(dirname(dirname(__DIR__))));;
 
 //接收参数
-$param = getopt('n:d:');
-if (isset($param['n'])) {
-    $name = $param['n'];
-}
-if (isset($param['d'])) {
-    $rootPath = $param['d'];
+$param = getopt('r:');
+//项目根路径
+if (isset($param['r'])) {
+    $rootPath = $param['r'];
+} else {
+    $rootPath = dirname(dirname(__DIR__));
+    while (!file_exists($rootPath . '/composer.json')) {
+        $rootPath = dirname($rootPath);
+    }
 }
 
 //项目模板文件路径
@@ -26,7 +25,8 @@ include $autoload;
 $baseFiles = [
     'app' => [
         'config' => [
-            'response.json'
+            'response.json',
+            'routes.json'
         ],
         'AppKernel.php'
     ],
@@ -37,56 +37,6 @@ $baseFiles = [
         '.htaccess',
         'index.php'
     ],
-];
-
-function createFiles($files, $rootPath, $templatePath, $replace = [])
-{
-    foreach ($files as $path => $child) {
-        if ($replace !== []) {
-            $path = replaceStr($path, $replace);
-        }
-        $path = '/' . $path;
-
-        if (is_array($child)) {
-            if (!is_dir($rootPath . $path)) {
-                mkdir($rootPath . $path);
-            }
-            createFiles($child, $rootPath . $path, $templatePath . $path, $replace);
-        } else {
-            if ($replace !== []) {
-                $child = replaceStr($child, $replace);
-            }
-            $child = '/' . $child;
-
-            if (!file_exists($rootPath . $child)) {
-                $content = file_get_contents($templatePath . $child);
-                if ($replace !== []) {
-                    $content = replaceStr($content, $replace);
-                }
-                file_put_contents($rootPath . $child, $content);
-            }
-        }
-    }
-}
-
-function replaceStr($str, $replace)
-{
-    foreach ($replace as $key => $value)
-        $str = str_replace($key, $value, $str);
-    return $str;
-}
-
-createFiles($baseFiles, $rootPath, $templatePath);
-
-//路由模板和控制器模板
-$routes = [
-    'app' => [
-        'config' => [
-            'routes.json'
-        ]
-    ]
-];
-$module = [
     'module' => [
         'AppModule' => [
             'Controller' => [
@@ -95,7 +45,26 @@ $module = [
         ]
     ]
 ];
-//生成路由文件
-createFiles($routes, $rootPath, $templatePath, ['App' => $name]);
-//生成控制器文件
-createFiles($module, $rootPath, $templatePath, ['App' => $name]);
+
+function createFiles($files, $rootPath, $templatePath)
+{
+    foreach ($files as $path => $child) {
+        $path = '/' . $path;
+
+        if (is_array($child)) {
+            if (!is_dir($rootPath . $path)) {
+                mkdir($rootPath . $path);
+            }
+            createFiles($child, $rootPath . $path, $templatePath . $path);
+        } else {
+            $child = '/' . $child;
+
+            if (!file_exists($rootPath . $child)) {
+                $content = file_get_contents($templatePath . $child);
+                file_put_contents($rootPath . $child, $content);
+            }
+        }
+    }
+}
+
+createFiles($baseFiles, $rootPath, $templatePath);
