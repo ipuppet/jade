@@ -18,7 +18,6 @@ use Zimings\Jade\Component\Router\Router;
 use Zimings\Jade\Foundation\Path\Exception\PathException;
 use Zimings\Jade\Foundation\Path\Path;
 use Zimings\Jade\Foundation\Path\PathInterface;
-use Zimings\Jade\Module\FrameworkModule\Controller\Controller;
 
 abstract class Kernel
 {
@@ -102,11 +101,7 @@ abstract class Kernel
             $request = $router->getRequest();
             $controller = $controllerResolver->getController($request);
             //调用
-            if ($controller[0] instanceof Controller) {
-                $controller[0]->setKernel($this);
-            }
             $response = call_user_func_array($controller, $request->request->all());
-
             if ($response instanceof Response) {
                 return $response;
             }
