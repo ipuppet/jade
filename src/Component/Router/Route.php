@@ -49,7 +49,7 @@ class Route implements RouteInterface
     /**
      * @var array
      */
-    private $placeholder;
+    private $placeholders;
 
     public function __construct($path, array $defaults = [], array $tokens = [], array $options = [], $host = '', $methods = [])
     {
@@ -290,19 +290,21 @@ class Route implements RouteInterface
         if (!is_string($regex)) {
             throw new InvalidArgumentException(sprintf('Routing token for "%s" must be a string.', $key));
         }
-
-        if ('' !== $regex && '^' === $regex[0]) {
-            $regex = (string)substr($regex, 1); // returns false for a single character
-        }
-
-        if ('$' === substr($regex, -1)) {
-            $regex = substr($regex, 0, -1);
-        }
-
         if ('' === $regex) {
             throw new InvalidArgumentException(sprintf('Routing token for "%s" cannot be empty.', $key));
         }
-
+        if ('^' === $regex[0]) {
+            $regex = (string)substr($regex, 1); // returns false for a single character
+        }
+        if ('$' === substr($regex, -1)) {
+            $regex = substr($regex, 0, -1);
+        }
+        if ('(' !== $regex[0]) {
+            $regex = '(' . $regex;
+        }
+        if (')' !== substr($regex, -1)) {
+            $regex .= ')';
+        }
         return $regex;
     }
 
@@ -311,15 +313,15 @@ class Route implements RouteInterface
      */
     public function getPlaceholders()
     {
-        if ($this->placeholder === null) {
+        if ($this->placeholders === null) {
             if (strpos($this->getPath(), '{')) {
                 //匹配花括号中的内容
-                preg_match_all('/(?<={)[^}]+/', $this->getPath(), $this->placeholder);
-                $this->placeholder = $this->placeholder[0];
+                preg_match_all('/(?<={)[^}]+/', $this->getPath(), $this->placeholders);
+                $this->placeholders = $this->placeholders[0];
             } else {
-                $this->placeholder = [];
+                $this->placeholders = [];
             }
         }
-        return $this->placeholder;
+        return $this->placeholders;
     }
 }

@@ -19,6 +19,9 @@
         "ext-json": "*",
         "psr/log": "^1.1"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    },
     "autoload": {
         "psr-4": {
             "Jade\\": "src/",
@@ -26,9 +29,6 @@
         },
         "classmap": [
             "app/AppKernel.php"
-        ],
-        "exclude-from-classmap": [
-            "**/Test/"
         ]
     },
     "repositories": {

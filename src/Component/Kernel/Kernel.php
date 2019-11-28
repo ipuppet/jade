@@ -12,7 +12,6 @@ use Jade\Component\Kernel\ConfigLoader\Loader;
 use Jade\Component\Kernel\Controller\ControllerResolver;
 use Jade\Component\Logger\Logger;
 use Jade\Component\Router\Exception\NoMatcherException;
-use Jade\Component\Router\Matcher\MatchByArray;
 use Jade\Component\Router\Matcher\MatchByRegexPath;
 use Jade\Component\Router\RouteContainer;
 use Jade\Component\Router\Router;
@@ -91,7 +90,7 @@ abstract class Kernel
         $logger->setName('Router')->setOutput($this->getLogDir());
 
         $router = new Router();
-        $matcher = new MatchByArray();
+        $matcher = new MatchByRegexPath();
         $router->setRequest($request)
             ->setLogger($logger)
             ->setRouteContainer($this->getRouteContainer())

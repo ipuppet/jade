@@ -10,9 +10,8 @@ class MatchByArray extends Matcher implements MatcherInterface
 {
     /**
      * 通过转换成数组进行匹配
-     * @param string $routePath
+     * @param RouteInterface $route
      * @param string $requestPath
-     * @param $tokens
      * @return bool
      */
     public function match(RouteInterface $route, $requestPath): bool
@@ -47,12 +46,14 @@ class MatchByArray extends Matcher implements MatcherInterface
                 }
                 if (preg_match('/' . $token . '/u', $requestArray[$i])) {
                     $attributes[$placeholder] = $requestArray[$i];
+                } else {
+                    return false;
                 }
             } else if ($routeArray[$i] !== $requestArray[$i]) {
                 return false;
             }
         }
-        $this->setAttributes($attributes);
+        $this->setAttributes($attributes, $route);
         return true;
     }
 }

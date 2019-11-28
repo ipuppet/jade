@@ -33,8 +33,8 @@ class MatchByRegexPath extends Matcher implements MatcherInterface
         }
         if (preg_match($tokenPath, urldecode($requestPath), $attributes)) {
             unset($attributes[0]);
-            $attributes = array_combine(array_keys($route->getPlaceholders()), $attributes);
-            $this->setAttributes($attributes);
+            $attributes = array_combine($route->getPlaceholders(), $attributes);
+            $this->setAttributes($attributes, $route);
             return true;
         }
         return false;

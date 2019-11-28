@@ -4,7 +4,10 @@
         "name": "App_say",
         "path": "/{name}",
         "tokens": {
-            "name": "[a-zA-Z]*"
+            "name": "([a-zA-Z]*)"
+        },
+        "defaults": {
+            "name": "World"
         },
         "_controller": "AppModule\\Controller\\AppController::sayAction"
     }

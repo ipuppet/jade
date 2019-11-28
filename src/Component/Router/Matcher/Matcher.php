@@ -49,14 +49,26 @@ abstract class Matcher implements MatcherInterface
      */
     public function getAttributes(): array
     {
-        return $this->attributes;
+        return array_filter($this->attributes);
     }
 
     /**
      * @param array $attributes
+     * @param RouteInterface $route
      */
-    protected function setAttributes(array $attributes)
+    protected function setAttributes(array $attributes, RouteInterface $route = null)
     {
+        if ($route !== null) {
+            array_walk($attributes, function (&$attribute, $name) use (&$route) {
+                if (empty($attribute)) {
+                    if ($route->hasDefault($name)) {
+                        $attribute = $route->getDefault($name);
+                    } else {
+                        $attribute = null;
+                    }
+                }
+            });
+        }
         $this->attributes = $attributes;
     }
 
