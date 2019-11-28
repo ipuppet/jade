@@ -7,7 +7,7 @@ namespace AppModule\Controller;
 use Zimings\Jade\Component\Http\Response;
 use Zimings\Jade\Module\FrameworkModule\Controller\Controller;
 
-class AppController extends Controller
+class HelloController extends Controller
 {
     /**
      * 由于可能会有token携带'*'即进行0次或多次匹配，所以可能存在空值(null)

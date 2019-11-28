@@ -40,7 +40,7 @@ $baseFiles = [
     'module' => [
         'AppModule' => [
             'Controller' => [
-                'AppController.php'
+                'HelloController.php'
             ]
         ]
     ]
