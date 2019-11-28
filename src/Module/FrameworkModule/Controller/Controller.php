@@ -15,7 +15,6 @@ use Zimings\Jade\Foundation\Path\Exception\PathException;
 
 class Controller
 {
-    protected $router;
     /**
      * @var Kernel
      */
@@ -26,10 +25,9 @@ class Controller
      */
     private $pdo;
 
-    public function __construct(Kernel $kernel)
+    public function setKernel(Kernel $kernel)
     {
         $this->kernel = $kernel;
-        $this->router = new Router(RequestFactory::createFromSuperGlobals());
     }
 
     /**
