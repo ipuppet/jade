@@ -114,14 +114,13 @@ abstract class Kernel
 
     /**
      * @return RouteContainer
-     * @throws PathException
      * @throws ConfigLoaderException
+     * @throws PathException
      */
     private function getRouteContainer(): RouteContainer
     {
-        $path = $this->createPath($this->getRootDir()->after($this->createPath('/app/config')));
+
         $loader = $this->getConfigLoader()
-            ->setPath($path)
             ->setName('routes')
             ->setParser(new JsonParser())
             ->loadFromFile();
@@ -131,11 +130,14 @@ abstract class Kernel
 
     /**
      * @return ConfigLoader
+     * @throws PathException
      */
     public function getConfigLoader(): ConfigLoader
     {
         if ($this->configLoader === null) {
             $this->configLoader = new ConfigLoader();
+            $path = $this->createPath($this->getRootDir()->after($this->createPath('/app/config')));
+            $this->configLoader->setPath($path);
         }
         return $this->configLoader;
     }
