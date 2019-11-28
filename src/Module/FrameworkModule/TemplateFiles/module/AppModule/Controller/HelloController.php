@@ -4,7 +4,10 @@
 namespace AppModule\Controller;
 
 
+use AppModule\Model\HelloModel;
 use Zimings\Jade\Component\Http\Response;
+use Zimings\Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
+use Zimings\Jade\Foundation\Path\Exception\PathException;
 use Zimings\Jade\Module\FrameworkModule\Controller\Controller;
 
 class HelloController extends Controller
@@ -30,9 +33,14 @@ class HelloController extends Controller
      *
      * @param string $name
      * @return Response
+     * @throws ConfigLoaderException
+     * @throws PathException
      */
     public function sayAction($name)
     {
-        return new Response("Hello {$name}!");
+        $helloModel = new HelloModel();
+        $tip = "You can change the message by changing the url<br>e.g. http://your.host.com/yourname";
+        $message = "Hello {$name}! I am {$helloModel->getName()}.";
+        return new Response($message . '<br>' . $tip);
     }
 }

@@ -26,7 +26,8 @@ $baseFiles = [
     'app' => [
         'config' => [
             'response.json',
-            'routes.json'
+            'routes.json',
+            'database.json'
         ],
         'AppKernel.php'
     ],
@@ -41,6 +42,9 @@ $baseFiles = [
         'AppModule' => [
             'Controller' => [
                 'HelloController.php'
+            ],
+            'Model' => [
+                'HelloModel.php'
             ]
         ]
     ]
