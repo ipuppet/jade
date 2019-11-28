@@ -7,7 +7,7 @@ namespace Zimings\Jade\Component\Kernel\ConfigLoader;
 use Zimings\Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
 use Zimings\Jade\Foundation\Path\PathInterface;
 
-class Loader
+class ConfigLoader
 {
     /**
      * @var string

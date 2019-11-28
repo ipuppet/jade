@@ -8,7 +8,7 @@ use Zimings\Jade\Component\Http\Request;
 use Zimings\Jade\Component\Http\Response;
 use Zimings\Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
 use Zimings\Jade\Component\Kernel\ConfigLoader\JsonParser;
-use Zimings\Jade\Component\Kernel\ConfigLoader\Loader;
+use Zimings\Jade\Component\Kernel\ConfigLoader\ConfigLoader;
 use Zimings\Jade\Component\Kernel\Controller\ControllerResolver;
 use Zimings\Jade\Component\Logger\Logger;
 use Zimings\Jade\Component\Router\Exception\NoMatcherException;
@@ -22,7 +22,7 @@ use Zimings\Jade\Foundation\Path\PathInterface;
 abstract class Kernel
 {
     /**
-     * @var Loader
+     * @var ConfigLoader
      */
     private $configLoader;
 
@@ -130,12 +130,12 @@ abstract class Kernel
     }
 
     /**
-     * @return Loader
+     * @return ConfigLoader
      */
-    public function getConfigLoader(): Loader
+    public function getConfigLoader(): ConfigLoader
     {
         if ($this->configLoader === null) {
-            $this->configLoader = new Loader();
+            $this->configLoader = new ConfigLoader();
         }
         return $this->configLoader;
     }
