@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Jade\Component\Router\Reason;
+namespace Zimings\Jade\Component\Router\Reason;
 
 
-use Jade\Component\Http\Response;
+use Zimings\Jade\Component\Http\Response;
 
 class NoMatch extends Reason implements ReasonInterface
 {

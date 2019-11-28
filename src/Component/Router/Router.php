@@ -1,19 +1,19 @@
 <?php
 
 
-namespace Jade\Component\Router;
+namespace Zimings\Jade\Component\Router;
 
 
-use Jade\Component\Http\Request;
-use Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
-use Jade\Component\Kernel\Kernel;
-use Jade\Component\Router\Exception\NoMatcherException;
-use Jade\Component\Router\Matcher\MatcherInterface;
-use Jade\Component\Router\Reason\HostNotAllow;
-use Jade\Component\Router\Reason\MethodNotAllow;
-use Jade\Component\Router\Reason\ReasonInterface;
-use Jade\Component\Router\Reason\NoMatch;
-use Jade\Foundation\Path\Exception\PathException;
+use Zimings\Jade\Component\Http\Request;
+use Zimings\Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
+use Zimings\Jade\Component\Kernel\Kernel;
+use Zimings\Jade\Component\Router\Exception\NoMatcherException;
+use Zimings\Jade\Component\Router\Matcher\MatcherInterface;
+use Zimings\Jade\Component\Router\Reason\HostNotAllow;
+use Zimings\Jade\Component\Router\Reason\MethodNotAllow;
+use Zimings\Jade\Component\Router\Reason\ReasonInterface;
+use Zimings\Jade\Component\Router\Reason\NoMatch;
+use Zimings\Jade\Foundation\Path\Exception\PathException;
 use Psr\Log\LoggerInterface;
 
 class Router

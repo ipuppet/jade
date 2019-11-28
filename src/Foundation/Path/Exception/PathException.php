@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Jade\Foundation\Path\Exception;
+namespace Zimings\Jade\Foundation\Path\Exception;
 
 
 use Exception;

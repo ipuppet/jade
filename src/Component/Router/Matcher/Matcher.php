@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Jade\Component\Router\Matcher;
+namespace Zimings\Jade\Component\Router\Matcher;
 
 
-use Jade\Component\Router\RouteInterface;
+use Zimings\Jade\Component\Router\RouteInterface;
 
 abstract class Matcher implements MatcherInterface
 {

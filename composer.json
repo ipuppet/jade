@@ -24,12 +24,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Jade\\": "src/",
-            "AppModule\\": "module/AppModule/"
-        },
-        "classmap": [
-            "app/AppKernel.php"
-        ]
+            "Zimings\\Jade\\": "src/"
+        }
     },
     "repositories": {
         "packagist": {

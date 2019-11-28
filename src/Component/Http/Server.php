@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Jade\Component\Http;
+namespace Zimings\Jade\Component\Http;
 
 
-use Jade\Foundation\Parameter;
+use Zimings\Jade\Foundation\Parameter;
 
 class Server extends Parameter
 {

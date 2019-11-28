@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Jade\Component\Http;
+namespace Zimings\Jade\Component\Http;
 
 
 use Exception;

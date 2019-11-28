@@ -7,6 +7,16 @@
 $name = 'App';
 //项目根路径
 $rootPath = dirname('../../..');
+
+//接收参数
+$param = getopt('n:d:');
+if (isset($param['n'])) {
+    $name = $param['n'];
+}
+if (isset($param['d'])) {
+    $rootPath = $param['d'];
+}
+
 //项目模板文件路径
 $templatePath = 'Module/FrameworkModule/TemplateFiles';
 //composer自动加载路径

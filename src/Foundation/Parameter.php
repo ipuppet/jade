@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Jade\Foundation;
+namespace Zimings\Jade\Foundation;
 
 
 use ArrayIterator;

@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Jade\Component\Router\Reason;
+namespace Zimings\Jade\Component\Router\Reason;
 
 
-use Jade\Component\Http\Response;
-use Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
-use Jade\Component\Kernel\ConfigLoader\JsonParser;
-use Jade\Component\Kernel\Kernel;
-use Jade\Foundation\Path\Exception\PathException;
+use Zimings\Jade\Component\Http\Response;
+use Zimings\Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
+use Zimings\Jade\Component\Kernel\ConfigLoader\JsonParser;
+use Zimings\Jade\Component\Kernel\Kernel;
+use Zimings\Jade\Foundation\Path\Exception\PathException;
 
 abstract class Reason implements ReasonInterface
 {

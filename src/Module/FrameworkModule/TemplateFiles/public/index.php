@@ -1,9 +1,10 @@
 <?php
 
-use Jade\Component\Http\Request;
-use Jade\Component\Http\RequestFactory;
-use Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
-use Jade\Foundation\Path\Exception\PathException;
+use Zimings\Jade\Component\Http\Request;
+use Zimings\Jade\Component\Http\RequestFactory;
+use Zimings\Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
+use Zimings\Jade\Component\Router\Exception\NoMatcherException;
+use Zimings\Jade\Foundation\Path\Exception\PathException;
 
 include '../vendor/autoload.php';
 
@@ -18,6 +19,7 @@ try {
     echo $e->getMessage();
 } catch (ConfigLoaderException $e) {
     echo $e->getMessage();
+} catch (NoMatcherException $e) {
 }
 
 $response->send();

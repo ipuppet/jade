@@ -1,15 +1,15 @@
 <?php
 
-namespace Jade\Component\Router\Test;
+namespace Zimings\Jade\Component\Router\Test;
 
-use Jade\Component\Http\RequestFactory;
-use Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
-use Jade\Component\Router\Exception\NoMatcherException;
-use Jade\Component\Router\Matcher\MatchByRegexPath;
-use Jade\Component\Router\Route;
-use Jade\Component\Router\RouteContainer;
-use Jade\Component\Router\Router;
-use Jade\Foundation\Path\Exception\PathException;
+use Zimings\Jade\Component\Http\RequestFactory;
+use Zimings\Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
+use Zimings\Jade\Component\Router\Exception\NoMatcherException;
+use Zimings\Jade\Component\Router\Matcher\MatchByRegexPath;
+use Zimings\Jade\Component\Router\Route;
+use Zimings\Jade\Component\Router\RouteContainer;
+use Zimings\Jade\Component\Router\Router;
+use Zimings\Jade\Foundation\Path\Exception\PathException;
 use PHPUnit\Framework\TestCase;
 
 class MatchByRegexPathTest extends TestCase

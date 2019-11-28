@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Jade\Component\Router\Exception;
+namespace Zimings\Jade\Component\Router\Exception;
 
 
 use Exception;

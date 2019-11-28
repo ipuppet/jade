@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Jade\Component\Http;
+namespace Zimings\Jade\Component\Http;
 
 
-use Jade\Component\Logger\Logger;
-use Jade\Foundation\Parameter;
+use Zimings\Jade\Component\Logger\Logger;
+use Zimings\Jade\Foundation\Parameter;
 
 class Request
 {

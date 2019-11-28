@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Jade\Foundation\Path;
+namespace Zimings\Jade\Foundation\Path;
 
 
 interface PathInterface

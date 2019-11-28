@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Jade\Component\Kernel\Controller;
+namespace Zimings\Jade\Component\Kernel\Controller;
 
 
 use InvalidArgumentException;
-use Jade\Component\Http\Request;
-use Jade\Component\Logger\Logger;
+use Zimings\Jade\Component\Http\Request;
+use Zimings\Jade\Component\Logger\Logger;
 use Psr\Log\LoggerInterface;
 
 class ControllerResolver

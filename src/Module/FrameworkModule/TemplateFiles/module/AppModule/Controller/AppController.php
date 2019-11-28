@@ -4,8 +4,8 @@
 namespace AppModule\Controller;
 
 
-use Jade\Component\Http\Response;
-use Jade\Module\FrameworkModule\Controller\Controller;
+use Zimings\Jade\Component\Http\Response;
+use Zimings\Jade\Module\FrameworkModule\Controller\Controller;
 
 class AppController extends Controller
 {

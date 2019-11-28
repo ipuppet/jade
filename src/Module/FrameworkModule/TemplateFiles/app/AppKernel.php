@@ -1,9 +1,9 @@
 <?php
 
 
-use Jade\Component\Kernel\Kernel;
-use Jade\Foundation\Path\Exception\PathException;
-use Jade\Foundation\Path\PathInterface;
+use Zimings\Jade\Component\Kernel\Kernel;
+use Zimings\Jade\Foundation\Path\Exception\PathException;
+use Zimings\Jade\Foundation\Path\PathInterface;
 
 class AppKernel extends Kernel
 {

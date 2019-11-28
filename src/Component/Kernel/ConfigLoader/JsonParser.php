@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Jade\Component\Kernel\ConfigLoader;
+namespace Zimings\Jade\Component\Kernel\ConfigLoader;
 
 
-use Jade\Foundation\Path\PathInterface;
+use Zimings\Jade\Foundation\Path\PathInterface;
 
 class JsonParser implements ParserInterface
 {

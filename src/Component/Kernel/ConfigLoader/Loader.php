@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Jade\Component\Kernel\ConfigLoader;
+namespace Zimings\Jade\Component\Kernel\ConfigLoader;
 
 
-use Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
-use Jade\Foundation\Path\PathInterface;
+use Zimings\Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
+use Zimings\Jade\Foundation\Path\PathInterface;
 
 class Loader
 {

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Jade\Foundation\Path;
+namespace Zimings\Jade\Foundation\Path;
 
 
-use Jade\Foundation\Path\Exception\PathException;
+use Zimings\Jade\Foundation\Path\Exception\PathException;
 
 class Path implements PathInterface
 {

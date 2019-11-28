@@ -1,23 +1,23 @@
 <?php
 
 
-namespace Jade\Component\Kernel;
+namespace Zimings\Jade\Component\Kernel;
 
 
-use Jade\Component\Http\Request;
-use Jade\Component\Http\Response;
-use Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
-use Jade\Component\Kernel\ConfigLoader\JsonParser;
-use Jade\Component\Kernel\ConfigLoader\Loader;
-use Jade\Component\Kernel\Controller\ControllerResolver;
-use Jade\Component\Logger\Logger;
-use Jade\Component\Router\Exception\NoMatcherException;
-use Jade\Component\Router\Matcher\MatchByRegexPath;
-use Jade\Component\Router\RouteContainer;
-use Jade\Component\Router\Router;
-use Jade\Foundation\Path\Exception\PathException;
-use Jade\Foundation\Path\Path;
-use Jade\Foundation\Path\PathInterface;
+use Zimings\Jade\Component\Http\Request;
+use Zimings\Jade\Component\Http\Response;
+use Zimings\Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
+use Zimings\Jade\Component\Kernel\ConfigLoader\JsonParser;
+use Zimings\Jade\Component\Kernel\ConfigLoader\Loader;
+use Zimings\Jade\Component\Kernel\Controller\ControllerResolver;
+use Zimings\Jade\Component\Logger\Logger;
+use Zimings\Jade\Component\Router\Exception\NoMatcherException;
+use Zimings\Jade\Component\Router\Matcher\MatchByRegexPath;
+use Zimings\Jade\Component\Router\RouteContainer;
+use Zimings\Jade\Component\Router\Router;
+use Zimings\Jade\Foundation\Path\Exception\PathException;
+use Zimings\Jade\Foundation\Path\Path;
+use Zimings\Jade\Foundation\Path\PathInterface;
 
 abstract class Kernel
 {

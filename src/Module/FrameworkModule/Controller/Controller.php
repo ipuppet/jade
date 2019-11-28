@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Jade\Module\FrameworkModule\Controller;
+namespace Zimings\Jade\Module\FrameworkModule\Controller;
 
 
-use Jade\Component\Http\RequestFactory;
-use Jade\Component\Router\Router;
+use Zimings\Jade\Component\Http\RequestFactory;
+use Zimings\Jade\Component\Router\Router;
 
 class Controller
 {
