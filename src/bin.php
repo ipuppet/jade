@@ -6,7 +6,7 @@
 //项目名称
 $name = 'App';
 //项目根路径
-$rootPath = '..';
+$rootPath = dirname('../../..');
 //项目模板文件路径
 $templatePath = 'Module/FrameworkModule/TemplateFiles';
 //composer自动加载路径
