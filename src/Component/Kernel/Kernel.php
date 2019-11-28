@@ -101,7 +101,11 @@ abstract class Kernel
             $request = $router->getRequest();
             $controller = $controllerResolver->getController($request);
             //调用
-            $response = call_user_func_array($controller, $request->request->all());
+            $class = $controller[0];
+            $method = $controller[1];
+            $instance = new $class($this);
+            $response = $instance->$method(...array_values($request->request->all()));
+            //$response = call_user_func_array($controller, $request->request->all());
             if ($response instanceof Response) {
                 return $response;
             }
