@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Foundation\File;
+namespace Zimings\Jade\Plugins\FileHelper;
 
 
 class FileList
