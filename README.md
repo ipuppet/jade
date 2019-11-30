@@ -1,5 +1,5 @@
 ## zimings/jade
-> 从symfony中取出了一些较为常用的部分组成了没有视图的api框架，感谢优秀的symfony!
+> 从symfony中取出了一些较为常用的部分组成了api框架，感谢优秀的symfony!
 
 ### 创建项目
 使用`vendor/zimings/jade/src`目录下的`build`脚本创建新项目
