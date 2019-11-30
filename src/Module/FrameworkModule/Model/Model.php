@@ -5,6 +5,9 @@ namespace Zimings\Jade\Module\FrameworkModule\Model;
 
 
 use AppKernel;
+use DateTime;
+use DateTimeZone;
+use Exception;
 use PDO;
 use Psr\Log\LoggerInterface;
 use Zimings\Jade\Component\DatabaseDriver\PdoDatabaseDriver;
@@ -44,6 +47,11 @@ abstract class Model
     private $logger;
 
     /**
+     * @var DateTime
+     */
+    private $date;
+
+    /**
      * Model constructor.
      * @throws PathException
      * @throws ConfigLoaderException
@@ -65,11 +73,10 @@ abstract class Model
         $this->logger = new Logger();
         $this->logger->setName('PdoDatabaseDriver')
             ->setOutput($this->kernel->getLogDir());
-        $this->database = $this->configLoader
+        $this->database = new Parameter($this->configLoader
             ->setName('database')
             ->loadFromFile()
-            ->all();
-        $this->pdo = new PdoDatabaseDriver($this->logger, $this->database);
+            ->all());
     }
 
     /**
@@ -95,10 +102,40 @@ abstract class Model
     }
 
     /**
-     * @return PDO
+     * @param string $dbname
+     * @param string $username
+     * @param string $password
+     * @return PDO|PdoDatabaseDriver
      */
-    protected function getPdo()
+    protected function getPdo(string $dbname = '', string $username = '', string $password = '')
     {
+        if ($this->pdo === null) {
+            if ($dbname !== '') {
+                $this->database->set('dbname', $dbname);
+            }
+            if ($username !== '') {
+                $this->database->set('username', $username);
+            }
+            if ($password !== '') {
+                $this->database->set('password', $password);
+            }
+            $this->pdo = new PdoDatabaseDriver($this->logger, $this->database->all());
+        }
         return $this->pdo;
+    }
+
+    /**
+     * 获取当前日期
+     * @param string $format 日期格式
+     * @return string
+     * @throws Exception
+     */
+    protected function dateNow(string $format = 'Y-m-d H:i:s')
+    {
+        if ($this->date === null) {
+            $this->date = new DateTime();
+            $this->date->setTimezone(new DateTimeZone('PRC'));
+        }
+        return $this->date->format($format);
     }
 }
