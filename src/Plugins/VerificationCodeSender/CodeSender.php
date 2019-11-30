@@ -1,0 +1,56 @@
+<?php
+
+
+namespace Zimings\Jade\Plugins\VerificationCodeSender;
+
+
+use Zimings\Jade\Plugins\EmailSender\EmailSender;
+
+abstract class CodeSender
+{
+    protected $verificationCode;
+    protected $target;
+    protected $emailSender;
+
+    public function __construct(EmailSender $emailSender)
+    {
+        $this->emailSender = $emailSender;
+    }
+
+    private function createVerificationCode(): VerificationCode
+    {
+        $vc = '';
+        $codeLength = 6;
+        $pov = 5;//有效期 分钟
+
+        for ($i = 0; $i < $codeLength; $i++) {
+            $vc .= (string)rand(0, 9);
+        }
+        return new VerificationCode($this->target, $vc, time(), $pov);
+    }
+
+    public function setTarget($target)
+    {
+        $this->target = $target;
+        $this->verificationCode = $this->createVerificationCode();
+        return $this;
+    }
+
+    /**
+     * 验证 验证码的可用性
+     * @param $vc
+     * @param VerificationCode $vcInfo
+     * @return bool
+     */
+    public static function test($vc, VerificationCode $vcInfo): bool
+    {
+        if (time() - $vcInfo->getDate() < 60 * $vcInfo->getPov()) {
+            if ($vc == $vcInfo->getCode()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    abstract function send($title);
+}
