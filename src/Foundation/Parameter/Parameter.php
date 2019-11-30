@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Zimings\Jade\Foundation;
+namespace Zimings\Jade\Foundation\Parameter;
 
 
 use ArrayIterator;
 
-class Parameter
+class Parameter implements ParameterInterface
 {
     protected $parameters;
 

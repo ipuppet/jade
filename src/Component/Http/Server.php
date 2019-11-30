@@ -4,9 +4,10 @@
 namespace Zimings\Jade\Component\Http;
 
 
-use Zimings\Jade\Foundation\Parameter;
+use Zimings\Jade\Foundation\Parameter\Parameter;
+use Zimings\Jade\Foundation\Parameter\ParameterInterface;
 
-class Server extends Parameter
+class Server extends Parameter implements ParameterInterface
 {
     public function getHeaders()
     {

@@ -6,9 +6,9 @@ namespace Zimings\Jade\Component\Kernel;
 
 use Zimings\Jade\Component\Http\Request;
 use Zimings\Jade\Component\Http\Response;
-use Zimings\Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
-use Zimings\Jade\Component\Kernel\ConfigLoader\JsonParser;
-use Zimings\Jade\Component\Kernel\ConfigLoader\ConfigLoader;
+use Zimings\Jade\Component\Kernel\Config\Exception\ConfigLoadException;
+use Zimings\Jade\Component\Kernel\Config\JsonParser;
+use Zimings\Jade\Component\Kernel\Config\ConfigLoader;
 use Zimings\Jade\Component\Kernel\Controller\ControllerResolver;
 use Zimings\Jade\Component\Logger\Logger;
 use Zimings\Jade\Component\Router\Exception\NoMatcherException;
@@ -74,7 +74,7 @@ abstract class Kernel
      * @param Request $request
      * @return Response
      * @throws PathException
-     * @throws ConfigLoaderException
+     * @throws ConfigLoadException
      * @throws NoMatcherException
      */
     public function handle(Request $request): Response
@@ -94,8 +94,14 @@ abstract class Kernel
         $router->setRequest($request)
             ->setLogger($logger)
             ->setRouteContainer($this->getRouteContainer())
-            ->setKernel($this)
             ->setMatcher($matcher);
+
+        $config = $this->getConfigLoader()->setName('response')->loadFromFile();
+        //如果加载成功则向Router中传递
+        if ($config !== null) {
+            $config->add(['root_dir' => $this->getRootDir()]);
+            $router->setConfig($config);
+        }
 
         if ($router->matchAll()) {
             $request = $router->getRequest();
@@ -114,17 +120,15 @@ abstract class Kernel
 
     /**
      * @return RouteContainer
-     * @throws ConfigLoaderException
      * @throws PathException
      */
     private function getRouteContainer(): RouteContainer
     {
-
-        $loader = $this->getConfigLoader()
+        $routes = $this->getConfigLoader()
             ->setName('routes')
             ->setParser(new JsonParser())
-            ->loadFromFile();
-        $routes = $loader->all();
+            ->loadFromFile()
+            ->all();
         return RouteContainer::createByArray($routes);
     }
 
@@ -137,7 +141,7 @@ abstract class Kernel
         if ($this->configLoader === null) {
             $this->configLoader = new ConfigLoader();
             $path = $this->createPath($this->getRootDir()->after($this->createPath('/app/config')));
-            $this->configLoader->setPath($path);
+            $this->configLoader->setPath($path)->setParser(new JsonParser());
         }
         return $this->configLoader;
     }

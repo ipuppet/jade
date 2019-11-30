@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Kernel\ConfigLoader;
+namespace Zimings\Jade\Component\Kernel\Config;
 
 
 use Zimings\Jade\Foundation\Path\PathInterface;
@@ -26,7 +26,12 @@ interface ParserInterface
     public function loadAsArray(): array;
 
     /**
-     * @return object
+     * @return Config
      */
-    public function loadAsObject();
+    public function loadAsConfig(): Config;
+
+    /**
+     * @return bool
+     */
+    public function fileExists(): bool;
 }

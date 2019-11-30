@@ -5,25 +5,26 @@ namespace Zimings\Jade\Component\Http;
 
 
 use Zimings\Jade\Component\Logger\Logger;
-use Zimings\Jade\Foundation\Parameter;
+use Zimings\Jade\Foundation\Parameter\Parameter;
+use Zimings\Jade\Foundation\Parameter\ParameterInterface;
 
 class Request
 {
     /**
      * GET
-     * @var Parameter
+     * @var ParameterInterface
      */
     public $query;
 
     /**
      * 请求，占位符参数也存放于此
-     * @var Parameter
+     * @var ParameterInterface
      */
     public $request;
 
     /**
      * attributes
-     * @var Parameter
+     * @var ParameterInterface
      */
     public $attributes;
 

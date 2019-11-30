@@ -4,11 +4,10 @@
 namespace Zimings\Jade\Component\Router\Reason;
 
 
+use Exception;
+use Psr\Log\LoggerInterface;
 use Zimings\Jade\Component\Http\Response;
-use Zimings\Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
-use Zimings\Jade\Component\Kernel\ConfigLoader\JsonParser;
-use Zimings\Jade\Component\Kernel\Kernel;
-use Zimings\Jade\Foundation\Path\Exception\PathException;
+use Zimings\Jade\Component\Kernel\Config\Config;
 
 abstract class Reason implements ReasonInterface
 {
@@ -19,28 +18,28 @@ abstract class Reason implements ReasonInterface
 
     /**
      * Reason constructor.
-     * @param Kernel|null $kernel
-     * @throws ConfigLoaderException
-     * @throws PathException
+     * @param Config|null $config
+     * @param LoggerInterface|null $logger
+     * @throws Exception
      */
-    public function __construct(Kernel $kernel = null)
+    public function __construct(Config $config = null, LoggerInterface $logger = null)
     {
-        if ($kernel !== null) {
-            $path = $kernel->createPath($kernel->getRootDir()->after($kernel->createPath('/app/config')));
-            $configLoader = $kernel->getConfigLoader()
-                ->setPath($path)
-                ->setName('response')
-                ->setParser(new JsonParser())
-                ->loadFromFile();
-            if (!$configLoader->prepare()) return;
-            $config = $configLoader->loadFromFile()->all();
-            $content = $config[$this->getHttpStatus()];
+        if ($config !== null) {
+            $content = $config->get($this->getHttpStatus());
             if ($content[0] === '@') {
-                $content = str_replace('@', $kernel->getRootDir(), $content);
-            }
-            if (file_exists($content)) {
-                include $content;
-                $this->content = '';
+                $content = str_replace('@', $config->get('root_dir'), $content);
+                if (file_exists($content)) {
+                    include $content;
+                    //阻止返回默认值
+                    $this->content = '';
+                } else {
+                    $message = '您在response配置文件中设定的文件不存在，请检查。';
+                    if ($logger !== null) {
+                        $logger->warning($message);
+                    } else {
+                        throw new Exception($message);
+                    }
+                }
             } else {
                 $this->content = $content;
             }

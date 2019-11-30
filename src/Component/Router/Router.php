@@ -4,16 +4,15 @@
 namespace Zimings\Jade\Component\Router;
 
 
+use Exception;
 use Zimings\Jade\Component\Http\Request;
-use Zimings\Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
-use Zimings\Jade\Component\Kernel\Kernel;
+use Zimings\Jade\Component\Kernel\Config\Config;
 use Zimings\Jade\Component\Router\Exception\NoMatcherException;
 use Zimings\Jade\Component\Router\Matcher\MatcherInterface;
 use Zimings\Jade\Component\Router\Reason\HostNotAllow;
 use Zimings\Jade\Component\Router\Reason\MethodNotAllow;
 use Zimings\Jade\Component\Router\Reason\ReasonInterface;
 use Zimings\Jade\Component\Router\Reason\NoMatch;
-use Zimings\Jade\Foundation\Path\Exception\PathException;
 use Psr\Log\LoggerInterface;
 
 class Router
@@ -39,9 +38,9 @@ class Router
     private $reason;
 
     /**
-     * @var Kernel
+     * @var Config
      */
-    private $kernel;
+    private $config;
 
     /**
      * @var MatcherInterface
@@ -65,12 +64,12 @@ class Router
     }
 
     /**
-     * @param Kernel $kernel
+     * @param Config $config
      * @return $this
      */
-    public function setKernel(Kernel $kernel)
+    public function setConfig(Config $config)
     {
-        $this->kernel = $kernel;
+        $this->config = $config;
         return $this;
     }
 
@@ -116,9 +115,8 @@ class Router
 
     /**
      * @return bool
-     * @throws ConfigLoaderException
-     * @throws PathException
      * @throws NoMatcherException
+     * @throws Exception
      */
     public function matchAll(): bool
     {
@@ -142,26 +140,25 @@ class Router
             }
         }
         //未成功匹配
-        $this->reason = new NoMatch($this->kernel);
+        $this->reason = new NoMatch($this->config, $this->logger);
         return false;
     }
 
     /**
      * @param RouteInterface $route
      * @return bool
-     * @throws ConfigLoaderException
-     * @throws PathException
+     * @throws Exception
      */
     public function beforeMatch(RouteInterface $route): bool
     {
         //方法是否允许
         if ($route->getMethods() !== [] && !in_array($this->request->getMethod(), $route->getMethods())) {
-            $this->reason = new MethodNotAllow($this->kernel);
+            $this->reason = new MethodNotAllow($this->config, $this->logger);
             return false;
         }
         //host是否允许 未规定则视为全都允许
         if ($route->getHost() !== '' && $this->request->headers->get('host') !== $route->getHost()) {
-            $this->reason = new HostNotAllow($this->kernel);
+            $this->reason = new HostNotAllow($this->config, $this->logger);
             return false;
         }
         return true;

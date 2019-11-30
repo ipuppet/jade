@@ -2,14 +2,13 @@
 
 namespace Zimings\Jade\Component\Router\Test;
 
+use Exception;
 use Zimings\Jade\Component\Http\RequestFactory;
-use Zimings\Jade\Component\Kernel\ConfigLoader\Exception\ConfigLoaderException;
 use Zimings\Jade\Component\Router\Exception\NoMatcherException;
 use Zimings\Jade\Component\Router\Matcher\MatchByRegexPath;
 use Zimings\Jade\Component\Router\Route;
 use Zimings\Jade\Component\Router\RouteContainer;
 use Zimings\Jade\Component\Router\Router;
-use Zimings\Jade\Foundation\Path\Exception\PathException;
 use PHPUnit\Framework\TestCase;
 
 class MatchByRegexPathTest extends TestCase
@@ -31,9 +30,8 @@ class MatchByRegexPathTest extends TestCase
         $router->setRouteContainer($routeContainer)->setRequest($request);
         try {
             $this->assertEquals($expected, $router->matchAll());
-        } catch (ConfigLoaderException $e) {
         } catch (NoMatcherException $e) {
-        } catch (PathException $e) {
+        } catch (Exception $e) {
         }
     }
 

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Kernel\ConfigLoader;
+namespace Zimings\Jade\Component\Kernel\Config;
 
 
 use Zimings\Jade\Foundation\Path\PathInterface;
@@ -50,13 +50,15 @@ class JsonParser implements ParserInterface
     }
 
     /**
-     * @return object
+     * @return Config
      */
-    public function loadAsObject()
+    public function loadAsConfig(): Config
     {
-        $file = $this->path . $this->name . 'json';
-        $json = file_get_contents($file);
-        $result = json_decode($json);
-        return $result;
+        return new Config($this->loadAsArray());
+    }
+
+    public function fileExists(): bool
+    {
+        return file_exists($this->path . $this->name . '.json');
     }
 }
