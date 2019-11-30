@@ -7,7 +7,6 @@ namespace Zimings\Jade\Component\DatabaseDriver;
 use PDO;
 use PDOException;
 use Psr\Log\LoggerInterface;
-use Zimings\Jade\Foundation\Path\Exception\PathException;
 
 class PdoDatabaseDriver
 {
@@ -54,7 +53,6 @@ class PdoDatabaseDriver
     /**
      * @param string $sql
      * @return array
-     * @throws PathException
      */
     public function query(string $sql)
     {
@@ -68,5 +66,20 @@ class PdoDatabaseDriver
             $this->logger->error($e->getMessage());
         }
         return $result;
+    }
+
+    /**
+     * @param string $sql
+     * @return false|int
+     */
+    public function exec(string $sql)
+    {
+        $line = 0;
+        try {
+            $line = $this->pdo->exec($sql);
+        } catch (PDOException $e) {
+            $this->logger->error($e->getMessage());
+        }
+        return $line;
     }
 }
