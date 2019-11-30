@@ -20,9 +20,7 @@
         "ext-json": "*",
         "ext-iconv": "*",
         "ext-fileinfo": "*",
-        "psr/log": "^1.1",
-        "swiftmailer/swiftmailer": "^6.2",
-        "phpoffice/phpspreadsheet": "^1.8"
+        "psr/log": "^1.1"
     },
     "suggest": {
         "swiftmailer/swiftmailer": "安装后您可以使用插件中的邮件发送器以及验证码发送器",
