@@ -14,6 +14,7 @@ class Response
     const HTTP_400 = 400;
     const HTTP_403 = 403;
     const HTTP_404 = 404;
+    const HTTP_405 = 405;
     const HTTP_500 = 500;
 
     protected static $httpStatusText = [
@@ -24,6 +25,7 @@ class Response
         401 => 'Unauthorized',
         403 => 'Forbidden',
         404 => 'Not Found',
+        405 => 'Method Not Allowed',
         500 => 'Internal Server Error',
     ];
 
