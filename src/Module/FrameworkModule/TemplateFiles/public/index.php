@@ -17,9 +17,11 @@ try {
     $response = $kernel->handle($request);
 } catch (PathException $e) {
     echo $e->getMessage();
-} catch (ConfigLoadException $e) {
-    echo $e->getMessage();
 } catch (NoMatcherException $e) {
+    echo $e->getMessage();
+} catch (ConfigLoadException $e) {
+} catch (Exception $e) {
+    echo $e->getMessage();
 }
 
 $response->send();
