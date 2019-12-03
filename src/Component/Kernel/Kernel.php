@@ -21,6 +21,7 @@ use Zimings\Jade\Foundation\Path\PathInterface;
 
 abstract class Kernel
 {
+    private $isLogAccessError = false;
     /**
      * @var ConfigLoader
      */
@@ -115,6 +116,10 @@ abstract class Kernel
         //响应错误信息
         $reason = $router->getReason();
         $response = new Response($reason->getContent(), $reason->getHttpStatus());
+        if ($this->isLogAccessError) {
+            //此时已经是Router日志
+            $logger->error("Access error'{$request->getPathInfo()}' {$reason->getDescription()}");
+        }
         return $response;
     }
 
@@ -142,7 +147,20 @@ abstract class Kernel
             $this->configLoader = new ConfigLoader();
             $path = $this->createPath($this->getRootDir()->after($this->createPath('/app/config')));
             $this->configLoader->setPath($path)->setParser(new JsonParser());
+            $this->loadDefaultConfig($this->configLoader);
         }
         return $this->configLoader;
+    }
+
+    /**
+     * 加载框架默认配置，默认认为所有配置项到保存在config文件中
+     * @param ConfigLoader $configLoader
+     */
+    private function loadDefaultConfig(ConfigLoader $configLoader)
+    {
+        $config = $configLoader->setName('config')->loadFromFile();
+        if ($config->has('logAccessError')) {
+            $this->isLogAccessError = $config->get('logAccessError');
+        }
     }
 }

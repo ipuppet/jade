@@ -75,21 +75,13 @@ class ConfigLoader
     /**
      * @return Config
      */
-    public function loadFromFile()
+    public function loadFromFile(): Config
     {
         $this->parser->setName($this->name)
             ->setPath($this->path);
         if ($this->parser->fileExists()) {
             $this->config = $this->parser->loadAsConfig();
         }
-        return $this->config;
-    }
-
-    /**
-     * @return Config
-     */
-    public function getConfig(): Config
-    {
         return $this->config;
     }
 }

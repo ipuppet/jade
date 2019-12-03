@@ -60,4 +60,9 @@ abstract class Reason implements ReasonInterface
     {
         return Response::HTTP_200;
     }
+
+    public function getDescription(): string
+    {
+        return $this->getDefaultContent();
+    }
 }
