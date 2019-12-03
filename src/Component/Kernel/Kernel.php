@@ -118,7 +118,7 @@ abstract class Kernel
         $response = new Response($reason->getContent(), $reason->getHttpStatus());
         if ($this->isLogAccessError) {
             //此时已经是Router日志
-            $logger->error("Access error'{$request->getPathInfo()}' {$reason->getDescription()}");
+            $logger->error("Access error '{$request->getPathInfo()}' {$reason->getDescription()}");
         }
         return $response;
     }
