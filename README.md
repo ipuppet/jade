@@ -37,3 +37,14 @@ e.g. `php build.php -r /path/to/`
 若开头为符号`@`，则该值被视为路径且符号`@`将被自动替换成项目根目录（该路径是通过AppKernel中的getRootDir方法获取的）
 
 若为其他内容则直接以字符串形式输出。
+
+### 配置文件
+
+项目全局配置文件为`app/config/config.json`中
+
+#### 内容说明
+
+| 名称 | 默认值 | 说明 |
+| --- | --- | --- |
+| logAccessError | false | 是否记录拒绝访问以及未匹配的路由 `true`表示记录 |
+
