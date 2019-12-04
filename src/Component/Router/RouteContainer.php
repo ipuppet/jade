@@ -11,46 +11,32 @@ class RouteContainer
      */
     private $routes;
 
-    public function __construct($routes = [])
-    {
-        $this->setRoutes($routes);
-    }
-
-    /**
-     * @param mixed $routes
-     */
-    public function setRoutes($routes)
-    {
-        if ($routes !== [] || $routes !== null)
-            $this->addRoutes($routes);
-    }
-
-    public function addRoutes($routes)
+    public function add($routes)
     {
         if ($routes instanceof RouteContainer) {
-            $routes = $routes->getRoutes();
+            $routes = $routes->all();
         }
         foreach ($routes as $name => $route) {
-            $this->addRoute($name, $route);
+            $this->set($name, $route);
         }
     }
 
-    public function addRoute($name, RouteInterface $route)
+    public function set($name, RouteInterface $route)
     {
         $this->routes[$name] = $route;
     }
 
-    public function getRoute($name): RouteInterface
+    public function get($name): RouteInterface
     {
         return $this->routes[$name];
     }
 
-    public function getNames()
+    public function names()
     {
         return array_keys($this->routes);
     }
 
-    public function getRoutes()
+    public function all()
     {
         return $this->routes;
     }
@@ -77,7 +63,7 @@ class RouteContainer
             $options['_controller'] = $route['_controller'];
             //转换为Route对象
             $route = new Route($path, $defaults, $tokens, $options, $host, $methods);
-            $routeContainer->addRoute($name, $route);
+            $routeContainer->set($name, $route);
         }
         return $routeContainer;
     }

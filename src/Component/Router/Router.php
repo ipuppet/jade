@@ -122,9 +122,9 @@ class Router
     {
         if ($this->matcher === null)
             throw new NoMatcherException('是否忘记调用setMatcher？');
-        $routeNames = $this->routeContainer->getNames();
+        $routeNames = $this->routeContainer->names();
         foreach ($routeNames as $name) {
-            $route = $this->routeContainer->getRoute($name);
+            $route = $this->routeContainer->get($name);
             if ($this->beforeMatch($route)) {
                 if ($this->matcher->match(
                     $route,
