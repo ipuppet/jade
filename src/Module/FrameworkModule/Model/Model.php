@@ -12,7 +12,6 @@ use PDO;
 use Psr\Log\LoggerInterface;
 use Zimings\Jade\Component\DatabaseDriver\PdoDatabaseDriver;
 use Zimings\Jade\Component\Kernel\Config\ConfigLoader;
-use Zimings\Jade\Component\Kernel\Config\Exception\ConfigLoadException;
 use Zimings\Jade\Component\Kernel\Config\JsonParser;
 use Zimings\Jade\Component\Kernel\Kernel;
 use Zimings\Jade\Component\Logger\Logger;
@@ -56,7 +55,6 @@ abstract class Model
     /**
      * Model constructor.
      * @throws PathException
-     * @throws ConfigLoadException
      */
     public function __construct()
     {
@@ -64,7 +62,6 @@ abstract class Model
     }
 
     /**
-     * @throws ConfigLoadException
      * @throws PathException
      */
     private function init()
@@ -92,7 +89,6 @@ abstract class Model
     /**
      * @param $name
      * @return ParameterInterface
-     * @throws ConfigLoadException
      */
     protected function getConfigByName($name): ParameterInterface
     {
