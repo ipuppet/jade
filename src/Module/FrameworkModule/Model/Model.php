@@ -38,6 +38,7 @@ abstract class Model
     private $configLoader;
 
     /**
+     * 数据库连接信息
      * @var ParameterInterface
      */
     private $database;
@@ -78,6 +79,14 @@ abstract class Model
             ->setName('database')
             ->loadFromFile()
             ->all());
+    }
+
+    /**
+     * @return Kernel
+     */
+    public function getKernel(): Kernel
+    {
+        return $this->kernel;
     }
 
     /**
