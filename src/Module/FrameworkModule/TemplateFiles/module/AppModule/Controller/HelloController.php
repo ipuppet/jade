@@ -6,7 +6,6 @@ namespace AppModule\Controller;
 
 use AppModule\Model\HelloModel;
 use Zimings\Jade\Component\Http\Response;
-use Zimings\Jade\Component\Kernel\Config\Exception\ConfigLoadException;
 use Zimings\Jade\Foundation\Path\Exception\PathException;
 use Zimings\Jade\Module\FrameworkModule\Controller\Controller;
 
@@ -33,7 +32,6 @@ class HelloController extends Controller
      *
      * @param string $name
      * @return Response
-     * @throws ConfigLoadException
      * @throws PathException
      */
     public function sayAction($name)
