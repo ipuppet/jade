@@ -15,14 +15,14 @@ interface PathInterface
     /**
      * 将路径加入到当前路径后面
      * @param PathInterface $path
-     * @return string
+     * @return PathInterface
      */
-    public function after(PathInterface $path = null);
+    public function after(PathInterface $path = null): PathInterface;
 
     /**
      * 将路径加入到当前路径前面
      * @param PathInterface $path
-     * @return string
+     * @return PathInterface
      */
-    public function before(PathInterface $path = null);
+    public function before(PathInterface $path = null): PathInterface;
 }

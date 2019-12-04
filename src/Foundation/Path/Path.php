@@ -61,7 +61,7 @@ class Path implements PathInterface
      * @param PathInterface $after
      * @return string
      */
-    public function join(PathInterface $before = null, PathInterface $after = null)
+    public static function join(PathInterface $before = null, PathInterface $after = null)
     {
         if ($before === null || $after === null)
             return $before ?? $after;
@@ -74,20 +74,22 @@ class Path implements PathInterface
     /**
      * 将路径加入到当前路径后面
      * @param PathInterface $path
-     * @return string
+     * @return PathInterface
      */
-    public function after(PathInterface $path = null)
+    public function after(PathInterface $path = null): PathInterface
     {
-        return $this->join($this, $path);
+        $this->path = self::join($this, $path);
+        return $this;
     }
 
     /**
      * 将路径加入到当前路径前面
      * @param PathInterface $path
-     * @return string
+     * @return PathInterface
      */
-    public function before(PathInterface $path = null)
+    public function before(PathInterface $path = null): PathInterface
     {
-        return $this->join($path, $this);
+        $this->path = self::join($path, $this);
+        return $this;
     }
 }
