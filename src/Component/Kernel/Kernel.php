@@ -6,7 +6,6 @@ namespace Zimings\Jade\Component\Kernel;
 
 use Zimings\Jade\Component\Http\Request;
 use Zimings\Jade\Component\Http\Response;
-use Zimings\Jade\Component\Kernel\Config\Exception\ConfigLoadException;
 use Zimings\Jade\Component\Kernel\Config\JsonParser;
 use Zimings\Jade\Component\Kernel\Config\ConfigLoader;
 use Zimings\Jade\Component\Kernel\Controller\ControllerResolver;
@@ -64,46 +63,38 @@ abstract class Kernel
      */
     public function createPath(string $path = ''): PathInterface
     {
-        try {
-            return new Path($path);
-        } catch (PathException $e) {
-            throw $e;
-        }
+        return new Path($path);
     }
 
     /**
      * @param Request $request
      * @return Response
      * @throws PathException
-     * @throws ConfigLoadException
      * @throws NoMatcherException
      */
     public function handle(Request $request): Response
     {
         $request->headers->set('X-Php-Ob-Level', ob_get_level());
         $logger = new Logger();
-        try {
-            $logger->setName('ControllerResolver')->setOutput($this->getLogDir());
-            $controllerResolver = new ControllerResolver($logger);
-        } catch (PathException $e) {
-            throw $e;
-        }
+        //实例化ControllerResolver
+        $logger->setName('ControllerResolver')->setOutput($this->getLogDir());
+        $controllerResolver = new ControllerResolver($logger);
+        //实例化Router对象
         $logger->setName('Router')->setOutput($this->getLogDir());
-
         $router = new Router();
         $matcher = new MatchByRegexPath();
         $router->setRequest($request)
             ->setLogger($logger)
             ->setRouteContainer($this->getRouteContainer())
             ->setMatcher($matcher);
-
+        //获取Config对象
         $config = $this->getConfigLoader()->setName('response')->loadFromFile();
         //如果加载成功则向Router中传递
         if ($config !== null) {
             $config->add(['root_dir' => $this->getRootDir()]);
             $router->setConfig($config);
         }
-
+        //开始匹配路由
         if ($router->matchAll()) {
             $request = $router->getRequest();
             $controller = $controllerResolver->getController($request);
@@ -145,7 +136,7 @@ abstract class Kernel
     {
         if ($this->configLoader === null) {
             $this->configLoader = new ConfigLoader();
-            $path = $this->createPath($this->getRootDir()->after($this->createPath('/app/config')));
+            $path = $this->getRootDir()->after($this->createPath('/app/config'));
             $this->configLoader->setPath($path)->setParser(new JsonParser());
             $this->loadDefaultConfig($this->configLoader);
         }
