@@ -27,6 +27,11 @@ class EmailSender
     /**
      * @var string
      */
+    private $name;
+
+    /**
+     * @var string
+     */
     private $password;
 
     /**
@@ -79,7 +84,7 @@ class EmailSender
 
         // Create a message
         $message = (new Swift_Message($this->email->getTitle()))
-            ->setFrom([$this->email->getFrom() => $this->email->getName()])
+            ->setFrom([$this->username => $this->name])
             ->setTo([$this->email->getTo(), $this->email->getTo() => $this->email->getTo()])
             ->setBody($this->email->getBody(), "text/html;charset=utf-8");
         try {
@@ -108,6 +113,16 @@ class EmailSender
     public function setHost(string $host): EmailSender
     {
         $this->host = $host;
+        return $this;
+    }
+
+    /**
+     * @param $name
+     * @return EmailSender
+     */
+    public function setName($name): EmailSender
+    {
+        $this->username = $name;
         return $this;
     }
 
