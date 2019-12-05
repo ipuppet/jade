@@ -12,6 +12,9 @@ use Swift_SmtpTransport;
 
 class EmailSender
 {
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
     /**
@@ -122,7 +125,7 @@ class EmailSender
      */
     public function setName($name): EmailSender
     {
-        $this->username = $name;
+        $this->name = $name;
         return $this;
     }
 
@@ -143,6 +146,16 @@ class EmailSender
     public function setPassword($password): EmailSender
     {
         $this->password = $password;
+        return $this;
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     * @return EmailSender
+     */
+    public function setLogger(LoggerInterface $logger): EmailSender
+    {
+        $this->logger = $logger;
         return $this;
     }
 }
