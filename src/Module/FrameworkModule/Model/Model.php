@@ -71,7 +71,7 @@ abstract class Model
             ->setParser(new JsonParser());
         $this->logger = new Logger();
         $this->logger->setName('PdoDatabaseDriver')
-            ->setOutput($this->kernel->getLogDir());
+            ->setOutput($this->kernel->getLogPath());
         $this->database = new Parameter($this->configLoader
             ->setName('database')
             ->loadFromFile()

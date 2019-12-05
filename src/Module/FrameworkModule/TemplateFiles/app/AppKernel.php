@@ -12,9 +12,9 @@ class AppKernel extends Kernel
      * @return PathInterface
      * @throws PathException
      */
-    public function getCacheDir(): PathInterface
+    public function getCachePath(): PathInterface
     {
-        return $this->createPath($this->getRootDir() . "/var/cache");
+        return $this->getRootPath()->after($this->createPath('/var/cache'));
     }
 
     /**
@@ -22,9 +22,9 @@ class AppKernel extends Kernel
      * @return PathInterface
      * @throws PathException
      */
-    public function getLogDir(): PathInterface
+    public function getLogPath(): PathInterface
     {
-        return $this->createPath($this->getRootDir() . "/var/log");
+        return $this->getRootPath()->after($this->createPath('/var/log'));
     }
 
     /**
@@ -32,7 +32,7 @@ class AppKernel extends Kernel
      * @return PathInterface
      * @throws PathException
      */
-    public function getRootDir(): PathInterface
+    public function getRootPath(): PathInterface
     {
         return $this->createPath(dirname(__DIR__));
     }

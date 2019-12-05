@@ -31,9 +31,9 @@ abstract class Kernel
      * @return PathInterface
      * @throws PathException
      */
-    public function getCacheDir(): PathInterface
+    public function getCachePath(): PathInterface
     {
-        return $this->createPath($this->getRootDir() . "/var/cache");
+        return $this->getRootPath()->after($this->createPath('/var/cache'));
     }
 
     /**
@@ -41,9 +41,9 @@ abstract class Kernel
      * @return PathInterface
      * @throws PathException
      */
-    public function getLogDir(): PathInterface
+    public function getLogPath(): PathInterface
     {
-        return $this->createPath($this->getRootDir() . "/var/log");
+        return $this->getRootPath()->after($this->createPath('/var/log'));
     }
 
     /**
@@ -51,7 +51,7 @@ abstract class Kernel
      * @return PathInterface
      * @throws PathException
      */
-    public function getRootDir(): PathInterface
+    public function getRootPath(): PathInterface
     {
         return $this->createPath(dirname(__DIR__));
     }
@@ -77,10 +77,10 @@ abstract class Kernel
         $request->headers->set('X-Php-Ob-Level', ob_get_level());
         $logger = new Logger();
         //实例化ControllerResolver
-        $logger->setName('ControllerResolver')->setOutput($this->getLogDir());
+        $logger->setName('ControllerResolver')->setOutput($this->getLogPath());
         $controllerResolver = new ControllerResolver($logger);
         //实例化Router对象
-        $logger->setName('Router')->setOutput($this->getLogDir());
+        $logger->setName('Router')->setOutput($this->getLogPath());
         $router = new Router();
         $matcher = new MatchByRegexPath();
         $router->setRequest($request)
@@ -91,7 +91,7 @@ abstract class Kernel
         $config = $this->getConfigLoader()->setName('response')->loadFromFile();
         //如果加载成功则向Router中传递
         if ($config !== null) {
-            $config->add(['root_dir' => $this->getRootDir()]);
+            $config->add(['root_dir' => $this->getRootPath()]);
             $router->setConfig($config);
         }
         //开始匹配路由
@@ -137,7 +137,7 @@ abstract class Kernel
         if ($this->configLoader === null) {
             $this->configLoader = new ConfigLoader();
             $path = $this->createPath(
-                $this->getRootDir()->after($this->createPath('/app/config'))
+                $this->getRootPath()->after($this->createPath('/app/config'))
             );
             $this->configLoader->setPath($path)->setParser(new JsonParser());
             $this->loadDefaultConfig($this->configLoader);
