@@ -136,7 +136,9 @@ abstract class Kernel
     {
         if ($this->configLoader === null) {
             $this->configLoader = new ConfigLoader();
-            $path = $this->getRootDir()->after($this->createPath('/app/config'));
+            $path = $this->createPath(
+                $this->getRootDir()->after($this->createPath('/app/config'))
+            );
             $this->configLoader->setPath($path)->setParser(new JsonParser());
             $this->loadDefaultConfig($this->configLoader);
         }
