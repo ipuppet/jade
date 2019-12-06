@@ -75,21 +75,21 @@ class Path implements PathInterface
      * 将路径加入到当前路径后面
      * @param PathInterface $path
      * @return PathInterface
+     * @throws PathException
      */
     public function after(PathInterface $path = null): PathInterface
     {
-        $this->path = self::join($this, $path);
-        return $this;
+        return new self(self::join($this, $path));
     }
 
     /**
      * 将路径加入到当前路径前面
      * @param PathInterface $path
      * @return PathInterface
+     * @throws PathException
      */
     public function before(PathInterface $path = null): PathInterface
     {
-        $this->path = self::join($path, $this);
-        return $this;
+        return new self(self::join($path, $this));
     }
 }
