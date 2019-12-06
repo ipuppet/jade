@@ -1,9 +1,10 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Kernel\Config;
+namespace Zimings\Jade\Foundation\Parser\Config;
 
 
+use Zimings\Jade\Foundation\Parameter\Parameter;
 use Zimings\Jade\Foundation\Path\PathInterface;
 
 class JsonParser implements ParserInterface
@@ -50,11 +51,11 @@ class JsonParser implements ParserInterface
     }
 
     /**
-     * @return Config
+     * @return Parameter
      */
-    public function loadAsConfig(): Config
+    public function loadAsParameter(): Parameter
     {
-        return new Config($this->loadAsArray());
+        return new Parameter($this->loadAsArray());
     }
 
     public function fileExists(): bool
