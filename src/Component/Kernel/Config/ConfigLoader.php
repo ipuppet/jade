@@ -5,7 +5,7 @@ namespace Zimings\Jade\Component\Kernel\Config;
 
 
 use Zimings\Jade\Component\Kernel\Config\Exception\ConfigLoadException;
-use Zimings\Jade\Foundation\Parser\Config\ParserInterface;
+use Zimings\Jade\Foundation\Parser\ParserInterface;
 use Zimings\Jade\Foundation\Path\PathInterface;
 
 class ConfigLoader

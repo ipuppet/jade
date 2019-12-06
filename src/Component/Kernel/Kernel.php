@@ -6,7 +6,7 @@ namespace Zimings\Jade\Component\Kernel;
 
 use Zimings\Jade\Component\Http\Request;
 use Zimings\Jade\Component\Http\Response;
-use Zimings\Jade\Component\Kernel\Config\JsonParser;
+use Zimings\Jade\Foundation\Parser\JsonParser;
 use Zimings\Jade\Component\Kernel\Config\ConfigLoader;
 use Zimings\Jade\Component\Kernel\Controller\ControllerResolver;
 use Zimings\Jade\Component\Logger\Logger;

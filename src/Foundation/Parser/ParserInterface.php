@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Foundation\Parser\Config;
+namespace Zimings\Jade\Foundation\Parser;
 
 
 use Zimings\Jade\Foundation\Parameter\Parameter;
