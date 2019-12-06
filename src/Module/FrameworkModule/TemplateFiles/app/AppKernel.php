@@ -9,6 +9,11 @@ use Zimings\Jade\Foundation\Path\PathInterface;
 class AppKernel extends Kernel
 {
     /**
+     * @var PathInterface
+     */
+    protected $rootPath;
+
+    /**
      * 获取项目根目录
      * @return PathInterface
      * @throws PathException
