@@ -27,13 +27,32 @@ abstract class Kernel
     private $configLoader;
 
     /**
+     * @var PathInterface
+     */
+    protected $cachePath;
+
+    /**
+     * @var PathInterface
+     */
+    protected $logPath;
+
+    /**
+     * @var PathInterface
+     */
+    protected $rootPath;
+
+    /**
      * 获取缓存目录
      * @return PathInterface
      * @throws PathException
      */
     public function getCachePath(): PathInterface
     {
-        return $this->getRootPath()->after($this->createPath('/var/cache'));
+        if ($this->cachePath === null) {
+            $this->cachePath = new Path($this->getRootPath());
+            $this->cachePath->after('/var/cache');
+        }
+        return $this->cachePath;
     }
 
     /**
@@ -43,7 +62,11 @@ abstract class Kernel
      */
     public function getLogPath(): PathInterface
     {
-        return $this->getRootPath()->after($this->createPath('/var/log'));
+        if ($this->logPath === null) {
+            $this->logPath = new Path($this->getRootPath());
+            $this->logPath->after('/var/log');
+        }
+        return $this->logPath;
     }
 
     /**
@@ -53,17 +76,10 @@ abstract class Kernel
      */
     public function getRootPath(): PathInterface
     {
-        return $this->createPath(dirname(__DIR__));
-    }
-
-    /**
-     * @param string $path
-     * @return PathInterface
-     * @throws PathException
-     */
-    public function createPath(string $path = ''): PathInterface
-    {
-        return new Path($path);
+        if ($this->rootPath === null) {
+            $this->rootPath = new Path(dirname(__DIR__));
+        }
+        return $this->rootPath;
     }
 
     /**
@@ -136,7 +152,8 @@ abstract class Kernel
     {
         if ($this->configLoader === null) {
             $this->configLoader = new ConfigLoader();
-            $path = $this->getRootPath()->after($this->createPath('/app/config'));
+            $path = new Path($this->getRootPath());
+            $path->after('/app/config');
             $this->configLoader->setPath($path)->setParser(new JsonParser());
             $this->loadDefaultConfig($this->configLoader);
         }

@@ -13,16 +13,22 @@ interface PathInterface
     public function __toString();
 
     /**
-     * 将路径加入到当前路径后面
-     * @param PathInterface $path
-     * @return PathInterface
+     * 合并两个路径
+     * @param PathInterface|string $before
+     * @param PathInterface|string $after
+     * @return string
      */
-    public function after(PathInterface $path = null): PathInterface;
+    public static function join($before = null, $after = null);
+
+    /**
+     * 将路径加入到当前路径后面
+     * @param PathInterface|string $path
+     */
+    public function after($path = null);
 
     /**
      * 将路径加入到当前路径前面
-     * @param PathInterface $path
-     * @return PathInterface
+     * @param PathInterface|string $path
      */
-    public function before(PathInterface $path = null): PathInterface;
+    public function before($path = null);
 }

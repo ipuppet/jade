@@ -57,39 +57,35 @@ class Path implements PathInterface
 
     /**
      * 合并两个路径
-     * @param PathInterface $before
-     * @param PathInterface $after
+     * @param PathInterface|string $before
+     * @param PathInterface|string $after
      * @return string
      */
-    public static function join(PathInterface $before = null, PathInterface $after = null)
+    public static function join($before = null, $after = null)
     {
         if ($before === null || $after === null)
             return $before ?? $after;
-        if ($before->get()[strlen($before) - 1] === $after->get()[0]) {
-            return $before . substr($after, 1);
+        if (mb_substr($before, -1, 1) === mb_substr($after, 0, 1)) {
+            return $before . mb_substr($after, 1);
         }
         return $before . $after;
     }
 
     /**
      * 将路径加入到当前路径后面
-     * @param PathInterface $path
-     * @return PathInterface
-     * @throws PathException
+     * @param PathInterface|string $path
      */
-    public function after(PathInterface $path = null): PathInterface
+    public function after($path = null)
     {
-        return new self(self::join($this, $path));
+        $this->path = self::join($this, $path);
     }
 
     /**
      * 将路径加入到当前路径前面
-     * @param PathInterface $path
-     * @return PathInterface
-     * @throws PathException
+     * @param PathInterface|string $path
      */
-    public function before(PathInterface $path = null): PathInterface
+    public function before($path = null)
     {
-        return new self(self::join($path, $this));
+        $this->path = self::join($path, $this);
     }
 }
