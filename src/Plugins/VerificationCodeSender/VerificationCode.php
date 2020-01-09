@@ -14,15 +14,15 @@ class VerificationCode
     /**
      * VerificationCode constructor.
      * @param $target
-     * @param $vc
-     * @param $creationDate
+     * @param $code
+     * @param $data
      * @param $pov
      */
-    public function __construct($target, $vc, $creationDate, $pov)
+    public function __construct($target, $code, $data, $pov)
     {
         $this->target = $target;
-        $this->code = $vc;
-        $this->date = $creationDate;
+        $this->code = $code;
+        $this->date = $data;
         $this->pov = $pov;
     }
 
