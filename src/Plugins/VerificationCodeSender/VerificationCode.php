@@ -12,7 +12,7 @@ class VerificationCode
     private $pov; //有效期
 
     /**
-     * VcInfo constructor.
+     * VerificationCode constructor.
      * @param $target
      * @param $vc
      * @param $creationDate
