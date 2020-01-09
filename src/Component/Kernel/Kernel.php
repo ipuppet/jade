@@ -87,6 +87,7 @@ abstract class Kernel
      * @return Response
      * @throws PathException
      * @throws NoMatcherException
+     * @throws \ReflectionException
      */
     public function handle(Request $request): Response
     {
@@ -114,8 +115,10 @@ abstract class Kernel
         if ($router->matchAll()) {
             $request = $router->getRequest();
             $controller = $controllerResolver->getController($request);
+            //整理参数顺序，按照方法签名对齐
+            $parameters = $controllerResolver->sortRequestParameters($controller, $request->request);
             //调用
-            $response = call_user_func_array($controller, $request->request->all());
+            $response = call_user_func_array($controller, $parameters);
             if ($response instanceof Response) {
                 return $response;
             }

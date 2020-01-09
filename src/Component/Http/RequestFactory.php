@@ -19,7 +19,7 @@ class RequestFactory
                 $server['CONTENT_TYPE'] = $_SERVER['HTTP_CONTENT_TYPE'];
             }
         }
-        if (in_array('application/json', explode(';', $server['CONTENT_TYPE']))) {
+        if (array_key_exists('CONTENT_TYPE', $server) && in_array('application/json', explode(';', $server['CONTENT_TYPE']))) {
             $post = file_get_contents('php://input');
             $post = json_decode($post, JSON_OBJECT_AS_ARRAY);
         } else {
