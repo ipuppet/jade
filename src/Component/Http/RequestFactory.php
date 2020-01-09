@@ -19,7 +19,13 @@ class RequestFactory
                 $server['CONTENT_TYPE'] = $_SERVER['HTTP_CONTENT_TYPE'];
             }
         }
-        $request = self::create($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER);
+        if (in_array('application/json', explode(';', $server['CONTENT_TYPE']))) {
+            $post = file_get_contents('php://input');
+            $post = json_decode($post, JSON_OBJECT_AS_ARRAY);
+        } else {
+            $post = $_POST;
+        }
+        $request = self::create($_GET, $post, [], $_COOKIE, $_FILES, $_SERVER);
         if (0 === strpos($request->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
             && in_array(strtoupper($request->server->get('REQUEST_METHOD', 'GET')), ['PUT', 'DELETE', 'PATCH'])
         ) {
