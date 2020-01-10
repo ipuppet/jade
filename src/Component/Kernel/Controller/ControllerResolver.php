@@ -9,7 +9,6 @@ use ReflectionMethod;
 use Zimings\Jade\Component\Http\Request;
 use Zimings\Jade\Component\Logger\Logger;
 use Psr\Log\LoggerInterface;
-use Zimings\Jade\Foundation\Parameter\ParameterInterface;
 
 class ControllerResolver
 {
@@ -145,20 +144,26 @@ class ControllerResolver
 
     /**
      * @param $controller
-     * @param ParameterInterface $request
+     * @param Request $request
      * @return array
      * @throws \ReflectionException
      */
-    public function sortRequestParameters($controller, ParameterInterface $request): array
+    public function sortRequestParameters($controller, Request $request): array
     {
+        $global = [
+            'request' => ['type' => 'Zimings\Jade\Component\Http\Request', 'value' => $request],
+        ];
         $method = new ReflectionMethod($controller[0], $controller[1]);
         $parameters = $method->getParameters();
         $result = [];
-        foreach ($parameters as $key => $parameter) {
-            $result[] = [
-                'name' => $parameter->name,
-                'value' => $request->get($parameter->name)
-            ];
+        foreach ($parameters as $parameter) {
+            if (!$request->request->has($parameter->getName()) &&
+                isset($global[$parameter->getName()]) &&
+                $global[$parameter->getName()]['type'] == (string)$parameter->getType()) {
+                $result[$parameter->getPosition()] = $global[$parameter->getName()]['value'];
+            } else {
+                $result[$parameter->getPosition()] = $request->request->get($parameter->getName());
+            }
         }
         return $result;
     }

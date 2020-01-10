@@ -116,7 +116,7 @@ abstract class Kernel
             $request = $router->getRequest();
             $controller = $controllerResolver->getController($request);
             //整理参数顺序，按照方法签名对齐
-            $parameters = $controllerResolver->sortRequestParameters($controller, $request->request);
+            $parameters = $controllerResolver->sortRequestParameters($controller, $request);
             //调用
             $response = call_user_func_array($controller, $parameters);
             if ($response instanceof Response) {
