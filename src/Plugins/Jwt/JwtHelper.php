@@ -4,92 +4,100 @@
 namespace Zimings\Jade\Plugins\Jwt;
 
 
-class Jwt
+class JwtHelper
 {
     //头部
     private $header = array(
         'alg' => 'HS256', //生成signature的算法
-        'typ' => 'JWT'    //类型
+        'typ' => 'JWT'
     );
 
     private $payload;
 
     //使用HMAC生成信息摘要时所使用的密钥
-    private $keys = [
-        "HS256" => "sdkjgvbewb354657896fvkjsdgfgbewuifbvsd354654g864ssd6fadsfad67654asdf"
-    ];
-    private $algConfig = [
-        "HS256" => "sha256"
-    ];
-
-    private static $instance;
-
-    public static function getInstance()
-    {
-        if (self::$instance === null)
-            self::$instance = new self();
-        return self::$instance;
-    }
+    private $keys = ["HS256" => "sdkjgvbewb354657896fvkjsdgfgbewuifbvsd354654g864ssd6fadsfad67654asdf"];
+    private $algConfig = ["HS256" => "sha256"];
 
     /**
-     * jwt载荷   格式如下非必须
-     * iss 该JWT的签发者
-     * iat 签发时间
-     * exp 过期时间
-     * nbf 该时间之前不接收处理该Token
-     * sub 面向的用户
-     * jti 该Token唯一标识
-     * aud 接收jwt的一方
      * jwtModel constructor.
      */
-    private function __construct()
+    public function __construct()
     {
-        $this->payload = [
+        $this->payload['registered'] = [
             //'iss' => '',  //该JWT的签发者
             'iat' => time(),  //签发时间
             'exp' => time() + 7200,  //过期时间
             //'nbf' => time() + 60,  //该时间之前不接收处理该Token
             //'sub' => '',  //面向的用户
             'jti' => md5(uniqid('JWT') . time()),  //该Token唯一标识
-            //'aud' => $userInfo['username'],   //接收jwt的一方
+            //'aud' => '',   //接收jwt的一方
         ];
     }
 
     /**
+     * @param string $key
+     * @param string $alg
+     * @return $this
+     */
+    public function setKey(string $key, string $alg = 'HS256')
+    {
+        $this->keys[$alg] = $key;
+        return $this;
+    }
+
+    /**
      * 设置过期时间
-     * @param $exp
+     * @param int $exp 单位秒
      * @return $this
      */
     public function setExp($exp)
     {
-        $this->payload['exp'] = $exp;
+        $this->payload['registered']['exp'] = time() + $exp;
+        return $this;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     * @return $this
+     */
+    public function setHeader($key, $value)
+    {
+        $this->header[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return $this
+     */
+    public function setPayload(array $data)
+    {
+        $this->payload['public'] = $data;
         return $this;
     }
 
     /**
      * 生成jwt token
-     * @param array $data
      * @return bool|string
      */
-    public function generateToken(array $data)
+    public function generateToken()
     {
-        foreach ($data as $k => $v) {
-            $this->payload[$k] = $v;
-        }
         $base64header = $this->base64UrlEncode(json_encode($this->header, JSON_UNESCAPED_UNICODE));
         $base64payload = $this->base64UrlEncode(json_encode($this->payload, JSON_UNESCAPED_UNICODE));
         $token = $base64header . '.' . $base64payload . '.' .
             $this->signature($base64header . '.' . $base64payload,
-                $this->getKey($this->header['alg']), $this->header['alg']);
+                $this->keys[$this->header['alg']], $this->header['alg']);
         return $token;
     }
 
     /**
      * 验证token，如果合法并可用则返回payload
-     * @param string $Token 需要验证的token
-     * @return bool|array
+     * @param string $Token
+     * @param bool $withRegistered 是否携带注册声明
+     * @return bool|mixed
      */
-    public function getPayload(string $Token)
+    public function getPayload(string $Token, bool $withRegistered = true)
     {
         //token不完整
         $tokens = explode('.', $Token);
@@ -104,29 +112,28 @@ class Jwt
             return false;
 
         //签名验证
-        if ($this->signature($base64header . '.' . $base64payload, $this->getKey($base64decodeHeader['alg']), $base64decodeHeader['alg']) !== $sign)
+        if ($this->signature($base64header . '.' . $base64payload, $this->keys[$base64decodeHeader['alg']], $base64decodeHeader['alg']) !== $sign)
             return false;
 
         $payload = json_decode($this->base64UrlDecode($base64payload), JSON_OBJECT_AS_ARRAY);
+        $registered = $payload['registered'];
 
         //签发时间大于当前服务器时间验证失败
-        if (isset($payload['iat']) && $payload['iat'] > time())
+        if (isset($registered['iat']) && $registered['iat'] > time())
             return false;
 
         //是否过期
-        if (isset($payload['exp']) && $payload['exp'] < time())
+        if (isset($registered['exp']) && $registered['exp'] < time())
             return false;
 
         //该nbf时间之前不接收处理该Token
-        if (isset($payload['nbf']) && $payload['nbf'] > time())
+        if (isset($registered['nbf']) && $registered['nbf'] > time())
             return false;
 
+        if (!$withRegistered) {
+            unset($payload['registered']);
+        }
         return $payload;
-    }
-
-    private function getKey($alg)
-    {
-        return $this->keys[$alg];
     }
 
     /**
@@ -155,7 +162,7 @@ class Jwt
     }
 
     /**
-     * HMACSHA256签名   https://jwt.io/  中HMACSHA256签名实现
+     * HMAC-SHA256签名   https://jwt.io/  中HMAC-SHA256签名实现
      * @param string $input 为base64UrlEncode(header).".".base64UrlEncode(payload)
      * @param string $key
      * @param string $alg 算法方式
