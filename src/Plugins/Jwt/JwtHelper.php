@@ -71,7 +71,7 @@ class JwtHelper
      * @param array $data
      * @return $this
      */
-    public function setPayload(array $data)
+    public function setPayloads(array $data)
     {
         $this->payload['public'] = $data;
         return $this;
