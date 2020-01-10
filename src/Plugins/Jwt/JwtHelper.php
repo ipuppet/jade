@@ -79,9 +79,9 @@ class JwtHelper
 
     /**
      * 生成jwt token
-     * @return bool|string
+     * @return string
      */
-    public function generateToken()
+    public function generateToken(): string
     {
         $base64header = $this->base64UrlEncode(json_encode($this->header, JSON_UNESCAPED_UNICODE));
         $base64payload = $this->base64UrlEncode(json_encode($this->payload, JSON_UNESCAPED_UNICODE));
