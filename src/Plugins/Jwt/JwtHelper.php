@@ -6,6 +6,7 @@ namespace Zimings\Jade\Plugins\Jwt;
 
 class JwtHelper
 {
+    public $reason;
     //头部
     private $header = array(
         'alg' => 'HS256', //生成signature的算法
@@ -99,36 +100,42 @@ class JwtHelper
      */
     public function getPayload(string $Token, bool $withRegistered = true)
     {
-        //token不完整
         $tokens = explode('.', $Token);
-        if (count($tokens) != 3)
+        if (count($tokens) != 3) {
+            $this->reason = 'token不完整';
             return false;
+        }
 
         list($base64header, $base64payload, $sign) = $tokens;
 
-        //获取jwt算法
         $base64decodeHeader = json_decode($this->base64UrlDecode($base64header), JSON_OBJECT_AS_ARRAY);
-        if (empty($base64decodeHeader['alg']))
+        if (empty($base64decodeHeader['alg'])) {
+            $this->reason = 'alg为空';
             return false;
+        }
 
-        //签名验证
-        if ($this->signature($base64header . '.' . $base64payload, $this->keys[$base64decodeHeader['alg']], $base64decodeHeader['alg']) !== $sign)
+        if ($this->signature($base64header . '.' . $base64payload, $this->keys[$base64decodeHeader['alg']], $base64decodeHeader['alg']) !== $sign) {
+            $this->reason = '签名不一致';
             return false;
+        }
 
         $payload = json_decode($this->base64UrlDecode($base64payload), JSON_OBJECT_AS_ARRAY);
         $registered = $payload['registered'];
 
-        //签发时间大于当前服务器时间验证失败
-        if (isset($registered['iat']) && $registered['iat'] > time())
+        if (isset($registered['iat']) && $registered['iat'] > time()) {
+            $this->reason = '签发时间大于当前服务器时间（不可能的“未来的”签发）';
             return false;
+        }
 
-        //是否过期
-        if (isset($registered['exp']) && $registered['exp'] < time())
+        if (isset($registered['exp']) && $registered['exp'] < time()) {
+            $this->reason = 'token已过期';
             return false;
+        }
 
-        //该nbf时间之前不接收处理该Token
-        if (isset($registered['nbf']) && $registered['nbf'] > time())
+        if (isset($registered['nbf']) && $registered['nbf'] > time()) {
+            $this->reason = 'nbf时间之前不接收处理该Token';
             return false;
+        }
 
         if (!$withRegistered) {
             unset($payload['registered']);
