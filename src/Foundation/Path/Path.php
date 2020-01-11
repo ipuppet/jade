@@ -20,11 +20,7 @@ class Path implements PathInterface
      */
     public function __construct(string $path = '')
     {
-        try {
-            $this->set($path);
-        } catch (PathException $e) {
-            throw $e;
-        }
+        $this->set($path);
     }
 
     /**
