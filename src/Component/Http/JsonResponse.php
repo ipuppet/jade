@@ -37,6 +37,7 @@ class JsonResponse extends Response
     public function setEncodingOptions($encodingOptions)
     {
         $this->encodingOptions = (int)$encodingOptions;
+
         return $this->setData(json_decode($this->data));
     }
 
@@ -60,13 +61,16 @@ class JsonResponse extends Response
                 }
             }
         }
+
         $this->callback = $callback;
+
         return $this->update();
     }
 
     public function setJson($json)
     {
         $this->data = $json;
+
         return $this->update();
     }
 
@@ -98,14 +102,17 @@ class JsonResponse extends Response
                     if ($this->hasLogger())
                         $this->logger->error($e->getMessage());
                 }
+
                 if (PHP_VERSION_ID >= 70300 && (JSON_THROW_ON_ERROR & $this->encodingOptions)) {
                     return $this->setJson($data);
                 }
             }
         }
+
         if (JSON_ERROR_NONE !== json_last_error()) {
             throw new InvalidArgumentException(json_last_error_msg());
         }
+
         return $this->setJson($data);
     }
 
@@ -117,11 +124,13 @@ class JsonResponse extends Response
 
             return $this->setContent(sprintf('/**/%s(%s);', $this->callback, $this->data));
         }
+
         // Only set the header when there is none or when it equals 'text/javascript' (from a previous update with callback)
         // in order to not overwrite a custom definition.
         if (!$this->headers->has('Content-Type') || 'text/javascript' === $this->headers->get('Content-Type')) {
             $this->headers->set('Content-Type', 'application/json');
         }
+
         return $this->setContent($this->data);
     }
 }
