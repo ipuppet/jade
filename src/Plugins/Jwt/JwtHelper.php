@@ -4,9 +4,10 @@
 namespace Zimings\Jade\Plugins\Jwt;
 
 
+use Zimings\Jade\Plugins\Jwt\Exception\PayloadException;
+
 class JwtHelper
 {
-    public $reason;
     //头部
     private $header = array(
         'alg' => 'HS256', //生成signature的算法
@@ -145,44 +146,39 @@ class JwtHelper
      * @param string $Token
      * @param bool $withRegistered 是否携带注册声明
      * @return bool|mixed
+     * @throws PayloadException
      */
     public function getPayload(string $Token, bool $withRegistered = true)
     {
         $tokens = explode('.', $Token);
         if (count($tokens) != 3) {
-            $this->reason = 'token不完整';
-            return false;
+            throw new PayloadException('token不完整');
         }
 
         list($base64header, $base64payload, $sign) = $tokens;
 
         $base64decodeHeader = json_decode($this->base64UrlDecode($base64header), JSON_OBJECT_AS_ARRAY);
         if (empty($base64decodeHeader['alg'])) {
-            $this->reason = 'alg为空';
-            return false;
+            throw new PayloadException('alg为空');
         }
 
         if ($this->signature($base64header . '.' . $base64payload, $this->keys[$base64decodeHeader['alg']], $base64decodeHeader['alg']) !== $sign) {
-            $this->reason = '签名不一致';
-            return false;
+            throw new PayloadException('签名不一致');
         }
 
         $payload = json_decode($this->base64UrlDecode($base64payload), JSON_OBJECT_AS_ARRAY);
         $registered = $payload['registered'];
 
         if (isset($registered['iat']) && $registered['iat'] > time()) {
-            $this->reason = '签发时间大于当前服务器时间（不可能的“未来的”签发）';
-            return false;
+            throw new PayloadException('签发时间大于当前服务器时间（不可能的“未来的”签发）');
         }
 
         if (isset($registered['exp']) && $registered['exp'] < time()) {
-            $this->reason = 'token已过期';
-            return false;
+            throw new PayloadException('token已过期');
         }
 
         if (isset($registered['nbf']) && $registered['nbf'] > time()) {
-            $this->reason = 'nbf时间之前不接收处理该Token';
-            return false;
+            throw new PayloadException('nbf时间之前不接收处理该Token');
         }
 
         if (!$withRegistered) {
