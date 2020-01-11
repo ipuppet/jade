@@ -79,6 +79,17 @@ class JwtHelper
     }
 
     /**
+     * @param string $alg
+     * @param string $hash
+     * @return $this
+     */
+    public function addAlgConfig(string $alg, string $hash)
+    {
+        $this->algConfig[$alg] = $hash;
+        return $this;
+    }
+
+    /**
      * @param array $data
      * @param string $part registered public private
      * @return $this
