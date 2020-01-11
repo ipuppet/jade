@@ -47,6 +47,17 @@ class JwtHelper
     }
 
     /**
+     * @param string $alg
+     * @param string $hash
+     * @return $this
+     */
+    public function setAlgConfig(string $alg, string $hash)
+    {
+        $this->algConfig[$alg] = $hash;
+        return $this;
+    }
+
+    /**
      * 设置过期时间
      * @param int $exp 单位秒
      * @return $this
@@ -75,17 +86,6 @@ class JwtHelper
     public function setAlg(string $alg)
     {
         $this->header['alg'] = $alg;
-        return $this;
-    }
-
-    /**
-     * @param string $alg
-     * @param string $hash
-     * @return $this
-     */
-    public function addAlgConfig(string $alg, string $hash)
-    {
-        $this->algConfig[$alg] = $hash;
         return $this;
     }
 
