@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use Swift_Mailer;
 use Swift_Message;
 use Swift_SmtpTransport;
+use Zimings\Jade\Plugins\EmailSender\Exception\EmailSenderException;
 
 class EmailSender
 {
@@ -59,21 +60,29 @@ class EmailSender
     }
 
     /**
-     * @return bool|int
+     * @return int 发送成功的个数
+     * @throws EmailSenderException
+     * @throws Exception
      */
-    public function send()
+    public function send(): int
     {
         if ($this->email === null) {
-            $this->logger->error("是否忘记将邮件类放进来？调用setEmail传入一个Email实例");
-            return false;
+            $message = '是否忘记将邮件类放进来？调用setEmail传入一个Email实例';
+            if ($this->logger !== null)
+                $this->logger->error($message);
+            throw new EmailSenderException($message);
         }
         if ($this->username === null) {
-            $this->logger->error("'邮箱服务器验证失败，请检查账号是否正确");
-            return false;
+            $message = '邮箱服务器验证失败，请检查账号是否正确';
+            if ($this->logger !== null)
+                $this->logger->error($message);
+            throw new EmailSenderException($message);
         }
         if ($this->password === null) {
-            $this->logger->error("邮箱服务器验证失败，请检查密码是否正确");
-            return false;
+            $message = '邮箱服务器验证失败，请检查密码是否正确';
+            if ($this->logger !== null)
+                $this->logger->error($message);
+            throw new EmailSenderException($message);
         }
         // Create the Transport
         $transport = (new Swift_SmtpTransport($this->host))
@@ -95,8 +104,9 @@ class EmailSender
             $result = $mailer->send($message);
         } catch (Exception $e) {
             $this->logger->error('邮件发送失败：' . $e->getMessage());
+            throw $e;
         }
-        return $result ?? false;
+        return $result;
     }
 
     /**

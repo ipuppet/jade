@@ -96,7 +96,7 @@ class Upload
      *
      * @return bool
      */
-    private function check()
+    private function check(): bool
     {
         if ($this->formatName != null) {
             $this->fileName = $this->formatName . '.' . $this->extension;
