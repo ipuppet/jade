@@ -16,7 +16,7 @@ class JwtHelper
     private $payload;
 
     //使用HMAC生成信息摘要时所使用的密钥
-    private $keys = ["HS256" => "sdkjgvbewb354657896fvkjsdgfgbewuifbvsd354654g864ssd6fadsfad67654asdf"];
+    private $keys = ["HS256" => "YourKey"];
     private $algConfig = ["HS256" => "sha256"];
 
     /**
@@ -69,12 +69,49 @@ class JwtHelper
     }
 
     /**
-     * @param array $data
+     * @param string $alg
      * @return $this
      */
-    public function setPayloads(array $data)
+    public function setAlg(string $alg)
     {
-        $this->payload['public'] = $data;
+        $this->header['alg'] = $alg;
+        return $this;
+    }
+
+    /**
+     * @param array $data
+     * @param string $part registered public private
+     * @return $this
+     */
+    public function setPayloads(array $data, string $part = 'public')
+    {
+        $this->payload[$part] = $data;
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @param $data
+     * @param string $part registered public private
+     * @return $this
+     */
+    public function setPayload(string $key, $data, string $part = 'public')
+    {
+        $this->payload[$part][$key] = $data;
+        return $this;
+    }
+
+    /**
+     * 增添，会覆盖原数据
+     * @param array $data
+     * @param string $part
+     * @return $this
+     */
+    public function addPayloads(array $data, string $part = 'public')
+    {
+        foreach ($data as $key => $datum) {
+            $this->payload[$part][$key] = $datum;
+        }
         return $this;
     }
 
