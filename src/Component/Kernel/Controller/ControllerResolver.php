@@ -5,6 +5,7 @@ namespace Zimings\Jade\Component\Kernel\Controller;
 
 
 use InvalidArgumentException;
+use ReflectionMethod;
 use Zimings\Jade\Component\Http\Request;
 use Zimings\Jade\Component\Logger\Logger;
 use Psr\Log\LoggerInterface;
@@ -139,5 +140,31 @@ class ControllerResolver
         }
 
         return $message;
+    }
+
+    /**
+     * @param $controller
+     * @param Request $request
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function sortRequestParameters($controller, Request $request): array
+    {
+        $global = [
+            'request' => ['type' => 'Zimings\Jade\Component\Http\Request', 'value' => $request],
+        ];
+        $method = new ReflectionMethod($controller[0], $controller[1]);
+        $parameters = $method->getParameters();
+        $result = [];
+        foreach ($parameters as $parameter) {
+            if (!$request->request->has($parameter->getName()) &&
+                isset($global[$parameter->getName()]) &&
+                $global[$parameter->getName()]['type'] == (string)$parameter->getType()) {
+                $result[$parameter->getPosition()] = $global[$parameter->getName()]['value'];
+            } else {
+                $result[$parameter->getPosition()] = $request->request->get($parameter->getName());
+            }
+        }
+        return $result;
     }
 }

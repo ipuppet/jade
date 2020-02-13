@@ -12,8 +12,7 @@ use PDO;
 use Psr\Log\LoggerInterface;
 use Zimings\Jade\Component\DatabaseDriver\PdoDatabaseDriver;
 use Zimings\Jade\Component\Kernel\Config\ConfigLoader;
-use Zimings\Jade\Component\Kernel\Config\Exception\ConfigLoadException;
-use Zimings\Jade\Component\Kernel\Config\JsonParser;
+use Zimings\Jade\Foundation\Parser\JsonParser;
 use Zimings\Jade\Component\Kernel\Kernel;
 use Zimings\Jade\Component\Logger\Logger;
 use Zimings\Jade\Foundation\Parameter\Parameter;
@@ -38,6 +37,7 @@ abstract class Model
     private $configLoader;
 
     /**
+     * 数据库连接信息
      * @var ParameterInterface
      */
     private $database;
@@ -55,7 +55,6 @@ abstract class Model
     /**
      * Model constructor.
      * @throws PathException
-     * @throws ConfigLoadException
      */
     public function __construct()
     {
@@ -63,7 +62,6 @@ abstract class Model
     }
 
     /**
-     * @throws ConfigLoadException
      * @throws PathException
      */
     private function init()
@@ -73,7 +71,7 @@ abstract class Model
             ->setParser(new JsonParser());
         $this->logger = new Logger();
         $this->logger->setName('PdoDatabaseDriver')
-            ->setOutput($this->kernel->getLogDir());
+            ->setOutput($this->kernel->getLogPath());
         $this->database = new Parameter($this->configLoader
             ->setName('database')
             ->loadFromFile()
@@ -81,9 +79,16 @@ abstract class Model
     }
 
     /**
+     * @return Kernel
+     */
+    public function getKernel(): Kernel
+    {
+        return $this->kernel;
+    }
+
+    /**
      * @param $name
      * @return ParameterInterface
-     * @throws ConfigLoadException
      */
     protected function getConfigByName($name): ParameterInterface
     {

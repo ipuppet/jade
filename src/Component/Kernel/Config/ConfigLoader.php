@@ -5,6 +5,7 @@ namespace Zimings\Jade\Component\Kernel\Config;
 
 
 use Zimings\Jade\Component\Kernel\Config\Exception\ConfigLoadException;
+use Zimings\Jade\Foundation\Parser\ParserInterface;
 use Zimings\Jade\Foundation\Path\PathInterface;
 
 class ConfigLoader
@@ -75,21 +76,13 @@ class ConfigLoader
     /**
      * @return Config
      */
-    public function loadFromFile()
+    public function loadFromFile(): Config
     {
         $this->parser->setName($this->name)
             ->setPath($this->path);
         if ($this->parser->fileExists()) {
-            $this->config = $this->parser->loadAsConfig();
+            $this->config = new Config($this->parser->loadAsParameter()->all());
         }
-        return $this->config;
-    }
-
-    /**
-     * @return Config
-     */
-    public function getConfig(): Config
-    {
         return $this->config;
     }
 }

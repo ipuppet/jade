@@ -9,9 +9,13 @@ use Psr\Log\LoggerInterface;
 use Swift_Mailer;
 use Swift_Message;
 use Swift_SmtpTransport;
+use Zimings\Jade\Plugins\EmailSender\Exception\EmailSenderException;
 
 class EmailSender
 {
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
     /**
@@ -23,6 +27,11 @@ class EmailSender
      * @var string
      */
     private $username;
+
+    /**
+     * @var string
+     */
+    private $name;
 
     /**
      * @var string
@@ -51,21 +60,29 @@ class EmailSender
     }
 
     /**
-     * @return bool|int
+     * @return int 发送成功的个数
+     * @throws EmailSenderException
+     * @throws Exception
      */
-    public function send()
+    public function send(): int
     {
         if ($this->email === null) {
-            $this->logger->error("是否忘记将邮件类放进来？调用setEmail传入一个Email实例");
-            return false;
+            $message = '是否忘记将邮件类放进来？调用setEmail传入一个Email实例';
+            if ($this->logger !== null)
+                $this->logger->error($message);
+            throw new EmailSenderException($message);
         }
         if ($this->username === null) {
-            $this->logger->error("'邮箱服务器验证失败，请检查账号是否正确");
-            return false;
+            $message = '邮箱服务器验证失败，请检查账号是否正确';
+            if ($this->logger !== null)
+                $this->logger->error($message);
+            throw new EmailSenderException($message);
         }
         if ($this->password === null) {
-            $this->logger->error("邮箱服务器验证失败，请检查密码是否正确");
-            return false;
+            $message = '邮箱服务器验证失败，请检查密码是否正确';
+            if ($this->logger !== null)
+                $this->logger->error($message);
+            throw new EmailSenderException($message);
         }
         // Create the Transport
         $transport = (new Swift_SmtpTransport($this->host))
@@ -79,7 +96,7 @@ class EmailSender
 
         // Create a message
         $message = (new Swift_Message($this->email->getTitle()))
-            ->setFrom([$this->email->getFrom() => $this->email->getName()])
+            ->setFrom([$this->username => $this->name])
             ->setTo([$this->email->getTo(), $this->email->getTo() => $this->email->getTo()])
             ->setBody($this->email->getBody(), "text/html;charset=utf-8");
         try {
@@ -87,8 +104,9 @@ class EmailSender
             $result = $mailer->send($message);
         } catch (Exception $e) {
             $this->logger->error('邮件发送失败：' . $e->getMessage());
+            throw $e;
         }
-        return $result ?? false;
+        return $result;
     }
 
     /**
@@ -112,6 +130,16 @@ class EmailSender
     }
 
     /**
+     * @param $name
+     * @return EmailSender
+     */
+    public function setName($name): EmailSender
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
      * @param $username
      * @return EmailSender
      */
@@ -128,6 +156,16 @@ class EmailSender
     public function setPassword($password): EmailSender
     {
         $this->password = $password;
+        return $this;
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     * @return EmailSender
+     */
+    public function setLogger(LoggerInterface $logger): EmailSender
+    {
+        $this->logger = $logger;
         return $this;
     }
 }

@@ -1,9 +1,10 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Kernel\Config;
+namespace Zimings\Jade\Foundation\Parser;
 
 
+use Zimings\Jade\Foundation\Parameter\Parameter;
 use Zimings\Jade\Foundation\Path\PathInterface;
 
 interface ParserInterface
@@ -26,9 +27,9 @@ interface ParserInterface
     public function loadAsArray(): array;
 
     /**
-     * @return Config
+     * @return Parameter
      */
-    public function loadAsConfig(): Config;
+    public function loadAsParameter(): Parameter;
 
     /**
      * @return bool

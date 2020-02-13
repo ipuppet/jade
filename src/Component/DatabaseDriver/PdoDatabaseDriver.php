@@ -59,7 +59,7 @@ class PdoDatabaseDriver
         $result = [];
         try {
             $rows = $this->pdo->query($sql);
-            foreach ($rows as $row) {
+            foreach ($rows->fetchAll(PDO::FETCH_ASSOC) as $row) {
                 $result[] = $row;
             }
         } catch (PDOException $e) {

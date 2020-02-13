@@ -3,37 +3,26 @@
 
 use Zimings\Jade\Component\Kernel\Kernel;
 use Zimings\Jade\Foundation\Path\Exception\PathException;
+use Zimings\Jade\Foundation\Path\Path;
 use Zimings\Jade\Foundation\Path\PathInterface;
 
 class AppKernel extends Kernel
 {
     /**
-     * 获取缓存目录
-     * @return PathInterface
-     * @throws PathException
+     * @var PathInterface
      */
-    public function getCacheDir(): PathInterface
-    {
-        return $this->createPath($this->getRootDir() . "/var/cache");
-    }
-
-    /**
-     * 获取日志目录
-     * @return PathInterface
-     * @throws PathException
-     */
-    public function getLogDir(): PathInterface
-    {
-        return $this->createPath($this->getRootDir() . "/var/log");
-    }
+    protected $rootPath;
 
     /**
      * 获取项目根目录
      * @return PathInterface
      * @throws PathException
      */
-    public function getRootDir(): PathInterface
+    public function getRootPath(): PathInterface
     {
-        return $this->createPath(dirname(__DIR__));
+        if ($this->rootPath === null) {
+            $this->rootPath = new Path(dirname(__DIR__));
+        }
+        return $this->rootPath;
     }
 }

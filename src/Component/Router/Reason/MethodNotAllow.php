@@ -10,7 +10,7 @@ class MethodNotAllow extends Reason implements ReasonInterface
 {
     public function getHttpStatus(): int
     {
-        return Response::HTTP_403;
+        return Response::HTTP_405;
     }
 
     public function getDefaultContent(): string

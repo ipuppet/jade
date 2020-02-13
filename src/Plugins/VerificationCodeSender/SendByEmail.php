@@ -5,16 +5,21 @@ namespace Zimings\Jade\Plugins\VerificationCodeSender;
 
 
 use Zimings\Jade\Plugins\EmailSender\Email;
+use Zimings\Jade\Plugins\EmailSender\Exception\EmailSenderException;
 
 class SendByEmail extends CodeSender
 {
     /**
      * 向目标电子邮件地址发送验证码
+     * @param $title
      * @return VerificationCode|bool
+     * @throws EmailSenderException
      */
     public function send($title)
     {
-        if (!($this->verificationCode instanceof VerificationCode)) return false;
+        if (!($this->verificationCode instanceof VerificationCode))
+            throw new EmailSenderException('验证码类创建失败');
+
         $msg = "
         {$this->verificationCode->getTarget()} 您的验证码为：<br>
         <span style='font-size: 24px;color: red;font-weight: bold;'>{$this->verificationCode->getCode()}</span><br>
@@ -29,9 +34,9 @@ class SendByEmail extends CodeSender
             ->setBody($msg);
 
         $result = $this->emailSender->setEmail($email)->send();
-        if ($result !== false) {
+        if ($result > 0) {
             return $this->verificationCode;
         }//发送失败由EmailSender记录日志
-        return false;
+        throw new EmailSenderException('发送失败');
     }
 }

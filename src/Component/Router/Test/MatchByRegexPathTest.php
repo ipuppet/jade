@@ -26,7 +26,7 @@ class MatchByRegexPathTest extends TestCase
         $router = new Router();
         $router->setMatcher(new MatchByRegexPath());
         $routeContainer = new RouteContainer();
-        $routeContainer->addRoute($name, $route);
+        $routeContainer->set($name, $route);
         $router->setRouteContainer($routeContainer)->setRequest($request);
         try {
             $this->assertEquals($expected, $router->matchAll());

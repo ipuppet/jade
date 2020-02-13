@@ -19,14 +19,14 @@ abstract class CodeSender
 
     private function createVerificationCode(): VerificationCode
     {
-        $vc = '';
+        $code = '';
         $codeLength = 6;
         $pov = 5;//有效期 分钟
 
         for ($i = 0; $i < $codeLength; $i++) {
-            $vc .= (string)rand(0, 9);
+            $code .= (string)rand(0, 9);
         }
-        return new VerificationCode($this->target, $vc, time(), $pov);
+        return new VerificationCode($this->target, $code, time(), $pov);
     }
 
     public function setTarget($target)
@@ -38,14 +38,14 @@ abstract class CodeSender
 
     /**
      * 验证 验证码的可用性
-     * @param $vc
-     * @param VerificationCode $vcInfo
+     * @param $code
+     * @param VerificationCode $compare
      * @return bool
      */
-    public static function test($vc, VerificationCode $vcInfo): bool
+    public static function test($code, VerificationCode $compare): bool
     {
-        if (time() - $vcInfo->getDate() < 60 * $vcInfo->getPov()) {
-            if ($vc == $vcInfo->getCode()) {
+        if (time() - $compare->getDate() < 60 * $compare->getPov()) {
+            if ($code == $compare->getCode()) {
                 return true;
             }
         }

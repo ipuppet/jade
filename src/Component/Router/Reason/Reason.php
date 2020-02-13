@@ -29,9 +29,7 @@ abstract class Reason implements ReasonInterface
             if ($content[0] === '@') {
                 $content = str_replace('@', $config->get('root_dir'), $content);
                 if (file_exists($content)) {
-                    include $content;
-                    //阻止返回默认值
-                    $this->content = '';
+                    $this->content = file_get_contents($content);
                 } else {
                     $message = '您在response配置文件中设定的文件不存在，请检查。';
                     if ($logger !== null) {
@@ -61,5 +59,10 @@ abstract class Reason implements ReasonInterface
     public function getHttpStatus(): int
     {
         return Response::HTTP_200;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->getDefaultContent();
     }
 }

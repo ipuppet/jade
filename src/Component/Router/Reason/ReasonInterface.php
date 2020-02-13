@@ -9,4 +9,6 @@ interface ReasonInterface
     public function getContent(): string;
 
     public function getHttpStatus(): int;
+
+    public function getDescription(): string;
 }

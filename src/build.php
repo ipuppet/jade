@@ -27,7 +27,8 @@ $baseFiles = [
         'config' => [
             'response.json',
             'routes.json',
-            'database.json'
+            'database.json',
+            'config.json'
         ],
         'AppKernel.php'
     ],

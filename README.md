@@ -1,5 +1,5 @@
 ## zimings/jade
-> 从symfony中取出了一些较为常用的部分组成了没有视图的api框架，感谢优秀的symfony!
+> 从symfony中取出了一些较为常用的部分组成了api框架，感谢优秀的symfony!
 
 ### 创建项目
 使用`vendor/zimings/jade/src`目录下的`build`脚本创建新项目
@@ -37,3 +37,25 @@ e.g. `php build.php -r /path/to/`
 若开头为符号`@`，则该值被视为路径且符号`@`将被自动替换成项目根目录（该路径是通过AppKernel中的getRootDir方法获取的）
 
 若为其他内容则直接以字符串形式输出。
+
+### 配置文件
+
+项目全局配置文件为`app/config/config.json`中
+
+#### 内容说明
+
+| 名称 | 默认值 | 说明 |
+| --- | --- | --- |
+| logAccessError | false | 是否记录拒绝访问以及未匹配的路由 `true`表示记录 |
+
+### 控制器
+
+前端向您发送的请求中携带参数（如url中包含的、请求body中携带的等等）您无需担心参数顺序，只需保证控制器参数名称与请求中的参数名称一致即可
+ControllerResolver::sortRequestParameters()将会帮助您自动进行排序与补充
+补充说明：当您的参数中含有请求中不存在但可从下方找到时，将自动进行补充：
+Zimings\Jade\Component\Http\Request $request
+
+注：必须参数名与类型同时符合时才会进行补充
+
+### API
+NULL

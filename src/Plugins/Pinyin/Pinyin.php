@@ -33,8 +33,7 @@ class Pinyin
      * @return string
      */
 
-    public
-    function getChineseSpells($chinese, $ifShorthand = false, $ifUppercase = false)
+    public function getChineseSpells($chinese, $ifShorthand = false, $ifUppercase = false)
     {
         $chinese = preg_replace("/\s/is", "_", $chinese);
         $chinese = preg_replace("/(|\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\+|\=|\{|\}|\[|\]|\||\\|\:|\;|\"|\'|\<|\,|\>|\.|\?|\/)/is", "", $chinese);
@@ -71,8 +70,7 @@ class Pinyin
         return ($ifUppercase == true ? $chineseSpells : strtolower($chineseSpells));
     }
 
-    private
-    function asi2py($char)
+    private function asi2py($char)
     {
         $chineseSpells = $this->chineseSpellList;
         foreach ($chineseSpells as $chineseSpell) {
@@ -84,6 +82,3 @@ class Pinyin
         return null;
     }
 }
-
-$test = new Pinyin();
-echo $test->getChineseSpells('测试');

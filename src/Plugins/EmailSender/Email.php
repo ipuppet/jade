@@ -9,17 +9,7 @@ class Email
     /**
      * @var string
      */
-    private $from;
-
-    /**
-     * @var string
-     */
     private $to;
-
-    /**
-     * @var string
-     */
-    private $name;
 
     /**
      * @var string
@@ -30,26 +20,6 @@ class Email
      * @var string
      */
     private $body;
-
-    /**
-     * @param $name
-     * @return Email
-     */
-    public function setName($name): Email
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * @param $from
-     * @return Email
-     */
-    public function setFrom($from): Email
-    {
-        $this->from = $from;
-        return $this;
-    }
 
     /**
      * @param $to
@@ -84,25 +54,9 @@ class Email
     /**
      * @return mixed
      */
-    public function getFrom()
-    {
-        return $this->from;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getTo()
     {
         return $this->to;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
