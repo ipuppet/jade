@@ -34,11 +34,5 @@
         "psr-4": {
             "Zimings\\Jade\\": "src/"
         }
-    },
-    "repositories": {
-        "packagist": {
-            "type": "composer",
-            "url": "https://packagist.phpcomposer.com"
-        }
     }
 }

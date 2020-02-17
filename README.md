@@ -2,7 +2,7 @@
 > 从symfony中取出了一些较为常用的部分组成了api框架，感谢优秀的symfony!
 
 ### 安装
-`composer require zimings/jade`
+`composer require ipuppet/jade`
 
 ### 创建项目
 使用`vendor/zimings/jade/src`目录下的`build`脚本创建新项目
