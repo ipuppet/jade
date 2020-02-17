@@ -1,10 +1,10 @@
 <?php
 
 
-use Zimings\Jade\Component\Kernel\Kernel;
-use Zimings\Jade\Foundation\Path\Exception\PathException;
-use Zimings\Jade\Foundation\Path\Path;
-use Zimings\Jade\Foundation\Path\PathInterface;
+use Ipuppet\Jade\Component\Kernel\Kernel;
+use Ipuppet\Jade\Foundation\Path\Exception\PathException;
+use Ipuppet\Jade\Foundation\Path\Path;
+use Ipuppet\Jade\Foundation\Path\PathInterface;
 
 class AppKernel extends Kernel
 {

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Foundation\Parameter;
+namespace Ipuppet\Jade\Foundation\Parameter;
 
 
 use ArrayIterator;

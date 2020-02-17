@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Component\DatabaseDriver;
+namespace Ipuppet\Jade\Component\DatabaseDriver;
 
 
 use PDO;

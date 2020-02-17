@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Foundation\Path;
+namespace Ipuppet\Jade\Foundation\Path;
 
 
 interface PathInterface

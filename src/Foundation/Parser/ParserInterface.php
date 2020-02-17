@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Zimings\Jade\Foundation\Parser;
+namespace Ipuppet\Jade\Foundation\Parser;
 
 
-use Zimings\Jade\Foundation\Parameter\Parameter;
-use Zimings\Jade\Foundation\Path\PathInterface;
+use Ipuppet\Jade\Foundation\Parameter\Parameter;
+use Ipuppet\Jade\Foundation\Path\PathInterface;
 
 interface ParserInterface
 {

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins\TencentCloudSmsSender;
+namespace Ipuppet\Jade\Plugins\TencentCloudSmsSender;
 
 use Psr\Log\LoggerInterface;
 use Qcloud\Sms\SmsSingleSender;

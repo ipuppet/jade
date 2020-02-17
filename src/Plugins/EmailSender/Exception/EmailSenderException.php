@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins\EmailSender\Exception;
+namespace Ipuppet\Jade\Plugins\EmailSender\Exception;
 
 
 use Exception;

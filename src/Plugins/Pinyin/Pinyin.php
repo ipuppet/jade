@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins\Pinyin;
+namespace Ipuppet\Jade\Plugins\Pinyin;
 
 
 class Pinyin

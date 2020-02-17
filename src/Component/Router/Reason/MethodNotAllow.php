@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Router\Reason;
+namespace Ipuppet\Jade\Component\Router\Reason;
 
 
-use Zimings\Jade\Component\Http\Response;
+use Ipuppet\Jade\Component\Http\Response;
 
 class MethodNotAllow extends Reason implements ReasonInterface
 {

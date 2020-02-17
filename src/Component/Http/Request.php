@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Http;
+namespace Ipuppet\Jade\Component\Http;
 
 
-use Zimings\Jade\Component\Logger\Logger;
-use Zimings\Jade\Foundation\Parameter\Parameter;
-use Zimings\Jade\Foundation\Parameter\ParameterInterface;
+use Ipuppet\Jade\Component\Logger\Logger;
+use Ipuppet\Jade\Foundation\Parameter\Parameter;
+use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
 
 class Request
 {

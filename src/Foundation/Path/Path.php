@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Zimings\Jade\Foundation\Path;
+namespace Ipuppet\Jade\Foundation\Path;
 
 
-use Zimings\Jade\Foundation\Path\Exception\PathException;
+use Ipuppet\Jade\Foundation\Path\Exception\PathException;
 
 class Path implements PathInterface
 {

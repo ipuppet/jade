@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins\Office;
+namespace Ipuppet\Jade\Plugins\Office;
 
 
 use PhpOffice\PhpSpreadsheet\Exception as PhpOfficeException;

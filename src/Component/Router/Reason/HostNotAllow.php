@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Router\Reason;
+namespace Ipuppet\Jade\Component\Router\Reason;
 
 
-use Zimings\Jade\Component\Http\Response;
+use Ipuppet\Jade\Component\Http\Response;
 
 class HostNotAllow extends Reason implements ReasonInterface
 {

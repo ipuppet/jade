@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins\FileHelper;
+namespace Ipuppet\Jade\Plugins\FileHelper;
 
 
 class Upload

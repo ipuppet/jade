@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins\EmailSender;
+namespace Ipuppet\Jade\Plugins\EmailSender;
 
 
 use Exception;
@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
 use Swift_Mailer;
 use Swift_Message;
 use Swift_SmtpTransport;
-use Zimings\Jade\Plugins\EmailSender\Exception\EmailSenderException;
+use Ipuppet\Jade\Plugins\EmailSender\Exception\EmailSenderException;
 
 class EmailSender
 {

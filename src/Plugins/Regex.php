@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins;
+namespace Ipuppet\Jade\Plugins;
 
 
 class Regex

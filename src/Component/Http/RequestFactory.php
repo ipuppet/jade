@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Http;
+namespace Ipuppet\Jade\Component\Http;
 
 
-use Zimings\Jade\Foundation\Parameter\Parameter;
+use Ipuppet\Jade\Foundation\Parameter\Parameter;
 
 class RequestFactory
 {

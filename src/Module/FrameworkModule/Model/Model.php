@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Module\FrameworkModule\Model;
+namespace Ipuppet\Jade\Module\FrameworkModule\Model;
 
 
 use AppKernel;
@@ -10,14 +10,14 @@ use DateTimeZone;
 use Exception;
 use PDO;
 use Psr\Log\LoggerInterface;
-use Zimings\Jade\Component\DatabaseDriver\PdoDatabaseDriver;
-use Zimings\Jade\Component\Kernel\Config\ConfigLoader;
-use Zimings\Jade\Foundation\Parser\JsonParser;
-use Zimings\Jade\Component\Kernel\Kernel;
-use Zimings\Jade\Component\Logger\Logger;
-use Zimings\Jade\Foundation\Parameter\Parameter;
-use Zimings\Jade\Foundation\Parameter\ParameterInterface;
-use Zimings\Jade\Foundation\Path\Exception\PathException;
+use Ipuppet\Jade\Component\DatabaseDriver\PdoDatabaseDriver;
+use Ipuppet\Jade\Component\Kernel\Config\ConfigLoader;
+use Ipuppet\Jade\Foundation\Parser\JsonParser;
+use Ipuppet\Jade\Component\Kernel\Kernel;
+use Ipuppet\Jade\Component\Logger\Logger;
+use Ipuppet\Jade\Foundation\Parameter\Parameter;
+use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
+use Ipuppet\Jade\Foundation\Path\Exception\PathException;
 
 abstract class Model
 {

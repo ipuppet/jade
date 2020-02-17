@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins\Jwt;
+namespace Ipuppet\Jade\Plugins\Jwt;
 
 
-use Zimings\Jade\Plugins\Jwt\Exception\PayloadException;
+use Ipuppet\Jade\Plugins\Jwt\Exception\PayloadException;
 
 class JwtHelper
 {

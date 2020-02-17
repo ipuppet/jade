@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Foundation\Path\Exception;
+namespace Ipuppet\Jade\Foundation\Path\Exception;
 
 
 use Exception;
