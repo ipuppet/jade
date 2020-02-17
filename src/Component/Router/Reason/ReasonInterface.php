@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Router\Reason;
+namespace Ipuppet\Jade\Component\Router\Reason;
 
 
 interface ReasonInterface

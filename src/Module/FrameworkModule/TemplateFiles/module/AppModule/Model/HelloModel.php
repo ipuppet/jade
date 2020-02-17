@@ -4,7 +4,7 @@
 namespace AppModule\Model;
 
 
-use Zimings\Jade\Module\FrameworkModule\Model\Model;
+use Ipuppet\Jade\Module\FrameworkModule\Model\Model;
 
 class HelloModel extends Model
 {

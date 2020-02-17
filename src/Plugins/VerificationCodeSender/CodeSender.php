@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins\VerificationCodeSender;
+namespace Ipuppet\Jade\Plugins\VerificationCodeSender;
 
 
-use Zimings\Jade\Plugins\EmailSender\EmailSender;
+use Ipuppet\Jade\Plugins\EmailSender\EmailSender;
 
 abstract class CodeSender
 {

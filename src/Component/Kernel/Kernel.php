@@ -1,22 +1,22 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Kernel;
+namespace Ipuppet\Jade\Component\Kernel;
 
 
-use Zimings\Jade\Component\Http\Request;
-use Zimings\Jade\Component\Http\Response;
-use Zimings\Jade\Foundation\Parser\JsonParser;
-use Zimings\Jade\Component\Kernel\Config\ConfigLoader;
-use Zimings\Jade\Component\Kernel\Controller\ControllerResolver;
-use Zimings\Jade\Component\Logger\Logger;
-use Zimings\Jade\Component\Router\Exception\NoMatcherException;
-use Zimings\Jade\Component\Router\Matcher\MatchByRegexPath;
-use Zimings\Jade\Component\Router\RouteContainer;
-use Zimings\Jade\Component\Router\Router;
-use Zimings\Jade\Foundation\Path\Exception\PathException;
-use Zimings\Jade\Foundation\Path\Path;
-use Zimings\Jade\Foundation\Path\PathInterface;
+use Ipuppet\Jade\Component\Http\Request;
+use Ipuppet\Jade\Component\Http\Response;
+use Ipuppet\Jade\Foundation\Parser\JsonParser;
+use Ipuppet\Jade\Component\Kernel\Config\ConfigLoader;
+use Ipuppet\Jade\Component\Kernel\Controller\ControllerResolver;
+use Ipuppet\Jade\Component\Logger\Logger;
+use Ipuppet\Jade\Component\Router\Exception\NoMatcherException;
+use Ipuppet\Jade\Component\Router\Matcher\MatchByRegexPath;
+use Ipuppet\Jade\Component\Router\RouteContainer;
+use Ipuppet\Jade\Component\Router\Router;
+use Ipuppet\Jade\Foundation\Path\Exception\PathException;
+use Ipuppet\Jade\Foundation\Path\Path;
+use Ipuppet\Jade\Foundation\Path\PathInterface;
 
 abstract class Kernel
 {

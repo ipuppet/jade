@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Router;
+namespace Ipuppet\Jade\Component\Router;
 
 
 class RouteContainer

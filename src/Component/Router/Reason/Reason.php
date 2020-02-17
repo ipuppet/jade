@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Router\Reason;
+namespace Ipuppet\Jade\Component\Router\Reason;
 
 
 use Exception;
 use Psr\Log\LoggerInterface;
-use Zimings\Jade\Component\Http\Response;
-use Zimings\Jade\Component\Kernel\Config\Config;
+use Ipuppet\Jade\Component\Http\Response;
+use Ipuppet\Jade\Component\Kernel\Config\Config;
 
 abstract class Reason implements ReasonInterface
 {

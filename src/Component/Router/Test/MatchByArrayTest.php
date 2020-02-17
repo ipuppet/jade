@@ -1,14 +1,14 @@
 <?php
 
-namespace Zimings\Jade\Component\Router\Test;
+namespace Ipuppet\Jade\Component\Router\Test;
 
 use Exception;
-use Zimings\Jade\Component\Http\RequestFactory;
-use Zimings\Jade\Component\Router\Exception\NoMatcherException;
-use Zimings\Jade\Component\Router\Matcher\MatchByArray;
-use Zimings\Jade\Component\Router\Route;
-use Zimings\Jade\Component\Router\RouteContainer;
-use Zimings\Jade\Component\Router\Router;
+use Ipuppet\Jade\Component\Http\RequestFactory;
+use Ipuppet\Jade\Component\Router\Exception\NoMatcherException;
+use Ipuppet\Jade\Component\Router\Matcher\MatchByArray;
+use Ipuppet\Jade\Component\Router\Route;
+use Ipuppet\Jade\Component\Router\RouteContainer;
+use Ipuppet\Jade\Component\Router\Router;
 use PHPUnit\Framework\TestCase as TestCaseAlias;
 
 class MatchByArrayTest extends TestCaseAlias

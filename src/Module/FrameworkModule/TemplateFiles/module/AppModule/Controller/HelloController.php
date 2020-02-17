@@ -5,9 +5,9 @@ namespace AppModule\Controller;
 
 
 use AppModule\Model\HelloModel;
-use Zimings\Jade\Component\Http\Response;
-use Zimings\Jade\Foundation\Path\Exception\PathException;
-use Zimings\Jade\Module\FrameworkModule\Controller\Controller;
+use Ipuppet\Jade\Component\Http\Response;
+use Ipuppet\Jade\Foundation\Path\Exception\PathException;
+use Ipuppet\Jade\Module\FrameworkModule\Controller\Controller;
 
 class HelloController extends Controller
 {

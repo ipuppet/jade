@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins\Jwt\Exception;
+namespace Ipuppet\Jade\Plugins\Jwt\Exception;
 
 
 use Exception;

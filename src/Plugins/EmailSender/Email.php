@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins\EmailSender;
+namespace Ipuppet\Jade\Plugins\EmailSender;
 
 
 class Email

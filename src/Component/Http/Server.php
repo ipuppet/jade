@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Http;
+namespace Ipuppet\Jade\Component\Http;
 
 
-use Zimings\Jade\Foundation\Parameter\Parameter;
-use Zimings\Jade\Foundation\Parameter\ParameterInterface;
+use Ipuppet\Jade\Foundation\Parameter\Parameter;
+use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
 
 class Server extends Parameter implements ParameterInterface
 {

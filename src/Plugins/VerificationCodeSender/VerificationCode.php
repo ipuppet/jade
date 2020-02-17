@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins\VerificationCodeSender;
+namespace Ipuppet\Jade\Plugins\VerificationCodeSender;
 
 
 class VerificationCode

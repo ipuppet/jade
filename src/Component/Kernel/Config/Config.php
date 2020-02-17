@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Kernel\Config;
+namespace Ipuppet\Jade\Component\Kernel\Config;
 
 
-use Zimings\Jade\Foundation\Parameter\ParameterInterface;
-use Zimings\Jade\Foundation\Parameter\Parameter;
+use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
+use Ipuppet\Jade\Foundation\Parameter\Parameter;
 
 class Config extends Parameter implements ParameterInterface
 {

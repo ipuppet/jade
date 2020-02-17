@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Router\Matcher;
+namespace Ipuppet\Jade\Component\Router\Matcher;
 
 
-use Zimings\Jade\Component\Router\RouteInterface;
+use Ipuppet\Jade\Component\Router\RouteInterface;
 
 class MatchByRegexPath extends Matcher implements MatcherInterface
 {

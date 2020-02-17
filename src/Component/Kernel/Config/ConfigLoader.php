@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Kernel\Config;
+namespace Ipuppet\Jade\Component\Kernel\Config;
 
 
-use Zimings\Jade\Component\Kernel\Config\Exception\ConfigLoadException;
-use Zimings\Jade\Foundation\Parser\ParserInterface;
-use Zimings\Jade\Foundation\Path\PathInterface;
+use Ipuppet\Jade\Component\Kernel\Config\Exception\ConfigLoadException;
+use Ipuppet\Jade\Foundation\Parser\ParserInterface;
+use Ipuppet\Jade\Foundation\Path\PathInterface;
 
 class ConfigLoader
 {

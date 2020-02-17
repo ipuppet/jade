@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins\VerificationCodeSender;
+namespace Ipuppet\Jade\Plugins\VerificationCodeSender;
 
 
-use Zimings\Jade\Plugins\EmailSender\Exception\EmailSenderException;
-use Zimings\Jade\Plugins\TencentCloudSmsSender\SMSSender;
+use Ipuppet\Jade\Plugins\EmailSender\Exception\EmailSenderException;
+use Ipuppet\Jade\Plugins\TencentCloudSmsSender\SMSSender;
 
 class SendByPhone extends CodeSender
 {

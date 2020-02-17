@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Module\FrameworkModule\Controller;
+namespace Ipuppet\Jade\Module\FrameworkModule\Controller;
 
 
 abstract class Controller

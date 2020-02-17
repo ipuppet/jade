@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins\HtmlProcessor;
+namespace Ipuppet\Jade\Plugins\HtmlProcessor;
 
 
 class HtmlSecuritySplit

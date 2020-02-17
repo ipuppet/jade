@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Logger;
+namespace Ipuppet\Jade\Component\Logger;
 
 
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Exception;
-use Zimings\Jade\Foundation\Path\PathInterface;
+use Ipuppet\Jade\Foundation\Path\PathInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\InvalidArgumentException;
 

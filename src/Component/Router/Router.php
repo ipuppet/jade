@@ -1,18 +1,18 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Router;
+namespace Ipuppet\Jade\Component\Router;
 
 
 use Exception;
-use Zimings\Jade\Component\Http\Request;
-use Zimings\Jade\Component\Kernel\Config\Config;
-use Zimings\Jade\Component\Router\Exception\NoMatcherException;
-use Zimings\Jade\Component\Router\Matcher\MatcherInterface;
-use Zimings\Jade\Component\Router\Reason\HostNotAllow;
-use Zimings\Jade\Component\Router\Reason\MethodNotAllow;
-use Zimings\Jade\Component\Router\Reason\ReasonInterface;
-use Zimings\Jade\Component\Router\Reason\NoMatch;
+use Ipuppet\Jade\Component\Http\Request;
+use Ipuppet\Jade\Component\Kernel\Config\Config;
+use Ipuppet\Jade\Component\Router\Exception\NoMatcherException;
+use Ipuppet\Jade\Component\Router\Matcher\MatcherInterface;
+use Ipuppet\Jade\Component\Router\Reason\HostNotAllow;
+use Ipuppet\Jade\Component\Router\Reason\MethodNotAllow;
+use Ipuppet\Jade\Component\Router\Reason\ReasonInterface;
+use Ipuppet\Jade\Component\Router\Reason\NoMatch;
 use Psr\Log\LoggerInterface;
 
 class Router

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Kernel\Config\Exception;
+namespace Ipuppet\Jade\Component\Kernel\Config\Exception;
 
 
 use Exception;

@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Zimings\Jade\Plugins\VerificationCodeSender;
+namespace Ipuppet\Jade\Plugins\VerificationCodeSender;
 
 
-use Zimings\Jade\Plugins\EmailSender\Email;
-use Zimings\Jade\Plugins\EmailSender\Exception\EmailSenderException;
+use Ipuppet\Jade\Plugins\EmailSender\Email;
+use Ipuppet\Jade\Plugins\EmailSender\Exception\EmailSenderException;
 
 class SendByEmail extends CodeSender
 {

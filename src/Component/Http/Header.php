@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Zimings\Jade\Component\Http;
+namespace Ipuppet\Jade\Component\Http;
 
 
 use ArrayIterator;

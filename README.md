@@ -1,11 +1,11 @@
-## zimings/jade
+## ipuppet/jade
 > 从symfony中取出了一些较为常用的部分组成了api框架，感谢优秀的symfony!
 
 ### 安装
 `composer require ipuppet/jade`
 
 ### 创建项目
-使用`vendor/zimings/jade/src`目录下的`build`脚本创建新项目
+使用`vendor/ipuppet/jade/src`目录下的`build`脚本创建新项目
 
 您可以在该脚本位置运行
 
@@ -60,7 +60,7 @@ ControllerResolver::sortRequestParameters()将会帮助您自动进行排序与�
 
 补充说明：当您的参数中含有请求中不存在但可从下方找到时，将自动进行补充：
 
-Zimings\Jade\Component\Http\Request $request
+Ipuppet\Jade\Component\Http\Request $request
 
 注：必须参数名与类型同时符合时才会进行补充
 
