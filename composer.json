@@ -1,5 +1,5 @@
 {
-    "name": "zimings/jade",
+    "name": "ipuppet/jade",
     "description": "从symfony中取出了一些较为常用的部分组成了api框架，感谢优秀的symfony!",
     "type": "library",
     "keywords": [
@@ -8,8 +8,8 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "zimings",
-            "email": "zimingw.ol@outlook.com",
+            "name": "ipuppet",
+            "email": "ipuppet@foxmail.com",
             "homepage": "https://blog.zimings.top",
             "role": "Developer"
         }
