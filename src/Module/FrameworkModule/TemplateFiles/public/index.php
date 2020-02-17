@@ -1,9 +1,9 @@
 <?php
 
-use Zimings\Jade\Component\Http\Request;
-use Zimings\Jade\Component\Http\RequestFactory;
-use Zimings\Jade\Component\Router\Exception\NoMatcherException;
-use Zimings\Jade\Foundation\Path\Exception\PathException;
+use Ipuppet\Jade\Component\Http\Request;
+use Ipuppet\Jade\Component\Http\RequestFactory;
+use Ipuppet\Jade\Component\Router\Exception\NoMatcherException;
+use Ipuppet\Jade\Foundation\Path\Exception\PathException;
 
 include '../vendor/autoload.php';
 
