@@ -34,7 +34,7 @@ e.g. `php build.php -r /path/to/`
 
 ### 基本配置
 
-项目创建完成后，您可以在`app/config/response.json`文件中设置如果请求发生错误该返回什么内容。
+项目创建完成后，您可以在`app/config/response.json`文件中设置如果请求发生错误该返回什么内容。(如请求方法不被允许、未匹配到结果等)
 
 该实现在`Component/Router/Reason/Reason.php`抽象类中，如果向构造函数传递一个Config对象则会试图从其中读取数据
 
