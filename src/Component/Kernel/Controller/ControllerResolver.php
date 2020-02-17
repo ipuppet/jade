@@ -151,7 +151,7 @@ class ControllerResolver
     public function sortRequestParameters($controller, Request $request): array
     {
         $global = [
-            'request' => ['type' => 'Zimings\Jade\Component\Http\Request', 'value' => $request],
+            'request' => ['type' => 'Ipuppet\Jade\Component\Http\Request', 'value' => $request],
         ];
         $method = new ReflectionMethod($controller[0], $controller[1]);
         $parameters = $method->getParameters();
