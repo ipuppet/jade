@@ -94,6 +94,7 @@ class Response
         }
         foreach ($this->headers->all() as $name => $values) {
             foreach ($values as $value) {
+                $name = implode('-', array_map('ucfirst', explode('-', $name)));
                 header($name . ': ' . $value, false, $this->statusCode);
             }
         }

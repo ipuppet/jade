@@ -125,18 +125,18 @@ class Router
         $routeNames = $this->routeContainer->names();
         foreach ($routeNames as $name) {
             $route = $this->routeContainer->get($name);
-            if ($this->beforeMatch($route)) {
-                if ($this->matcher->match(
-                    $route,
-                    $this->request->getPathInfo()
-                )) {
+            if ($this->matcher->match(
+                $route,
+                $this->request->getPathInfo()
+            )) {
+                if ($this->afterMatch($route)) {
                     $this->request->request->add($this->matcher->getAttributes());
                     $this->request->attributes->set('_controller', $route->getOption('_controller'));
                     return true;
+                } else {
+                    //非法请求
+                    return false;
                 }
-            } else {
-                //非法请求
-                return false;
             }
         }
         //未成功匹配
@@ -149,7 +149,7 @@ class Router
      * @return bool
      * @throws Exception
      */
-    public function beforeMatch(RouteInterface $route): bool
+    public function afterMatch(RouteInterface $route): bool
     {
         //方法是否允许
         if ($route->getMethods() !== [] && !in_array($this->request->getMethod(), $route->getMethods())) {
