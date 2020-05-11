@@ -6,7 +6,6 @@ namespace Ipuppet\Jade\Component\Kernel;
 
 use Ipuppet\Jade\Component\Http\Request;
 use Ipuppet\Jade\Component\Http\Response;
-use Ipuppet\Jade\Foundation\Parser\JsonParser;
 use Ipuppet\Jade\Component\Kernel\Config\ConfigLoader;
 use Ipuppet\Jade\Component\Kernel\Controller\ControllerResolver;
 use Ipuppet\Jade\Component\Logger\Logger;
@@ -14,6 +13,7 @@ use Ipuppet\Jade\Component\Router\Exception\NoMatcherException;
 use Ipuppet\Jade\Component\Router\Matcher\MatchByRegexPath;
 use Ipuppet\Jade\Component\Router\RouteContainer;
 use Ipuppet\Jade\Component\Router\Router;
+use Ipuppet\Jade\Foundation\Parser\JsonParser;
 use Ipuppet\Jade\Foundation\Path\Exception\PathException;
 use Ipuppet\Jade\Foundation\Path\Path;
 use Ipuppet\Jade\Foundation\Path\PathInterface;
@@ -121,6 +121,8 @@ abstract class Kernel
             $response = call_user_func_array($controller, $parameters);
             if ($response instanceof Response) {
                 return $response;
+            } else {
+                $logger->error('Your response not instanceof Response.');
             }
         }
         //响应错误信息

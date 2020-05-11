@@ -133,10 +133,11 @@ class Router
                     $this->request->request->add($this->matcher->getAttributes());
                     $this->request->attributes->set('_controller', $route->getOption('_controller'));
                     return true;
-                } else {
+                } /*else {
                     //非法请求
+                    //此处可能导致相同path但不同方法不同名称的多条路由被跳过
                     return false;
-                }
+                }*/
             }
         }
         //未成功匹配
