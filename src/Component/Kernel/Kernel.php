@@ -115,14 +115,20 @@ abstract class Kernel
         if ($router->matchAll()) {
             $request = $router->getRequest();
             $controller = $controllerResolver->getController($request);
-            //整理参数顺序，按照方法签名对齐
-            $parameters = $controllerResolver->sortRequestParameters($controller, $request);
             //调用
-            $response = call_user_func_array($controller, $parameters);
-            if ($response instanceof Response) {
+            $isIgnoreRequest = call_user_func([$controller[0], 'isIgnoreRequest']);
+            if ($isIgnoreRequest) {
+                $response = call_user_func([$controller[0], 'getDefaultResponse']);
                 return $response;
             } else {
-                $logger->error('Your response not instanceof Response.');
+                //整理参数顺序，按照方法签名对齐
+                $parameters = $controllerResolver->sortRequestParameters($controller, $request);
+                $response = call_user_func_array($controller, $parameters);
+                if ($response instanceof Response) {
+                    return $response;
+                } else {
+                    $logger->error('Your response not instanceof Response.');
+                }
             }
         }
         //响应错误信息

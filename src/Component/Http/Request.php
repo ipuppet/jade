@@ -17,13 +17,13 @@ class Request
     public $query;
 
     /**
-     * 请求，占位符参数也存放于此
+     * POST请求，占位符参数也存放于此
      * @var ParameterInterface
      */
     public $request;
 
     /**
-     * attributes
+     * 路由中携带的属性，如 _controller
      * @var ParameterInterface
      */
     public $attributes;
@@ -36,12 +36,12 @@ class Request
     public $cookies;
 
     /**
-     * @var Server
+     * @var Server $_SERVER
      */
     public $server;
 
     /**
-     * @var Header
+     * @var Header 请求头
      */
     public $headers;
 
@@ -50,7 +50,7 @@ class Request
     protected $baseUrl;
     protected $pathInfo;
     protected $basePath;
-    protected $method;
+    protected $method; //请求方法，如get post put delete
 
     protected static $httpMethodParameterOverride = false;
 
@@ -94,6 +94,11 @@ class Request
         }
 
         return $default;
+    }
+
+    public function has($key): bool
+    {
+        return $this->attributes->has($key) || $this->query->has($key) || $this->request->has($key);
     }
 
     public function getScriptName()

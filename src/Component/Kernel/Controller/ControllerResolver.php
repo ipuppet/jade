@@ -5,10 +5,11 @@ namespace Ipuppet\Jade\Component\Kernel\Controller;
 
 
 use InvalidArgumentException;
-use ReflectionMethod;
 use Ipuppet\Jade\Component\Http\Request;
 use Ipuppet\Jade\Component\Logger\Logger;
 use Psr\Log\LoggerInterface;
+use ReflectionClass;
+use ReflectionMethod;
 
 class ControllerResolver
 {
@@ -46,13 +47,13 @@ class ControllerResolver
 
         if (false === strpos($controller, ':')) {
             if (method_exists($controller, '__invoke')) {
-                return $this->instantiateController($controller);
+                return $this->instantiateController($controller, $request);
             } elseif (function_exists($controller)) {
                 return $controller;
             }
         }
 
-        $callable = $this->createController($controller);
+        $callable = $this->createController($controller, $request);
 
         if (!is_callable($callable)) {
             throw new InvalidArgumentException(sprintf('The controller for URI "%s" is not callable. %s', $request->getPathInfo(), $this->getControllerError($callable)));
@@ -61,7 +62,7 @@ class ControllerResolver
         return $callable;
     }
 
-    protected function createController($controller)
+    protected function createController($controller, $request)
     {
         if (false === strpos($controller, '::')) {
             throw new InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
@@ -73,12 +74,26 @@ class ControllerResolver
             throw new InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
-        return array($this->instantiateController($class), $method);
+        return array($this->instantiateController($class, $request), $method);
     }
 
-    protected function instantiateController($class)
+    protected function instantiateController($class, $request)
     {
-        return new $class();
+        $reflectionClass = new ReflectionClass($class);
+        $constructor = $reflectionClass->getConstructor();
+        if ($constructor !== null) {
+            $parameters = $constructor->getParameters();
+            $result = [];
+            foreach ($parameters as $parameter) {
+                if ('Ipuppet\Jade\Component\Http\Request' === (string)$parameter->getType()) {
+                    $result[$parameter->getPosition()] = $request;
+                } else {
+                    $result[$parameter->getPosition()] = $request->get($parameter->getName());
+                }
+            }
+            return $reflectionClass->newInstanceArgs($result);
+        }
+        return $reflectionClass->newInstanceArgs();
     }
 
     private function getControllerError($callable)
@@ -143,6 +158,7 @@ class ControllerResolver
     }
 
     /**
+     * 通过反射按照控制器的参数顺序排序
      * @param $controller
      * @param Request $request
      * @return array
@@ -150,6 +166,7 @@ class ControllerResolver
      */
     public function sortRequestParameters($controller, Request $request): array
     {
+        //$global定义通用参数，如获取request对象等
         $global = [
             'request' => ['type' => 'Ipuppet\Jade\Component\Http\Request', 'value' => $request],
         ];
@@ -157,12 +174,13 @@ class ControllerResolver
         $parameters = $method->getParameters();
         $result = [];
         foreach ($parameters as $parameter) {
-            if (!$request->request->has($parameter->getName()) &&
+            //如果控制器方法存在网络请求没有的参数则去$global中寻找
+            if (!$request->has($parameter->getName()) &&
                 isset($global[$parameter->getName()]) &&
                 $global[$parameter->getName()]['type'] == (string)$parameter->getType()) {
                 $result[$parameter->getPosition()] = $global[$parameter->getName()]['value'];
             } else {
-                $result[$parameter->getPosition()] = $request->request->get($parameter->getName());
+                $result[$parameter->getPosition()] = $request->get($parameter->getName());
             }
         }
         return $result;
