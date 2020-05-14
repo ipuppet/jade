@@ -36,7 +36,7 @@ e.g. `php build.php -r /path/to/`
 
 项目创建完成后，您可以在`app/config/response.json`文件中设置如果请求发生错误该返回什么内容。(如请求方法不被允许、未匹配到结果等)
 
-该实现在`Component/Router/Reason/Reason.php`抽象类中，如果向构造函数传递一个Config对象则会试图从其中读取数据
+该实现在`Component/Router/Reason/Reason.php`抽象类中，如果向构造函数传递一个Config对象则会尝试从其中读取数据
 
 若开头为符号`@`，则该值被视为路径且符号`@`将被自动替换成项目根目录（该路径是通过AppKernel中的getRootDir方法获取的）
 
@@ -54,15 +54,58 @@ e.g. `php build.php -r /path/to/`
 
 ### 控制器
 
-前端向您发送的请求中携带参数（如url中包含的、请求body中携带的等等）您无需担心参数顺序，只需保证控制器参数名称与请求中的参数名称一致即可
+前端向您发送的请求中携带参数（如url中包含的、请求body中携带的等等）您**无需担心参数顺序**，只需保证控制器参数名称与请求中的参数名称一致即可
 
 ControllerResolver::sortRequestParameters()将会帮助您自动进行排序与补充
 
+例如：
+
+```php
+public function sayHelloAction($like, $name)
+{
+    echo 'Hello: '.$name.'. I like '.$like;
+}
+```
+
+对应的路由为：
+
+```json
+{
+    "methods": [
+        "get"
+    ],
+    "name": "SayHello",
+    "path": "/say-hello/{like}/{name}/",
+    "_controller": "AppModule\\Controller\\SayHelloController::sayHelloAction"
+}
+```
+
+上面的路由的做少量改动仍然能正确输出：
+`"path": "/say-hello/{name}/{like}/"`
+同样，改变`sayHelloAction`的参数顺序最终结果不会发生变化。
+
 补充说明：当您的参数中含有请求中不存在但可从下方找到时，将自动进行补充：
 
-Ipuppet\Jade\Component\Http\Request $request
+`Ipuppet\Jade\Component\Http\Request $request`
 
-注：必须参数名与类型同时符合时才会进行补充
+注意，这个参数必须叫`$request`。
+
+但在构造方法中有所不同，无需规定名称，只需声明是Request类型即可。如下：
+
+```php
+public function __construct(Request $req)
+{
+    if ($req->getMethod() === 'OPTIONS') {
+        $this->ignoreRequest();
+    }
+}
+```
+
+`ignoreRequest()`方法可用来忽略一次请求，该方法在抽象类`Controller`中。
+
+与其共同工作的还有`setDefaultResponse()`方法，该方法接受一个`Response`型的变量，用来明确默认情况下该作何反应。
+若不调用将会返回一个状态为200的响应。
 
 ### API
-NULL
+
+由于目前分身乏术，可能日后再进行更新，目前还请直接查看源码。
