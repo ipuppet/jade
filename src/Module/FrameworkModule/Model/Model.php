@@ -40,7 +40,7 @@ abstract class Model
      * 数据库连接信息
      * @var ParameterInterface
      */
-    private $database;
+    protected $database;
 
     /**
      * @var LoggerInterface
@@ -64,7 +64,7 @@ abstract class Model
     /**
      * @throws PathException
      */
-    private function init()
+    protected function init()
     {
         $this->kernel = new AppKernel();
         $this->configLoader = $this->kernel->getConfigLoader()
