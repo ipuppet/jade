@@ -82,4 +82,25 @@ class PdoDatabaseDriver
         }
         return $line;
     }
+
+    function closeAutoCommit(): self
+    {
+        $this->pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, false);
+        return $this;
+    }
+
+    function beginTransaction()
+    {
+        return $this->pdo->beginTransaction();
+    }
+
+    function commit()
+    {
+        return $this->pdo->commit();
+    }
+
+    function rollback()
+    {
+        return $this->pdo->rollback();
+    }
 }
