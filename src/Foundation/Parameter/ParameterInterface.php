@@ -8,17 +8,17 @@ use ArrayIterator;
 
 interface ParameterInterface
 {
+    public function keys(): array;
+
     public function set($key, $value);
 
-    public function add(array $parameters = []);
+    public function add(array $parameters);
 
     public function remove($key);
 
     public function has($key): bool;
 
     public function get($key, $default = null);
-
-    public function all(): array;
 
     public function toArray(): array;
 

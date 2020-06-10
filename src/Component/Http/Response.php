@@ -92,7 +92,7 @@ class Response
         if (headers_sent()) {
             return $this;
         }
-        foreach ($this->headers->all() as $name => $values) {
+        foreach ($this->headers->toArray() as $name => $values) {
             foreach ($values as $value) {
                 $name = implode('-', array_map('ucfirst', explode('-', $name)));
                 header($name . ': ' . $value, false, $this->statusCode);

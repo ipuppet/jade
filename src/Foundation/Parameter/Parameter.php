@@ -18,12 +18,17 @@ class Parameter implements ParameterInterface
         $this->parameters = $parameters;
     }
 
+    public function keys(): array
+    {
+        return array_keys($this->toArray());
+    }
+
     public function set($key, $value)
     {
         $this->parameters[$key] = $value;
     }
 
-    public function add(array $parameters = [])
+    public function add(array $parameters)
     {
         $this->parameters = array_replace($this->parameters, $parameters);
     }
@@ -41,11 +46,6 @@ class Parameter implements ParameterInterface
     public function get($key, $default = null)
     {
         return array_key_exists($key, $this->parameters) ? $this->parameters[$key] : $default;
-    }
-
-    public function all(): array
-    {
-        return $this->parameters;
     }
 
     public function toArray(): array
