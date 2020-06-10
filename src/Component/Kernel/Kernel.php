@@ -151,7 +151,7 @@ abstract class Kernel
             ->setName('routes')
             ->setParser(new JsonParser())
             ->loadFromFile()
-            ->all();
+            ->toArray();
         return RouteContainer::createByArray($routes);
     }
 

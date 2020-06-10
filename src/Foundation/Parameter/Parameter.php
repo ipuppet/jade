@@ -8,6 +8,9 @@ use ArrayIterator;
 
 class Parameter implements ParameterInterface
 {
+    /**
+     * @var array
+     */
     protected $parameters;
 
     public function __construct(array $parameters = [])
@@ -30,7 +33,7 @@ class Parameter implements ParameterInterface
         unset($this->parameters[$key]);
     }
 
-    public function has($key)
+    public function has($key): bool
     {
         return array_key_exists($key, $this->parameters);
     }
@@ -40,7 +43,12 @@ class Parameter implements ParameterInterface
         return array_key_exists($key, $this->parameters) ? $this->parameters[$key] : $default;
     }
 
-    public function all()
+    public function all(): array
+    {
+        return $this->parameters;
+    }
+
+    public function toArray(): array
     {
         return $this->parameters;
     }
@@ -61,12 +69,12 @@ class Parameter implements ParameterInterface
         return str_replace(['-', '+'], '', $this->filter($key, $default, FILTER_SANITIZE_NUMBER_INT));
     }
 
-    public function getInt($key, $default = 0)
+    public function getInt($key, $default = 0): int
     {
         return (int)$this->get($key, $default);
     }
 
-    public function getBoolean($key, $default = false)
+    public function getBoolean($key, $default = false): bool
     {
         return $this->filter($key, $default, FILTER_VALIDATE_BOOLEAN);
     }
@@ -88,12 +96,12 @@ class Parameter implements ParameterInterface
         return filter_var($value, $filter, $options);
     }
 
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->parameters);
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->parameters);
     }

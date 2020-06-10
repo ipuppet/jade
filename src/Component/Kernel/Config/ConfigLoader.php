@@ -81,7 +81,7 @@ class ConfigLoader
         $this->parser->setName($this->name)
             ->setPath($this->path);
         if ($this->parser->fileExists()) {
-            $this->config = new Config($this->parser->loadAsParameter()->all());
+            $this->config = new Config($this->parser->loadAsArray());
         }
         return $this->config;
     }
