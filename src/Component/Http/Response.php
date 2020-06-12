@@ -29,16 +29,16 @@ class Response
         500 => 'Internal Server Error',
     ];
 
-    protected $statusCode;
-    protected $statusText;
-    protected $content;
-    protected $headers;
-    protected $httpVersion = '1.1';
+    protected $statusCode; //HTTP状态码
+    protected $statusText; //状态码对应的提示字符
+    protected $content; //响应内容
+    protected $headers; //响应头
+    protected $httpVersion = '1.1'; //HTTP版本
 
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    protected $logger; //日志记录器
 
     public function __construct($content = '', int $httpStatus = self::HTTP_200, array $headers = [])
     {
@@ -49,7 +49,7 @@ class Response
 
     public function hasLogger(): bool
     {
-        return null === $this->logger;
+        return $this->logger === null;
     }
 
     public function setLogger(LoggerInterface $logger)
@@ -87,6 +87,10 @@ class Response
         return $this;
     }
 
+    /**
+     * 发送header
+     * @return $this
+     */
     public function sendHeaders()
     {
         if (headers_sent()) {

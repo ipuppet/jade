@@ -73,7 +73,7 @@ class Header extends Parameter implements ParameterInterface
         $key = $this->parseKey($key);
         $headers = $this->toArray();
         if (!$this->has($key)) {
-            if ($default === null) {
+            if (null === $default) {
                 return $first ? null : [];
             }
             return $first ? $default : [$default];
@@ -82,7 +82,7 @@ class Header extends Parameter implements ParameterInterface
             if (!$headers[$key]) {
                 return $default;
             }
-            if ($headers[$key][0] === null) {
+            if (null === $headers[$key][0]) {
                 return null;
             }
             return (string)$headers[$key][0];
@@ -101,13 +101,13 @@ class Header extends Parameter implements ParameterInterface
         $key = $this->parseKey($key);
         if (is_array($values)) {
             $values = array_values($values);
-            if ($replace === true || !isset($this->parameters[$key])) {
+            if (true === $replace || !isset($this->parameters[$key])) {
                 $this->parameters[$key] = $values;
             } else {
                 $this->parameters[$key] = array_merge($this->parameters[$key], $values);
             }
         } else {
-            if ($replace === true || !isset($this->parameters[$key])) {
+            if (true === $replace || !isset($this->parameters[$key])) {
                 $this->parameters[$key] = [$values];
             } else {
                 $this->parameters[$key][] = $values;
@@ -161,10 +161,10 @@ class Header extends Parameter implements ParameterInterface
      */
     public function getDate($key, DateTime $default = null)
     {
-        if ($value = $this->get($key) === null) {
+        if (null === $value = $this->get($key)) {
             return $default;
         }
-        if ($date = DateTime::createFromFormat(DATE_RFC2822, $value) === false) {
+        if (false === $date = DateTime::createFromFormat(DATE_RFC2822, $value)) {
             throw new RuntimeException(sprintf('The %s HTTP header is not parseable (%s).', $key, $value));
         }
         return $date;
@@ -216,7 +216,7 @@ class Header extends Parameter implements ParameterInterface
         $parts = [];
         ksort($this->cacheControl);
         foreach ($this->cacheControl as $key => $value) {
-            if ($value === true) {
+            if (true === $value) {
                 $parts[] = $key;
             } else {
                 if (preg_match('#[^a-zA-Z0-9._-]#', $value)) {

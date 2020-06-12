@@ -88,7 +88,7 @@ class JsonResponse extends Response
     protected function update()
     {
         // 防止覆盖自定义 Content-Type
-        if (!$this->headers->has('Content-Type') || $this->headers->get('Content-Type') === 'text/javascript') {
+        if (!$this->headers->has('Content-Type') || 'text/javascript' === $this->headers->get('Content-Type')) {
             $this->headers->set('Content-Type', 'application/json');
         }
         return $this->setContent($this->data);
