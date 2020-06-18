@@ -82,17 +82,15 @@ class Request
 
     public function get($key, $default = null)
     {
-        if ($this !== $result = $this->attributes->get($key, $this)) {
-            return $result;
+        if ($this->attributes->has($key)) {
+            return $this->attributes->get($key);
         }
-
-        if ($this !== $result = $this->query->get($key, $this)) {
-            return $result;
+        if ($this->query->has($key)) {
+            return $this->query->get($key);
         }
-        if ($this !== $result = $this->request->get($key, $this)) {
-            return $result;
+        if ($this->request->has($key)) {
+            return $this->request->get($key);
         }
-
         return $default;
     }
 
@@ -111,7 +109,6 @@ class Request
         if (null === $this->baseUrl) {
             $this->baseUrl = $this->prepareBaseUrl();
         }
-
         return $this->baseUrl;
     }
 
@@ -120,10 +117,13 @@ class Request
         if (null === $this->requestUri) {
             $this->requestUri = $this->prepareRequestUri();
         }
-
         return $this->requestUri;
     }
 
+    /**
+     * 设置请求方法
+     * @param $method
+     */
     public function setMethod($method)
     {
         $this->method = null;
@@ -135,15 +135,23 @@ class Request
         self::$httpMethodParameterOverride = true;
     }
 
+    /**
+     * 获取除BaseUri及get参数的信息
+     * 如/path/to
+     * @return false|mixed|string|null
+     */
     public function getPathInfo()
     {
         if (null === $this->pathInfo) {
             $this->pathInfo = $this->preparePathInfo();
         }
-
         return $this->pathInfo;
     }
 
+    /**
+     * 获取请求方法
+     * @return string
+     */
     public function getMethod()
     {
         if (null !== $this->method) {
@@ -151,13 +159,11 @@ class Request
         }
 
         $this->method = strtoupper($this->server->get('REQUEST_METHOD', 'GET'));
-
         if ('POST' !== $this->method) {
             return $this->method;
         }
 
         $method = $this->headers->get('X-HTTP-METHOD-OVERRIDE');
-
         if (!$method && self::$httpMethodParameterOverride) {
             $method = $this->request->get('_method', $this->query->get('_method', 'POST'));
         }
@@ -167,7 +173,6 @@ class Request
         }
 
         $method = strtoupper($method);
-
         if (in_array($method, ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'PATCH', 'PURGE', 'TRACE'], true)) {
             return $this->method = $method;
         }
@@ -175,35 +180,28 @@ class Request
         if (!preg_match('/^[A-Z]++$/D', $method)) {
             $this->logger->error('Invalid method override' . $method);
         }
-
         return $this->method = $method;
     }
 
-    public function getContent($asResource = false)
+    public function getContent(bool $asResource = false)
     {
         $currentContentIsResource = is_resource($this->content);
         if (PHP_VERSION_ID < 50600 && false === $this->content) {
             $this->logger->error('getContent() can only be called once when using the resource return type and PHP below 5.6.');
         }
-
         if (true === $asResource) {
             if ($currentContentIsResource) {
                 rewind($this->content);
-
                 return $this->content;
             }
-
             // Content passed in parameter (test)
             if (is_string($this->content)) {
                 $resource = fopen('php://temp', 'r+');
                 fwrite($resource, $this->content);
                 rewind($resource);
-
                 return $resource;
             }
-
             $this->content = false;
-
             return fopen('php://input', 'rb');
         }
 
@@ -222,22 +220,20 @@ class Request
 
     public function isXmlHttpRequest()
     {
-        return 'XMLHttpRequest' == $this->headers->get('X-Requested-With');
+        return 'XMLHttpRequest' === $this->headers->get('X-Requested-With');
     }
 
     protected function preparePathInfo()
     {
         $baseUrl = $this->getBaseUrl();
 
-        if (null === ($requestUri = $this->getRequestUri())) {
+        if (null === $requestUri = $this->getRequestUri()) {
             return '/';
         }
-
         // Remove the query string from REQUEST_URI
         if ($pos = strpos($requestUri, '?')) {
             $requestUri = substr($requestUri, 0, $pos);
         }
-
         $pathInfo = substr($requestUri, strlen($baseUrl));
         if (null !== $baseUrl && (false === $pathInfo || '' === $pathInfo)) {
             // If substr() returns false then PATH_INFO is set to an empty string

@@ -75,7 +75,7 @@ abstract class Model
         $this->database = new Parameter($this->configLoader
             ->setName('database')
             ->loadFromFile()
-            ->all());
+            ->toArray());
     }
 
     /**
@@ -92,11 +92,9 @@ abstract class Model
      */
     protected function getConfigByName($name): ParameterInterface
     {
-        return new Parameter($this->configLoader
+        return $this->configLoader
             ->setName($name)
-            ->loadFromFile()
-            ->all()
-        );
+            ->loadFromFile();
     }
 
     /**
@@ -125,7 +123,7 @@ abstract class Model
             if ($password !== '') {
                 $this->database->set('password', $password);
             }
-            $this->pdo = new PdoDatabaseDriver($this->logger, $this->database->all());
+            $this->pdo = new PdoDatabaseDriver($this->logger, $this->database->toArray());
         }
         return $this->pdo;
     }
