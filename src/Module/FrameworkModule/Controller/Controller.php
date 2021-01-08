@@ -36,7 +36,7 @@ abstract class Controller
     public function getDefaultResponse(): Response
     {
         if (!($this->defaultResponse instanceof Response)) {
-            $this->defaultResponse = Response::create();
+            $this->defaultResponse = Response::create('', Response::HTTP_204);
         }
         return $this->defaultResponse;
     }
