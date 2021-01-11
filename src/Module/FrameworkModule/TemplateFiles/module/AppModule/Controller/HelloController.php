@@ -27,7 +27,7 @@ class HelloController extends Controller
      *   "defaults": {
      *     "name": "World"
      *   },
-     *   "_controller": "AppModule\\Controller\\AppController::sayAction"
+     *   "controller": "AppModule\\Controller\\AppController::sayAction"
      * }
      *
      * @param string $name

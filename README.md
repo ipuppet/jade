@@ -76,7 +76,7 @@ public function sayHelloAction($like, $name)
     ],
     "name": "SayHello",
     "path": "/say-hello/{like}/{name}/",
-    "_controller": "AppModule\\Controller\\SayHelloController::sayHelloAction"
+    "controller": "AppModule\\Controller\\SayHelloController::sayHelloAction"
 }
 ```
 

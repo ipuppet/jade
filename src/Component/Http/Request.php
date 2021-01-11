@@ -23,7 +23,7 @@ class Request
     public $request;
 
     /**
-     * 路由中携带的属性，如 _controller
+     * 路由中携带的属性，如 controller
      * @var ParameterInterface
      */
     public $attributes;

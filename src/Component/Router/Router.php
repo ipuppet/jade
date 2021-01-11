@@ -131,7 +131,7 @@ class Router
             )) {
                 if ($this->afterMatch($route)) {
                     $this->request->request->add($this->matcher->getAttributes());
-                    $this->request->attributes->set('_controller', $route->getOption('_controller'));
+                    $this->request->attributes->set('controller', $route->getOption('controller'));
                     return true;
                 } /*else {
                     //非法请求
