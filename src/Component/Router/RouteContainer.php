@@ -60,7 +60,7 @@ class RouteContainer
                     $methods = [$route['methods']];
                 }
             }
-            $options['_controller'] = $route['_controller'];
+            $options['controller'] = $route['controller'];
             //转换为Route对象
             $route = new Route($path, $defaults, $tokens, $options, $host, $methods);
             $routeContainer->set($name, $route);
