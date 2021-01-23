@@ -1,5 +1,6 @@
 <?php
 
+namespace App;
 
 use Ipuppet\Jade\Component\Kernel\Kernel;
 use Ipuppet\Jade\Foundation\Path\Exception\PathException;
@@ -24,5 +25,10 @@ class AppKernel extends Kernel
             $this->rootPath = new Path(dirname(__DIR__));
         }
         return $this->rootPath;
+    }
+
+    public static function getRootPathString()
+    {
+        return dirname(__DIR__);
     }
 }
