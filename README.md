@@ -104,7 +104,7 @@ public function __construct(Request $req)
 `ignoreRequest()`方法可用来忽略一次请求，该方法在抽象类`Controller`中。
 
 与其共同工作的还有`setDefaultResponse()`方法，该方法接受一个`Response`型的变量，用来明确默认情况下该作何反应。
-若不调用将会返回一个状态为200的响应。
+若不调用将会返回一个状态为204的响应。
 
 ### API
 
