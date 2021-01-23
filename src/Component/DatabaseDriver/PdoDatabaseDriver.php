@@ -46,7 +46,7 @@ class PdoDatabaseDriver
             $this->pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
             $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         } catch (PDOException $e) {
-            $this->logger->error($e->getMessage() . ' 看看账号密码以及数据库是否正确？配置文件 app/config/database.json');
+            $this->logger->error($e->getMessage());
         }
     }
 
