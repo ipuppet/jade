@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0.10",
+        "php": ">=7.4",
         "ext-pdo": "*",
         "ext-json": "*",
         "ext-iconv": "*",
