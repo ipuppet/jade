@@ -4,7 +4,7 @@
 namespace Ipuppet\Jade\Module\FrameworkModule\Model;
 
 
-use AppKernel;
+use App\AppKernel;
 use DateTime;
 use DateTimeZone;
 use Exception;
