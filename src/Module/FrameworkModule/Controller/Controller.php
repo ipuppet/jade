@@ -15,9 +15,9 @@ abstract class Controller
     protected bool $isIgnoreRequest = false;
 
     /**
-     * @var Response
+     * @var ?Response
      */
-    protected Response $defaultResponse;
+    protected ?Response $defaultResponse = null;
 
     public function isIgnoreRequest(): bool
     {

@@ -21,9 +21,9 @@ use Psr\Log\LoggerInterface;
 abstract class Model
 {
     /**
-     * @var PdoDatabaseDriver
+     * @var ?PdoDatabaseDriver
      */
-    private PdoDatabaseDriver $pdo;
+    private ?PdoDatabaseDriver $pdo = null;
 
     /**
      * @var Kernel
@@ -47,9 +47,9 @@ abstract class Model
     private LoggerInterface $logger;
 
     /**
-     * @var DateTime
+     * @var ?DateTime
      */
-    private DateTime $date;
+    private ?DateTime $date = null;
 
     /**
      * Model constructor.

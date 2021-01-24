@@ -11,12 +11,12 @@ class Path implements PathInterface
     /**
      * @var string
      */
-    private $path;
+    private string $path;
 
     /**
      * @var string
      */
-    private $file = '';
+    private string $file = '';
 
     /**
      * Path constructor.
@@ -51,7 +51,7 @@ class Path implements PathInterface
         return $this->path . $this->file;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->get();
     }
@@ -61,6 +61,7 @@ class Path implements PathInterface
      * @param PathInterface|string $before
      * @param PathInterface|string $after
      * @return PathInterface
+     * @throws PathException
      */
     public static function join($before = null, $after = null): PathInterface
     {
@@ -74,8 +75,9 @@ class Path implements PathInterface
 
     /**
      * 将路径加入到当前路径后面
-     * @param PathInterface|string $path
+     * @param null $path
      * @return PathInterface
+     * @throws PathException
      */
     public function after($path = null): PathInterface
     {
@@ -85,8 +87,9 @@ class Path implements PathInterface
 
     /**
      * 将路径加入到当前路径前面
-     * @param PathInterface|string $path
+     * @param null $path
      * @return PathInterface
+     * @throws PathException
      */
     public function before($path = null): PathInterface
     {

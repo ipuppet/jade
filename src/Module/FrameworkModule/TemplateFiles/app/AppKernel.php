@@ -10,11 +10,6 @@ use Ipuppet\Jade\Foundation\Path\PathInterface;
 class AppKernel extends Kernel
 {
     /**
-     * @var PathInterface
-     */
-    protected PathInterface $rootPath;
-
-    /**
      * 获取项目根目录
      * @return PathInterface
      * @throws PathException

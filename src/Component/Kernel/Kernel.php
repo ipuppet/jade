@@ -22,24 +22,24 @@ abstract class Kernel
 {
     private bool $isLogAccessError = false;
     /**
-     * @var ConfigLoader
+     * @var ?ConfigLoader
      */
-    private ConfigLoader $configLoader;
+    private ?ConfigLoader $configLoader = null;
 
     /**
-     * @var PathInterface
+     * @var ?PathInterface
      */
-    protected PathInterface $cachePath;
+    protected ?PathInterface $cachePath = null;
 
     /**
-     * @var PathInterface
+     * @var ?PathInterface
      */
-    protected PathInterface $logPath;
+    protected ?PathInterface $logPath = null;
 
     /**
-     * @var PathInterface
+     * @var ?PathInterface
      */
-    protected PathInterface $rootPath;
+    protected ?PathInterface $rootPath = null;
 
     /**
      * 获取缓存目录

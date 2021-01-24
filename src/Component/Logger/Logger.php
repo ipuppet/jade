@@ -108,12 +108,12 @@ class Logger extends AbstractLogger
      * Logs with an arbitrary level.
      *
      * @param mixed $level
-     * @param string $message
+     * @param $message
      * @param array $context
      * @return void
      * @throws Exception
      */
-    public function log($level, string $message, array $context = [])
+    public function log($level, $message, array $context = [])
     {
         if (!$this->checkOutput()) {
             throw new Exception('是否忘记调用 setOutput 方法了？');

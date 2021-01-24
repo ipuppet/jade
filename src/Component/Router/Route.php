@@ -49,7 +49,7 @@ class Route implements RouteInterface
     /**
      * @var array
      */
-    private array $placeholders;
+    private array $placeholders = [];
 
     public function __construct($path, array $defaults = [], array $tokens = [], array $options = [], $host = '', $methods = [])
     {
