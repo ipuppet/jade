@@ -313,7 +313,7 @@ class Route implements RouteInterface
      */
     public function getPlaceholders(): array
     {
-        if ($this->placeholders === null) {
+        if (empty($this->placeholders)) {
             if (strpos($this->getPath(), '{')) {
                 //匹配花括号中的内容
                 preg_match_all('/(?<={)[^}]+/', $this->getPath(), $this->placeholders);
