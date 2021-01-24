@@ -20,26 +20,26 @@ use Ipuppet\Jade\Foundation\Path\PathInterface;
 
 abstract class Kernel
 {
-    private $isLogAccessError = false;
+    private bool $isLogAccessError = false;
     /**
      * @var ConfigLoader
      */
-    private $configLoader;
+    private ConfigLoader $configLoader;
 
     /**
      * @var PathInterface
      */
-    protected $cachePath;
+    protected PathInterface $cachePath;
 
     /**
      * @var PathInterface
      */
-    protected $logPath;
+    protected PathInterface $logPath;
 
     /**
      * @var PathInterface
      */
-    protected $rootPath;
+    protected PathInterface $rootPath;
 
     /**
      * 获取缓存目录
@@ -180,7 +180,7 @@ abstract class Kernel
     {
         $config = $configLoader->setName('config')->loadFromFile();
         if ($config->has('logAccessError')) {
-            $this->isLogAccessError = $config->get('logAccessError');
+            $this->isLogAccessError = (bool)$config->get('logAccessError');
         }
     }
 }

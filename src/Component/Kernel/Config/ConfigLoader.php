@@ -13,22 +13,22 @@ class ConfigLoader
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
-     * @var PathInterface
+     * @var ?PathInterface
      */
-    private $path;
+    private ?PathInterface $path;
 
     /**
-     * @var ParserInterface
+     * @var ?ParserInterface
      */
-    private $parser;
+    private ?ParserInterface $parser;
 
     /**
      * @var Config
      */
-    private $config;
+    private Config $config;
 
     public function __construct(string $name = '', PathInterface $path = null, ParserInterface $parser = null)
     {
@@ -37,19 +37,19 @@ class ConfigLoader
         $this->parser = $parser;
     }
 
-    public function setName(string $name)
+    public function setName(string $name): self
     {
         $this->name = $name;
         return $this;
     }
 
-    public function setPath(PathInterface $path)
+    public function setPath(PathInterface $path): self
     {
         $this->path = $path;
         return $this;
     }
 
-    public function setParser(ParserInterface $parser)
+    public function setParser(ParserInterface $parser): self
     {
         $this->parser = $parser;
         return $this;

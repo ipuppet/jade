@@ -11,41 +11,41 @@ use Ipuppet\Jade\Component\Router\Exception\NoMatcherException;
 use Ipuppet\Jade\Component\Router\Matcher\MatcherInterface;
 use Ipuppet\Jade\Component\Router\Reason\HostNotAllow;
 use Ipuppet\Jade\Component\Router\Reason\MethodNotAllow;
-use Ipuppet\Jade\Component\Router\Reason\ReasonInterface;
 use Ipuppet\Jade\Component\Router\Reason\NoMatch;
+use Ipuppet\Jade\Component\Router\Reason\ReasonInterface;
 use Psr\Log\LoggerInterface;
 
 class Router
 {
     /**
-     * @var Request
+     * @var ?Request
      */
-    private $request;
+    private ?Request $request;
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
-     * @var RouteContainer
+     * @var ?RouteContainer
      */
-    private $routeContainer;
+    private ?RouteContainer $routeContainer;
 
     /**
      * @var ReasonInterface
      */
-    private $reason;
+    private ReasonInterface $reason;
 
     /**
      * @var Config
      */
-    private $config;
+    private Config $config;
 
     /**
      * @var MatcherInterface
      */
-    private $matcher;
+    private MatcherInterface $matcher;
 
     public function __construct(Request $request = null, RouteContainer $routeContainer = null)
     {
@@ -57,7 +57,7 @@ class Router
      * @param LoggerInterface $logger
      * @return $this
      */
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger): self
     {
         $this->logger = $logger;
         return $this;
@@ -67,7 +67,7 @@ class Router
      * @param Config $config
      * @return $this
      */
-    public function setConfig(Config $config)
+    public function setConfig(Config $config): self
     {
         $this->config = $config;
         return $this;
@@ -77,7 +77,7 @@ class Router
      * @param RouteContainer $routeContainer
      * @return $this
      */
-    public function setRouteContainer(RouteContainer $routeContainer)
+    public function setRouteContainer(RouteContainer $routeContainer): self
     {
         $this->routeContainer = $routeContainer;
         return $this;
@@ -87,7 +87,7 @@ class Router
      * @param MatcherInterface $matcher
      * @return $this
      */
-    public function setMatcher(MatcherInterface $matcher)
+    public function setMatcher(MatcherInterface $matcher): self
     {
         $this->matcher = $matcher;
         return $this;
@@ -97,7 +97,7 @@ class Router
      * @param Request|null $request
      * @return $this
      */
-    public function setRequest(Request $request = null)
+    public function setRequest(Request $request = null): self
     {
         $this->request = $request;
         return $this;

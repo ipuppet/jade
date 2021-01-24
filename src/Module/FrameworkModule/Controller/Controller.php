@@ -12,12 +12,12 @@ abstract class Controller
      * 忽略的请求方法
      * @var bool
      */
-    protected $isIgnoreRequest = false;
+    protected bool $isIgnoreRequest = false;
 
     /**
      * @var Response
      */
-    protected $defaultResponse = null;
+    protected Response $defaultResponse;
 
     public function isIgnoreRequest(): bool
     {

@@ -11,45 +11,45 @@ class Route implements RouteInterface
     /**
      * @var string
      */
-    private $path = '/';
+    private string $path = '/';
 
     /**
      * @var string
      */
-    private $host;
+    private string $host;
 
     /**
      * @var array
      */
-    private $methods;
+    private array $methods;
 
     /**
      * 占位符的默认值
      * @var array
      */
-    private $defaults;
+    private array $defaults;
 
     /**
      * 占位符token
      * @var array
      */
-    private $tokens;
+    private array $tokens;
 
     /**
      * 占位符匹配到的参数
      * @var array
      */
-    private $parameters = [];
+    private array $parameters = [];
 
     /**
      * @var array
      */
-    private $options;
+    private array $options;
 
     /**
      * @var array
      */
-    private $placeholders;
+    private array $placeholders;
 
     public function __construct($path, array $defaults = [], array $tokens = [], array $options = [], $host = '', $methods = [])
     {
@@ -66,7 +66,7 @@ class Route implements RouteInterface
      *
      * @return string The path pattern
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -78,7 +78,7 @@ class Route implements RouteInterface
      *
      * @return $this
      */
-    public function setPath($pattern)
+    public function setPath(string $pattern): self
     {
         // A pattern must start with a slash and must not have multiple slashes at the beginning because the
         // generated path for this route would be confused with a network path, e.g. '//domain.com/path'.
@@ -92,7 +92,7 @@ class Route implements RouteInterface
      *
      * @return string The host pattern
      */
-    public function getHost()
+    public function getHost(): string
     {
         return $this->host;
     }
@@ -104,7 +104,7 @@ class Route implements RouteInterface
      *
      * @return $this
      */
-    public function setHost($pattern)
+    public function setHost(string $pattern): self
     {
         $this->host = (string)$pattern;
 
@@ -117,7 +117,7 @@ class Route implements RouteInterface
      *
      * @return array The methods
      */
-    public function getMethods()
+    public function getMethods(): array
     {
         return $this->methods;
     }
@@ -130,24 +130,24 @@ class Route implements RouteInterface
      *
      * @return $this
      */
-    public function setMethods($methods)
+    public function setMethods($methods): self
     {
         $this->methods = array_map('strtoupper', (array)$methods);
 
         return $this;
     }
 
-    public function getParameters()
+    public function getParameters(): array
     {
         return $this->parameters;
     }
 
-    public function setParameters(array $Parameters)
+    public function setParameters(array $Parameters): self
     {
         return $this->addParameters($Parameters);
     }
 
-    public function addParameters(array $parameters)
+    public function addParameters(array $parameters): self
     {
         foreach ($parameters as $name => $parameter) {
             $this->parameters[$name] = $parameter;
@@ -156,7 +156,7 @@ class Route implements RouteInterface
         return $this;
     }
 
-    public function setParameter($name, $value)
+    public function setParameter($name, $value): self
     {
         $this->parameters[$name] = $value;
 
@@ -168,22 +168,22 @@ class Route implements RouteInterface
         return isset($this->parameters[$name]) ? $this->parameters[$name] : null;
     }
 
-    public function hasParameter($name)
+    public function hasParameter($name): bool
     {
         return array_key_exists($name, $this->parameters);
     }
 
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
 
-    public function setOptions(array $options)
+    public function setOptions(array $options): self
     {
         return $this->addOptions($options);
     }
 
-    public function addOptions(array $options)
+    public function addOptions(array $options): self
     {
         foreach ($options as $name => $option) {
             $this->options[$name] = $option;
@@ -192,7 +192,7 @@ class Route implements RouteInterface
         return $this;
     }
 
-    public function setOption($name, $value)
+    public function setOption($name, $value): self
     {
         $this->options[$name] = $value;
 
@@ -204,24 +204,24 @@ class Route implements RouteInterface
         return isset($this->options[$name]) ? $this->options[$name] : null;
     }
 
-    public function hasOption($name)
+    public function hasOption($name): bool
     {
         return array_key_exists($name, $this->options);
     }
 
-    public function getDefaults()
+    public function getDefaults(): array
     {
         return $this->defaults;
     }
 
-    public function setDefaults(array $defaults)
+    public function setDefaults(array $defaults): self
     {
         $this->defaults = [];
 
         return $this->addDefaults($defaults);
     }
 
-    public function addDefaults(array $defaults)
+    public function addDefaults(array $defaults): self
     {
         foreach ($defaults as $name => $default) {
             $this->defaults[$name] = $default;
@@ -235,31 +235,31 @@ class Route implements RouteInterface
         return isset($this->defaults[$name]) ? $this->defaults[$name] : null;
     }
 
-    public function hasDefault($name)
+    public function hasDefault($name): bool
     {
         return array_key_exists($name, $this->defaults);
     }
 
-    public function setDefault($name, $default)
+    public function setDefault($name, $default): self
     {
         $this->defaults[$name] = $default;
 
         return $this;
     }
 
-    public function getTokens()
+    public function getTokens(): array
     {
         return $this->tokens;
     }
 
-    public function setTokens(array $tokens)
+    public function setTokens(array $tokens): self
     {
         $this->tokens = [];
 
         return $this->addTokens($tokens);
     }
 
-    public function addTokens(array $tokens)
+    public function addTokens(array $tokens): self
     {
         foreach ($tokens as $key => $regex) {
             $this->tokens[$key] = $this->sanitizeToken($key, $regex);
@@ -273,14 +273,14 @@ class Route implements RouteInterface
         return isset($this->tokens[$key]) ? $this->tokens[$key] : null;
     }
 
-    public function setToken($key, $regex)
+    public function setToken($key, $regex): self
     {
         $this->tokens[$key] = $this->sanitizeToken($key, $regex);
 
         return $this;
     }
 
-    public function hasToken($key)
+    public function hasToken($key): bool
     {
         return array_key_exists($key, $this->tokens);
     }
@@ -311,7 +311,7 @@ class Route implements RouteInterface
     /**
      * @return array
      */
-    public function getPlaceholders()
+    public function getPlaceholders(): array
     {
         if ($this->placeholders === null) {
             if (strpos($this->getPath(), '{')) {

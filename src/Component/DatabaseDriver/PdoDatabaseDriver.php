@@ -13,12 +13,12 @@ class PdoDatabaseDriver
     /**
      * @var PDO
      */
-    private $pdo;
+    private PDO $pdo;
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * PdoDatabaseDriver constructor.
@@ -54,7 +54,7 @@ class PdoDatabaseDriver
      * @param string $sql
      * @return array
      */
-    public function query(string $sql)
+    public function query(string $sql): array
     {
         $result = [];
         try {
@@ -89,17 +89,17 @@ class PdoDatabaseDriver
         return $this;
     }
 
-    function beginTransaction()
+    function beginTransaction(): bool
     {
         return $this->pdo->beginTransaction();
     }
 
-    function commit()
+    function commit(): bool
     {
         return $this->pdo->commit();
     }
 
-    function rollback()
+    function rollback(): bool
     {
         return $this->pdo->rollback();
     }

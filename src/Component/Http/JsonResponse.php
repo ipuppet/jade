@@ -9,88 +9,75 @@ use InvalidArgumentException;
 
 class JsonResponse extends Response
 {
-    protected $data;
-    protected $encodingOptions = JSON_UNESCAPED_UNICODE;
+    protected int $encodingOptions = JSON_UNESCAPED_UNICODE;
 
-    public function __construct($data = null, int $httpStatus = self::HTTP_200, array $headers = [], $json = false)
+    private function __construct(string $content = '', int $httpStatus = self::HTTP_200, array $headers = [])
     {
-        parent::__construct($data, $httpStatus, $headers);
-        $json ? $this->setJson($data) : $this->setData($data);
+        parent::__construct($content, $httpStatus, $headers);
     }
 
-    public static function create($data = null, int $httpStatus = self::HTTP_200, array $headers = [])
+    public static function fromArray(array $content = [], int $httpStatus = self::HTTP_200, array $headers = []): JsonResponse
     {
-        return new static($data, $httpStatus, $headers);
+        $response = new static('', $httpStatus, $headers);
+        $response->setArray($content);
+        return $response;
     }
 
-    public static function fromJsonString($data = null, int $httpStatus = self::HTTP_200, array $headers = [])
+    public static function fromJsonString(string $content = '{}', int $httpStatus = self::HTTP_200, array $headers = []): JsonResponse
     {
-        return new static($data, $httpStatus, $headers, true);
+        return new static($content, $httpStatus, $headers);
     }
 
-    public function getEncodingOptions()
+    public function getEncodingOptions(): int
     {
         return $this->encodingOptions;
     }
 
-    public function setEncodingOptions(int $encodingOptions)
+    public function setEncodingOptions(int $encodingOptions): self
     {
         $this->encodingOptions = $encodingOptions;
-        return $this->setData(json_decode($this->data));
+        return $this->setContent(json_decode($this->content));
     }
 
-    public function setJson($json)
+    public function setJson(string $json): void
     {
-        $this->data = $json;
-        return $this->update();
+        $this->content = $json;
+        // 防止覆盖自定义 Content-Type
+        if (!$this->headers->has('Content-Type') || 'text/javascript' === $this->headers->get('Content-Type')) {
+            $this->headers->set('Content-Type', 'application/json');
+        }
     }
 
-    /**
-     * @param array $data
-     * @return JsonResponse
-     */
-    public function setData($data = [])
+    public function setArray(array $content): void
     {
         if (defined('HHVM_VERSION')) {
             // HHVM does not trigger any warnings and let exceptions
             // thrown from a JsonSerializable object pass through.
             // If only PHP did the same...
-            $data = json_encode($data, $this->encodingOptions);
+            $content = json_encode($content, $this->encodingOptions);
         } else {
             if (!interface_exists('JsonSerializable', false)) {
-                set_error_handler(function () {
-                    return false;
-                });
                 try {
-                    $data = @json_encode($data, $this->encodingOptions);
+                    $content = @json_encode($content, $this->encodingOptions);
                 } finally {
                     restore_error_handler();
                 }
             } else {
                 try {
-                    $data = json_encode($data, $this->encodingOptions);
+                    $content = json_encode($content, $this->encodingOptions);
                 } catch (Exception $e) {
                     if ($this->hasLogger())
                         $this->logger->error($e->getMessage());
                 }
 
                 if (PHP_VERSION_ID >= 70300 && (JSON_THROW_ON_ERROR & $this->encodingOptions)) {
-                    return $this->setJson($data);
+                    $this->setJson($content);
                 }
             }
         }
         if (JSON_ERROR_NONE !== json_last_error()) {
             throw new InvalidArgumentException(json_last_error_msg());
         }
-        return $this->setJson($data);
-    }
-
-    protected function update()
-    {
-        // 防止覆盖自定义 Content-Type
-        if (!$this->headers->has('Content-Type') || 'text/javascript' === $this->headers->get('Content-Type')) {
-            $this->headers->set('Content-Type', 'application/json');
-        }
-        return $this->setContent($this->data);
+        $this->setJson($content);
     }
 }

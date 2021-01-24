@@ -5,11 +5,11 @@ namespace Ipuppet\Jade\Plugins\EmailSender;
 
 
 use Exception;
+use Ipuppet\Jade\Plugins\EmailSender\Exception\EmailSenderException;
 use Psr\Log\LoggerInterface;
 use Swift_Mailer;
 use Swift_Message;
 use Swift_SmtpTransport;
-use Ipuppet\Jade\Plugins\EmailSender\Exception\EmailSenderException;
 
 class EmailSender
 {

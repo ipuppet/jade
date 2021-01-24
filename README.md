@@ -21,11 +21,8 @@ e.g. `php build.php -r /path/to/`
     "autoload": {
         "psr-4": {
             "...": "您之前的内容",
-            "AppModule\\": "module/AppModule/"
-        },
-        "classmap": [
-            "app/AppKernel.php"
-        ]
+            "App\\": "app"
+        }
     }
 }
 ```
@@ -34,17 +31,17 @@ e.g. `php build.php -r /path/to/`
 
 ### 基本配置
 
-项目创建完成后，您可以在`app/config/response.json`文件中设置如果请求发生错误该返回什么内容。(如请求方法不被允许、未匹配到结果等)
+项目创建完成后，您可以在`config/response.json`文件中设置如果请求发生错误该返回什么内容。(如请求方法不被允许、未匹配到结果等)
 
-该实现在`Component/Router/Reason/Reason.php`抽象类中，如果向构造函数传递一个Config对象则会尝试从其中读取数据
+该实现在`Component/Router/Reason/Reason.php`抽象类中，如果向构造函数传递一个`Config`对象则会尝试从其中读取数据
 
-若开头为符号`@`，则该值被视为路径且符号`@`将被自动替换成项目根目录（该路径是通过AppKernel中的getRootDir方法获取的）
+若开头为符号`@`，则该值被视为路径且符号`@`将被自动替换成项目根目录（该路径是通过`AppKernel`中的`getRootDir()`方法获取的）
 
 若为其他内容则直接以字符串形式输出。
 
 ### 配置文件
 
-项目全局配置文件为`app/config/config.json`中
+项目全局配置文件为`config/config.json`中
 
 #### 内容说明
 
@@ -56,7 +53,7 @@ e.g. `php build.php -r /path/to/`
 
 前端向您发送的请求中携带参数（如url中包含的、请求body中携带的等等）您**无需担心参数顺序**，只需保证控制器参数名称与请求中的参数名称一致即可
 
-ControllerResolver::sortRequestParameters()将会帮助您自动进行排序与补充
+`ControllerResolver::sortRequestParameters()`将会帮助您自动进行排序与补充
 
 例如：
 
@@ -76,7 +73,7 @@ public function sayHelloAction($like, $name)
     ],
     "name": "SayHello",
     "path": "/say-hello/{like}/{name}/",
-    "controller": "AppModule\\Controller\\SayHelloController::sayHelloAction"
+    "controller": "App\\Controller\\SayHelloController::sayHelloAction"
 }
 ```
 
@@ -90,7 +87,7 @@ public function sayHelloAction($like, $name)
 
 注意，这个参数必须叫`$request`。
 
-但在构造方法中有所不同，无需规定名称，只需声明是Request类型即可。如下：
+但在构造方法中有所不同，无需规定名称，只需声明是`Request`类型即可。如下：
 
 ```php
 public function __construct(Request $req)
@@ -104,7 +101,7 @@ public function __construct(Request $req)
 `ignoreRequest()`方法可用来忽略一次请求，该方法在抽象类`Controller`中。
 
 与其共同工作的还有`setDefaultResponse()`方法，该方法接受一个`Response`型的变量，用来明确默认情况下该作何反应。
-若不调用将会返回一个状态为204的响应。
+若不调用将会返回一个状态为`204`的响应。
 
 ### API
 

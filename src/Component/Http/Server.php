@@ -9,7 +9,7 @@ use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
 
 class Server extends Parameter implements ParameterInterface
 {
-    public function getHeaders()
+    public function getHeaders(): array
     {
         $headers = [];
         // CONTENT_* 无 HTTP_ 前缀

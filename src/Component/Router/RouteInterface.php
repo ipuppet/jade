@@ -13,27 +13,27 @@ interface RouteInterface
      * @param string $pattern The path pattern
      * @return $this
      */
-    public function setPath($pattern);
+    public function setPath(string $pattern): self;
 
     /**
      * Returns the pattern for the host.
      * @return string The host pattern
      */
-    public function getHost();
+    public function getHost(): string;
 
     /**
      * Sets the pattern for the host.
      * @param string $pattern The host pattern
      * @return $this
      */
-    public function setHost($pattern);
+    public function setHost(string $pattern): self;
 
     /**
      * Returns the uppercased HTTP methods this route is restricted to.
      * So an empty array means that any method is allowed.
      * @return array The methods
      */
-    public function getMethods();
+    public function getMethods(): array;
 
     /**
      * Sets the HTTP methods (e.g. 'POST') this route is restricted to.
@@ -41,7 +41,7 @@ interface RouteInterface
      * @param string|array $methods The method or an array of methods
      * @return $this
      */
-    public function setMethods($methods);
+    public function setMethods($methods): self;
 
     /**
      * @return mixed

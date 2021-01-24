@@ -7,6 +7,7 @@ namespace Ipuppet\Jade\Component\Http;
 use Ipuppet\Jade\Component\Logger\Logger;
 use Ipuppet\Jade\Foundation\Parameter\Parameter;
 use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
+use Psr\Log\LoggerInterface;
 
 class Request
 {
@@ -14,47 +15,50 @@ class Request
      * GET
      * @var ParameterInterface
      */
-    public $query;
+    public ParameterInterface $query;
 
     /**
      * POST请求，占位符参数也存放于此
      * @var ParameterInterface
      */
-    public $request;
+    public ParameterInterface $request;
 
     /**
      * 路由中携带的属性，如 controller
      * @var ParameterInterface
      */
-    public $attributes;
+    public ParameterInterface $attributes;
 
     /**
      * @var File
      */
-    public $files;
+    public File $files;
 
+    /**
+     * TODO Cookie
+     */
     public $cookies;
 
     /**
      * @var Server $_SERVER
      */
-    public $server;
+    public Server $server;
 
     /**
      * @var Header 请求头
      */
-    public $headers;
+    public Header $headers;
 
     protected $content;
-    protected $requestUri;
-    protected $baseUrl;
-    protected $pathInfo;
-    protected $basePath;
-    protected $method; //请求方法，如get post put delete
+    protected string $requestUri;
+    protected string $baseUrl;
+    protected string $pathInfo;
+    protected string $basePath;
+    protected string $method; //请求方法，如get post put delete
 
-    protected static $httpMethodParameterOverride = false;
+    protected static bool $httpMethodParameterOverride = false;
 
-    protected $logger;
+    protected LoggerInterface $logger;
 
     public function __construct(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)
     {
@@ -74,10 +78,10 @@ class Request
         $this->headers = new Header($this->server->getHeaders());
 
         $this->content = $content;
-        $this->requestUri = null;
-        $this->baseUrl = null;
-        $this->basePath = null;
-        $this->method = null;
+        $this->requestUri = '';
+        $this->baseUrl = '';
+        $this->basePath = '';
+        $this->method = '';
     }
 
     public function get($key, $default = null)
@@ -99,22 +103,22 @@ class Request
         return $this->attributes->has($key) || $this->query->has($key) || $this->request->has($key);
     }
 
-    public function getScriptName()
+    public function getScriptName(): string
     {
         return $this->server->get('SCRIPT_NAME', $this->server->get('ORIG_SCRIPT_NAME', ''));
     }
 
-    public function getBaseUrl()
+    public function getBaseUrl(): string
     {
-        if (null === $this->baseUrl) {
+        if (empty($this->baseUrl)) {
             $this->baseUrl = $this->prepareBaseUrl();
         }
         return $this->baseUrl;
     }
 
-    public function getRequestUri()
+    public function getRequestUri(): string
     {
-        if (null === $this->requestUri) {
+        if (empty($this->requestUri)) {
             $this->requestUri = $this->prepareRequestUri();
         }
         return $this->requestUri;
@@ -122,15 +126,16 @@ class Request
 
     /**
      * 设置请求方法
-     * @param $method
+     * @param string $method
      */
-    public function setMethod($method)
+    public function setMethod(string $method): void
     {
-        $this->method = null;
+        $method = strtoupper($method);
+        $this->method = $method;
         $this->server->set('REQUEST_METHOD', $method);
     }
 
-    public static function enableHttpMethodParameterOverride()
+    public static function enableHttpMethodParameterOverride(): void
     {
         self::$httpMethodParameterOverride = true;
     }
@@ -138,11 +143,11 @@ class Request
     /**
      * 获取除BaseUri及get参数的信息
      * 如/path/to
-     * @return false|mixed|string|null
+     * @return string
      */
-    public function getPathInfo()
+    public function getPathInfo(): string
     {
-        if (null === $this->pathInfo) {
+        if (empty($this->pathInfo)) {
             $this->pathInfo = $this->preparePathInfo();
         }
         return $this->pathInfo;
@@ -152,9 +157,9 @@ class Request
      * 获取请求方法
      * @return string
      */
-    public function getMethod()
+    public function getMethod(): string
     {
-        if (null !== $this->method) {
+        if (!empty($this->method)) {
             return $this->method;
         }
 
@@ -218,12 +223,12 @@ class Request
         return $this->content;
     }
 
-    public function isXmlHttpRequest()
+    public function isXmlHttpRequest(): bool
     {
         return 'XMLHttpRequest' === $this->headers->get('X-Requested-With');
     }
 
-    protected function preparePathInfo()
+    protected function preparePathInfo(): string
     {
         $baseUrl = $this->getBaseUrl();
 
@@ -245,7 +250,7 @@ class Request
         return (string)$pathInfo;
     }
 
-    protected function prepareRequestUri()
+    protected function prepareRequestUri(): string
     {
         $requestUri = '';
 
@@ -290,7 +295,7 @@ class Request
         return $requestUri;
     }
 
-    protected function prepareBaseUrl()
+    protected function prepareBaseUrl(): string
     {
         $filename = basename($this->server->get('SCRIPT_FILENAME'));
 

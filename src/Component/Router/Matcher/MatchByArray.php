@@ -14,7 +14,7 @@ class MatchByArray extends Matcher implements MatcherInterface
      * @param string $requestPath
      * @return bool
      */
-    public function match(RouteInterface $route, $requestPath): bool
+    public function match(RouteInterface $route, string $requestPath): bool
     {
         $attributes = [];
         $requestArray = explode('/', urldecode($requestPath));

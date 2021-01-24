@@ -12,7 +12,7 @@ class AppKernel extends Kernel
     /**
      * @var PathInterface
      */
-    protected $rootPath;
+    protected PathInterface $rootPath;
 
     /**
      * 获取项目根目录
