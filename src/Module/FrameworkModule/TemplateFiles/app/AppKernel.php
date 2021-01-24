@@ -26,9 +26,4 @@ class AppKernel extends Kernel
         }
         return $this->rootPath;
     }
-
-    public static function getRootPathString()
-    {
-        return dirname(__DIR__);
-    }
 }

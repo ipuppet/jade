@@ -9,6 +9,6 @@
         "defaults": {
             "name": "World"
         },
-        "controller": "AppModule\\Controller\\HelloController::sayAction"
+        "controller": "App\\Controller\\HelloController::sayAction"
     }
 ]

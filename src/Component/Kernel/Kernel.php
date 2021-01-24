@@ -77,7 +77,8 @@ abstract class Kernel
     public function getRootPath(): PathInterface
     {
         if ($this->rootPath === null) {
-            $this->rootPath = new Path(dirname(__DIR__));
+            $path = substr(__DIR__, 0, strripos(__DIR__, 'vendor') - 1);
+            $this->rootPath = new Path($path);
         }
         return $this->rootPath;
     }
@@ -164,7 +165,7 @@ abstract class Kernel
         if ($this->configLoader === null) {
             $this->configLoader = new ConfigLoader();
             $path = new Path($this->getRootPath());
-            $path->after('/app/config');
+            $path->after('/config');
             $this->configLoader->setPath($path)->setParser(new JsonParser());
             $this->loadDefaultConfig($this->configLoader);
         }
