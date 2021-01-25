@@ -13,27 +13,27 @@ interface RouteInterface
      * @param string $pattern The path pattern
      * @return $this
      */
-    public function setPath($pattern);
+    public function setPath(string $pattern): self;
 
     /**
      * Returns the pattern for the host.
      * @return string The host pattern
      */
-    public function getHost();
+    public function getHost(): string;
 
     /**
      * Sets the pattern for the host.
      * @param string $pattern The host pattern
      * @return $this
      */
-    public function setHost($pattern);
+    public function setHost(string $pattern): self;
 
     /**
      * Returns the uppercased HTTP methods this route is restricted to.
      * So an empty array means that any method is allowed.
      * @return array The methods
      */
-    public function getMethods();
+    public function getMethods(): array;
 
     /**
      * Sets the HTTP methods (e.g. 'POST') this route is restricted to.
@@ -41,31 +41,31 @@ interface RouteInterface
      * @param string|array $methods The method or an array of methods
      * @return $this
      */
-    public function setMethods($methods);
+    public function setMethods($methods): self;
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getParameters();
+    public function getParameters(): array;
 
     /**
      * @param array $Parameters
-     * @return mixed
+     * @return $this
      */
-    public function setParameters(array $Parameters);
+    public function setParameters(array $Parameters): self;
 
     /**
      * @param array $parameters
-     * @return mixed
+     * @return $this
      */
-    public function addParameters(array $parameters);
+    public function addParameters(array $parameters): self;
 
     /**
      * @param $name
      * @param $value
-     * @return mixed
+     * @return $this
      */
-    public function setParameter($name, $value);
+    public function setParameter($name, $value): self;
 
     /**
      * @param $name
@@ -75,33 +75,33 @@ interface RouteInterface
 
     /**
      * @param $name
-     * @return mixed
+     * @return bool
      */
-    public function hasParameter($name);
+    public function hasParameter($name): bool;
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getOptions();
-
-    /**
-     * @param array $options
-     * @return mixed
-     */
-    public function setOptions(array $options);
+    public function getOptions(): array;
 
     /**
      * @param array $options
-     * @return mixed
+     * @return $this
      */
-    public function addOptions(array $options);
+    public function setOptions(array $options): self;
+
+    /**
+     * @param array $options
+     * @return $this
+     */
+    public function addOptions(array $options): self;
 
     /**
      * @param $name
      * @param $value
-     * @return mixed
+     * @return $this
      */
-    public function setOption($name, $value);
+    public function setOption($name, $value): self;
 
     /**
      * @param $name
@@ -111,26 +111,26 @@ interface RouteInterface
 
     /**
      * @param $name
-     * @return mixed
+     * @return bool
      */
-    public function hasOption($name);
+    public function hasOption($name): bool;
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getDefaults();
-
-    /**
-     * @param array $defaults
-     * @return mixed
-     */
-    public function setDefaults(array $defaults);
+    public function getDefaults(): array;
 
     /**
      * @param array $defaults
-     * @return mixed
+     * @return $this
      */
-    public function addDefaults(array $defaults);
+    public function setDefaults(array $defaults): self;
+
+    /**
+     * @param array $defaults
+     * @return $this
+     */
+    public function addDefaults(array $defaults): self;
 
     /**
      * @param $name
@@ -140,33 +140,33 @@ interface RouteInterface
 
     /**
      * @param $name
-     * @return mixed
+     * @return bool
      */
-    public function hasDefault($name);
+    public function hasDefault($name): bool;
 
     /**
      * @param $name
      * @param $default
-     * @return mixed
+     * @return $this
      */
-    public function setDefault($name, $default);
+    public function setDefault($name, $default): self;
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getTokens();
-
-    /**
-     * @param array $tokens
-     * @return mixed
-     */
-    public function setTokens(array $tokens);
+    public function getTokens(): array;
 
     /**
      * @param array $tokens
-     * @return mixed
+     * @return $this
      */
-    public function addTokens(array $tokens);
+    public function setTokens(array $tokens): self;
+
+    /**
+     * @param array $tokens
+     * @return $this
+     */
+    public function addTokens(array $tokens): self;
 
     /**
      * @param $key
@@ -177,18 +177,18 @@ interface RouteInterface
     /**
      * @param $key
      * @param $regex
-     * @return mixed
+     * @return $this
      */
-    public function setToken($key, $regex);
+    public function setToken($key, $regex): self;
 
     /**
      * @param $key
-     * @return mixed
+     * @return bool
      */
-    public function hasToken($key);
+    public function hasToken($key): bool;
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getPlaceholders();
+    public function getPlaceholders(): array;
 }

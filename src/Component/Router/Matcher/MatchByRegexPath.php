@@ -14,7 +14,7 @@ class MatchByRegexPath extends Matcher implements MatcherInterface
      * @param string $requestPath
      * @return bool
      */
-    public function match(RouteInterface $route, $requestPath): bool
+    public function match(RouteInterface $route, string $requestPath): bool
     {
         $tokenPath = $route->getPath();
         foreach ($route->getPlaceholders() as $placeholder) {

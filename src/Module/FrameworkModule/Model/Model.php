@@ -8,49 +8,48 @@ use App\AppKernel;
 use DateTime;
 use DateTimeZone;
 use Exception;
-use PDO;
-use Psr\Log\LoggerInterface;
 use Ipuppet\Jade\Component\DatabaseDriver\PdoDatabaseDriver;
 use Ipuppet\Jade\Component\Kernel\Config\ConfigLoader;
-use Ipuppet\Jade\Foundation\Parser\JsonParser;
 use Ipuppet\Jade\Component\Kernel\Kernel;
 use Ipuppet\Jade\Component\Logger\Logger;
 use Ipuppet\Jade\Foundation\Parameter\Parameter;
 use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
+use Ipuppet\Jade\Foundation\Parser\JsonParser;
 use Ipuppet\Jade\Foundation\Path\Exception\PathException;
+use Psr\Log\LoggerInterface;
 
 abstract class Model
 {
     /**
-     * @var PDO
+     * @var ?PdoDatabaseDriver
      */
-    private $pdo;
+    private ?PdoDatabaseDriver $pdo = null;
 
     /**
      * @var Kernel
      */
-    private $kernel;
+    private Kernel $kernel;
 
     /**
      * @var ConfigLoader
      */
-    private $configLoader;
+    private ConfigLoader $configLoader;
 
     /**
      * 数据库连接信息
      * @var ParameterInterface
      */
-    protected $database;
+    protected ParameterInterface $database;
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
-     * @var DateTime
+     * @var ?DateTime
      */
-    private $date;
+    private ?DateTime $date = null;
 
     /**
      * Model constructor.
@@ -64,7 +63,7 @@ abstract class Model
     /**
      * @throws PathException
      */
-    protected function init()
+    protected function init(): void
     {
         $this->kernel = new AppKernel();
         $this->configLoader = $this->kernel->getConfigLoader()
@@ -109,9 +108,9 @@ abstract class Model
      * @param string $dbname
      * @param string $username
      * @param string $password
-     * @return PDO|PdoDatabaseDriver
+     * @return PdoDatabaseDriver
      */
-    protected function getPdo(string $dbname = '', string $username = '', string $password = '')
+    protected function getPdo(string $dbname = '', string $username = '', string $password = ''): PdoDatabaseDriver
     {
         if ($this->pdo === null) {
             if ($dbname !== '') {
@@ -134,7 +133,7 @@ abstract class Model
      * @return string
      * @throws Exception
      */
-    protected function dateNow(string $format = 'Y-m-d H:i:s')
+    protected function dateNow(string $format = 'Y-m-d H:i:s'): string
     {
         if ($this->date === null) {
             $this->date = new DateTime();

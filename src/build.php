@@ -24,22 +24,6 @@ include $autoload;
 
 $baseFiles = [
     'app' => [
-        'config' => [
-            'response.json',
-            'routes.json',
-            'database.json',
-            'config.json'
-        ],
-        'AppKernel.php'
-    ],
-    'public' => [
-        'response' => [
-            '404.html'
-        ],
-        '.htaccess',
-        'index.php'
-    ],
-    'module' => [
         'AppModule' => [
             'Controller' => [
                 'HelloController.php'
@@ -47,7 +31,21 @@ $baseFiles = [
             'Model' => [
                 'HelloModel.php'
             ]
-        ]
+        ],
+        'AppKernel.php'
+    ],
+    'config' => [
+        'response.json',
+        'routes.json',
+        'database.json',
+        'config.json'
+    ],
+    'public' => [
+        'response' => [
+            '404.html'
+        ],
+        '.htaccess',
+        'index.php'
     ]
 ];
 

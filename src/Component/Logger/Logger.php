@@ -19,13 +19,13 @@ class Logger extends AbstractLogger
     const DATE_FORMAT = 'Y-m-d H:i:s';
     const DATE_TIME_ZONE = 'PRC';
 
-    private $name;
+    private string $name;
 
     private $handle;
 
     private $formatter;
 
-    private $outputStatus = false;
+    private bool $outputStatus = false;
 
     /**
      * Logger constructor.
@@ -38,7 +38,7 @@ class Logger extends AbstractLogger
         $this->formatter = $formatter ?: [$this, 'format'];
     }
 
-    public function setName($name)
+    public function setName($name): self
     {
         $this->name = $name;
         $this->outputStatus = false;
@@ -49,7 +49,7 @@ class Logger extends AbstractLogger
      * @param $output
      * @return $this
      */
-    public function setOutput($output)
+    public function setOutput($output): self
     {
         if ($output instanceof PathInterface) {
             if (!is_dir($output)) {
@@ -69,7 +69,7 @@ class Logger extends AbstractLogger
         return $this->outputStatus;
     }
 
-    private function format($level, $message, array $context = [])
+    private function format($level, $message, array $context = []): string
     {
         if ($context !== []) {
             $replace = [];
@@ -108,11 +108,9 @@ class Logger extends AbstractLogger
      * Logs with an arbitrary level.
      *
      * @param mixed $level
-     * @param string $message
+     * @param $message
      * @param array $context
-     *
      * @return void
-     *
      * @throws Exception
      */
     public function log($level, $message, array $context = [])

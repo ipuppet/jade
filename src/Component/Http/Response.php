@@ -17,7 +17,7 @@ class Response
     const HTTP_405 = 405;
     const HTTP_500 = 500;
 
-    protected static $httpStatusText = [
+    protected static array $httpStatusText = [
         200 => 'OK',
         201 => 'Created',
         204 => 'No Content',
@@ -29,18 +29,18 @@ class Response
         500 => 'Internal Server Error',
     ];
 
-    protected $statusCode; //HTTP状态码
-    protected $statusText; //状态码对应的提示字符
-    protected $content; //响应内容
-    protected $headers; //响应头
-    protected $httpVersion = '1.1'; //HTTP版本
+    protected int $statusCode; //HTTP状态码
+    protected string $statusText; //状态码对应的提示字符
+    protected string $content; //响应内容
+    protected Header $headers; //响应头
+    protected string $httpVersion = '1.1'; //HTTP版本
 
     /**
      * @var LoggerInterface
      */
-    protected $logger; //日志记录器
+    protected LoggerInterface $logger; //日志记录器
 
-    public function __construct($content = '', int $httpStatus = self::HTTP_200, array $headers = [])
+    public function __construct(string $content = '', int $httpStatus = self::HTTP_200, array $headers = [])
     {
         $this->setContent($content);
         $this->setStatusCode($httpStatus);
@@ -52,35 +52,35 @@ class Response
         return $this->logger === null;
     }
 
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger): self
     {
         $this->logger = $logger;
         return $this;
     }
 
-    public static function create($content = '', int $httpStatus = self::HTTP_200, array $headers = [])
+    public static function create($content = '', int $httpStatus = self::HTTP_200, array $headers = []): Response
     {
         return new static($content, $httpStatus, $headers);
     }
 
-    public function setHttpVersion(string $httpVersion)
+    public function setHttpVersion(string $httpVersion): self
     {
         $this->httpVersion = $httpVersion;
         return $this;
     }
 
-    public function setContent($content)
+    public function setContent(string $content): self
     {
         $this->content = $content;
         return $this;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
 
-    public function setStatusCode(int $statusCode)
+    public function setStatusCode(int $statusCode): self
     {
         $this->statusCode = $statusCode;
         $this->statusText = self::$httpStatusText[$this->statusCode];
@@ -91,7 +91,7 @@ class Response
      * 发送header
      * @return $this
      */
-    public function sendHeaders()
+    public function sendHeaders(): self
     {
         if (headers_sent()) {
             return $this;

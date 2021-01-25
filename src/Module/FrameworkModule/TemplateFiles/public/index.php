@@ -6,7 +6,7 @@ use Ipuppet\Jade\Component\Http\RequestFactory;
 use Ipuppet\Jade\Component\Router\Exception\NoMatcherException;
 use Ipuppet\Jade\Foundation\Path\Exception\PathException;
 
-include '../../vendor/autoload.php';
+include '../vendor/autoload.php';
 
 date_default_timezone_set('PRC');
 

@@ -8,7 +8,7 @@ use Ipuppet\Jade\Foundation\Parameter\Parameter;
 
 class RequestFactory
 {
-    public static function createFromSuperGlobals()
+    public static function createFromSuperGlobals(): Request
     {
         $server = $_SERVER;
         if ('cli-server' === PHP_SAPI) {
@@ -35,7 +35,7 @@ class RequestFactory
         return $request;
     }
 
-    public static function create(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)
+    public static function create(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null): Request
     {
         return new Request($query, $request, $attributes, $cookies, $files, $server, $content);
     }

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace AppModule\Controller;
+namespace App\Controller;
 
 
-use AppModule\Model\HelloModel;
+use App\Model\HelloModel;
 use Ipuppet\Jade\Component\Http\Response;
 use Ipuppet\Jade\Foundation\Path\Exception\PathException;
 use Ipuppet\Jade\Module\FrameworkModule\Controller\Controller;
@@ -34,7 +34,7 @@ class HelloController extends Controller
      * @return Response
      * @throws PathException
      */
-    public function sayAction($name)
+    public function sayAction($name): Response
     {
         $helloModel = new HelloModel();
         $tip = "You can change the message by changing the url<br>e.g. http://your.host.com/yourname";

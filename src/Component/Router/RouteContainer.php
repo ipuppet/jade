@@ -9,7 +9,7 @@ class RouteContainer
     /**
      * @var array
      */
-    private $routes;
+    private array $routes;
 
     public function add($routes)
     {
@@ -31,12 +31,12 @@ class RouteContainer
         return $this->routes[$name];
     }
 
-    public function names()
+    public function names(): array
     {
         return array_keys($this->routes);
     }
 
-    public function all()
+    public function all(): array
     {
         return $this->routes;
     }

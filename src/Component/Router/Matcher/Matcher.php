@@ -13,12 +13,12 @@ abstract class Matcher implements MatcherInterface
      * 开启后路由结尾不能有'/'
      * @var bool
      */
-    private $strictMode;
+    private bool $strictMode;
 
     /**
      * @var array
      */
-    protected $attributes;
+    protected array $attributes;
 
     public function __construct(bool $strictMode = false)
     {
@@ -41,7 +41,7 @@ abstract class Matcher implements MatcherInterface
      * @param string $requestPath
      * @return bool
      */
-    abstract public function match(RouteInterface $route, $requestPath): bool;
+    abstract public function match(RouteInterface $route, string $requestPath): bool;
 
     /**
      * 返回占位符匹配结果
@@ -54,7 +54,7 @@ abstract class Matcher implements MatcherInterface
 
     /**
      * @param array $attributes
-     * @param RouteInterface $route
+     * @param RouteInterface|null $route
      */
     protected function setAttributes(array $attributes, RouteInterface $route = null)
     {
@@ -72,7 +72,7 @@ abstract class Matcher implements MatcherInterface
         $this->attributes = $attributes;
     }
 
-    public function defaultToken()
+    public function defaultToken(): string
     {
         return '([_0-9a-zA-Z\x{4e00}-\x{9fa5}]*)';
     }

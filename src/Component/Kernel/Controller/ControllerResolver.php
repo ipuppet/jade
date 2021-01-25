@@ -9,6 +9,7 @@ use Ipuppet\Jade\Component\Http\Request;
 use Ipuppet\Jade\Component\Logger\Logger;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 
 class ControllerResolver
@@ -54,7 +55,7 @@ class ControllerResolver
         return $callable;
     }
 
-    protected function createController($controller, $request)
+    protected function createController($controller, $request): array
     {
         if (false === strpos($controller, '::')) {
             throw new InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
@@ -66,7 +67,13 @@ class ControllerResolver
         return array($this->instantiateController($class, $request), $method);
     }
 
-    protected function instantiateController($class, $request)
+    /**
+     * @param $class
+     * @param $request
+     * @return object
+     * @throws ReflectionException
+     */
+    protected function instantiateController($class, $request): object
     {
         $reflectionClass = new ReflectionClass($class);
         $constructor = $reflectionClass->getConstructor();
@@ -85,7 +92,7 @@ class ControllerResolver
         return $reflectionClass->newInstanceArgs();
     }
 
-    private function getControllerError($callable)
+    private function getControllerError($callable): string
     {
         if (is_string($callable)) {
             if (false !== strpos($callable, '::')) {
@@ -135,7 +142,7 @@ class ControllerResolver
      * @param $controller
      * @param Request $request
      * @return array
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function sortRequestParameters($controller, Request $request): array
     {

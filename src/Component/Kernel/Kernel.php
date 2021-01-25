@@ -20,26 +20,26 @@ use Ipuppet\Jade\Foundation\Path\PathInterface;
 
 abstract class Kernel
 {
-    private $isLogAccessError = false;
+    private bool $isLogAccessError = false;
     /**
-     * @var ConfigLoader
+     * @var ?ConfigLoader
      */
-    private $configLoader;
+    private ?ConfigLoader $configLoader = null;
 
     /**
-     * @var PathInterface
+     * @var ?PathInterface
      */
-    protected $cachePath;
+    protected ?PathInterface $cachePath = null;
 
     /**
-     * @var PathInterface
+     * @var ?PathInterface
      */
-    protected $logPath;
+    protected ?PathInterface $logPath = null;
 
     /**
-     * @var PathInterface
+     * @var ?PathInterface
      */
-    protected $rootPath;
+    protected ?PathInterface $rootPath = null;
 
     /**
      * 获取缓存目录
@@ -77,7 +77,8 @@ abstract class Kernel
     public function getRootPath(): PathInterface
     {
         if ($this->rootPath === null) {
-            $this->rootPath = new Path(dirname(__DIR__));
+            $path = substr(__DIR__, 0, strripos(__DIR__, 'vendor') - 1);
+            $this->rootPath = new Path($path);
         }
         return $this->rootPath;
     }
@@ -164,7 +165,7 @@ abstract class Kernel
         if ($this->configLoader === null) {
             $this->configLoader = new ConfigLoader();
             $path = new Path($this->getRootPath());
-            $path->after('/app/config');
+            $path->after('/config');
             $this->configLoader->setPath($path)->setParser(new JsonParser());
             $this->loadDefaultConfig($this->configLoader);
         }
@@ -179,7 +180,7 @@ abstract class Kernel
     {
         $config = $configLoader->setName('config')->loadFromFile();
         if ($config->has('logAccessError')) {
-            $this->isLogAccessError = $config->get('logAccessError');
+            $this->isLogAccessError = (bool)$config->get('logAccessError');
         }
     }
 }

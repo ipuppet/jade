@@ -12,12 +12,12 @@ class JsonParser implements ParserInterface
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @var PathInterface
      */
-    private $path;
+    private PathInterface $path;
 
     /**
      * @param string $name

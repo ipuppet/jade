@@ -10,11 +10,6 @@ use Ipuppet\Jade\Foundation\Path\PathInterface;
 class AppKernel extends Kernel
 {
     /**
-     * @var PathInterface
-     */
-    protected $rootPath;
-
-    /**
      * 获取项目根目录
      * @return PathInterface
      * @throws PathException
@@ -25,10 +20,5 @@ class AppKernel extends Kernel
             $this->rootPath = new Path(dirname(__DIR__));
         }
         return $this->rootPath;
-    }
-
-    public static function getRootPathString()
-    {
-        return dirname(__DIR__);
     }
 }

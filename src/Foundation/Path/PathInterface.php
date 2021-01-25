@@ -16,7 +16,7 @@ interface PathInterface
      * 合并两个路径
      * @param PathInterface|string $before
      * @param PathInterface|string $after
-     * @return string
+     * @return PathInterface
      */
     public static function join($before = null, $after = null): PathInterface;
 

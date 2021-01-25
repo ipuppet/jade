@@ -5,9 +5,9 @@ namespace Ipuppet\Jade\Component\Router\Reason;
 
 
 use Exception;
-use Psr\Log\LoggerInterface;
 use Ipuppet\Jade\Component\Http\Response;
 use Ipuppet\Jade\Component\Kernel\Config\Config;
+use Psr\Log\LoggerInterface;
 
 abstract class Reason implements ReasonInterface
 {
