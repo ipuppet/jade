@@ -61,12 +61,13 @@ class RouteContainer
             $methods = [];
             if (isset($route['methods'])) {
                 if (is_array($route['methods'])) {
-                    foreach ($route['methods'] as $method) {
-                        $methods[] = $method;
-                    }
+                    $methods = $route['methods'];
                 } else {
+                    // 当只有一种请求方法受到支持时，您应该使用 'method' 而不是 'methods'
                     $methods = [$route['methods']];
                 }
+            } else if (isset($route['method'])) {
+                $methods = [$route['method']];
             }
             $options['controller'] = $route['controller'];
             //转换为Route对象
