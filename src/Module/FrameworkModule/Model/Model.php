@@ -66,8 +66,7 @@ abstract class Model
     protected function init(): void
     {
         $this->kernel = new AppKernel();
-        $this->configLoader = $this->kernel->getConfigLoader()
-            ->setParser(new JsonParser());
+        $this->configLoader = $this->kernel->getConfigLoader();
         $this->logger = new Logger();
         $this->logger->setName('PdoDatabaseDriver')
             ->setOutput($this->kernel->getLogPath());

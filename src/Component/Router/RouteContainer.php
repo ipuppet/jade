@@ -11,6 +11,10 @@ class RouteContainer
      */
     private array $routes;
 
+    /**
+     * 批量添加
+     * @param $routes
+     */
     public function add($routes)
     {
         if ($routes instanceof RouteContainer) {
@@ -21,6 +25,11 @@ class RouteContainer
         }
     }
 
+    /**
+     * 单个设置
+     * @param $name
+     * @param RouteInterface $route
+     */
     public function set($name, RouteInterface $route)
     {
         $this->routes[$name] = $route;
@@ -49,7 +58,6 @@ class RouteContainer
             $path = $route['path'];
             $defaults = $route['defaults'] ?? [];
             $tokens = $route['tokens'] ?? [];
-            $host = $route['host'] ?? '';
             $methods = [];
             if (isset($route['methods'])) {
                 if (is_array($route['methods'])) {
@@ -62,7 +70,7 @@ class RouteContainer
             }
             $options['controller'] = $route['controller'];
             //转换为Route对象
-            $route = new Route($path, $defaults, $tokens, $options, $host, $methods);
+            $route = new Route($path, $defaults, $tokens, $options, $methods);
             $routeContainer->set($name, $route);
         }
         return $routeContainer;

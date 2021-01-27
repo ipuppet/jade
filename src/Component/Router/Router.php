@@ -108,8 +108,15 @@ class Router
         return $this->request;
     }
 
-    public function getReason(): ReasonInterface
+    /**
+     * 是否将错误写入日志
+     * @param bool $logAccessError
+     * @return ReasonInterface
+     */
+    public function getReason(bool $logAccessError = false): ReasonInterface
     {
+        if ($logAccessError)
+            $this->logger->error("Access error '{$this->request->getPathInfo()}' {$this->reason->getDescription()}");
         return $this->reason;
     }
 
@@ -133,14 +140,10 @@ class Router
                     $this->request->request->add($this->matcher->getAttributes());
                     $this->request->attributes->set('controller', $route->getOption('controller'));
                     return true;
-                } /*else {
-                    //非法请求
-                    //此处可能导致相同path但不同方法不同名称的多条路由被跳过
-                    return false;
-                }*/
+                }
             }
         }
-        //未成功匹配
+        // 未成功匹配
         $this->reason = new NoMatch($this->config, $this->logger);
         return false;
     }
@@ -152,14 +155,13 @@ class Router
      */
     public function afterMatch(RouteInterface $route): bool
     {
-        //方法是否允许
-        if ($route->getMethods() !== [] && !in_array($this->request->getMethod(), $route->getMethods())) {
+        // 方法是否允许，未规定则视为全都允许
+        if (
+            $route->getMethods() !== [] &&
+            !in_array($this->request->getMethod(), $route->getMethods()) &&
+            $this->request->getMethod() !== 'OPTIONS' // 所有OPTIONS请求都跳过检查
+        ) {
             $this->reason = new MethodNotAllow($this->config, $this->logger);
-            return false;
-        }
-        //host是否允许 未规定则视为全都允许
-        if ($route->getHost() !== '' && $this->request->headers->get('host') !== $route->getHost()) {
-            $this->reason = new HostNotAllow($this->config, $this->logger);
             return false;
         }
         return true;
