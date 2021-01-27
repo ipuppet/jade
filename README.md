@@ -33,21 +33,15 @@ e.g. `php build.php -r /path/to/`
 
 创建以后请运行`composer dump-autoload`以更新自动加载文件。
 
-### 基本配置
-
-项目创建完成后，您可以在`config/response.json`文件中设置如果请求发生错误该返回什么内容。(如请求方法不被允许、未匹配到结果等)
-
-该实现在`Component/Router/Reason/Reason.php`抽象类中，如果向构造函数传递一个`Config`对象则会尝试从其中读取数据
-
-若开头为符号`@`，则该值被视为路径且符号`@`将被自动替换成项目根目录（该路径是通过`AppKernel`中的`getRootDir()`方法获取的）
-
-若为其他内容则直接以字符串形式输出。
-
 ### 配置文件
 
-项目全局配置文件为`config/config.json`中
+> 配置文件均在`/config`目录中
 
-#### 内容说明
+#### `config.json`
+
+项目全局配置文件
+
+##### 内容说明
 
 | 名称 | 默认值 | 说明 |
 | --- | --- | --- |
@@ -72,6 +66,30 @@ e.g. `php build.php -r /path/to/`
 }
 ```
 
+#### `routes.json`
+
+示例：
+
+```json
+[
+    {
+        "method": "get",
+        "name": "SayHello",
+        "path": "/say-hello/{like}/{name}/",
+        "controller": "App\\Controller\\SayHelloController::sayHelloAction"
+    },
+    {
+        "methods": [
+            "get",
+            "post"
+        ],
+        "name": "SayHello2",
+        "path": "/say-hello2/{like}/{name}/",
+        "controller": "App\\Controller\\SayHelloController::sayHelloTwoAction"
+    }
+]
+```
+
 ### 控制器
 
 前端向您发送的请求中携带参数（如url中包含的、请求body中携带的等等）您**无需担心参数顺序**，只需保证控制器参数名称与请求中的参数名称一致即可
@@ -91,9 +109,7 @@ public function sayHelloAction($like, $name)
 
 ```json
 {
-    "methods": [
-        "get"
-    ],
+    "method": "get",
     "name": "SayHello",
     "path": "/say-hello/{like}/{name}/",
     "controller": "App\\Controller\\SayHelloController::sayHelloAction"
