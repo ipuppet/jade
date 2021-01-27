@@ -24,16 +24,15 @@ abstract class Controller
     public function checkCors(): bool
     {
         if (null === $this->corsConfig) $this->corsConfig = new Config();
-        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] === 443) ? "https://" : "http://";
-        $host = $_SERVER['HTTP_ORIGIN'] ?? $protocol . $_SERVER['HTTP_HOST'];
+        $origin = $_SERVER['HTTP_ORIGIN'];
         // 判断是否允许跨域
-        if (in_array($host, $this->corsConfig->get('hosts', []))) {
+        if (in_array($origin, $this->corsConfig->get('hosts', []))) {
             $methods = ['OPTIONS'];
             foreach ($this->corsConfig->get('methods', ['get', 'post', 'put', 'delete']) as $method) {
                 $methods[] = strtoupper($method);
             }
             $headers = $this->corsConfig->get('headers', ['Content-Type', 'Authorization']);
-            header('Access-Control-Allow-Origin: ' . $host);
+            header('Access-Control-Allow-Origin: ' . $origin);
             header('Access-Control-Allow-Methods: ' . implode(', ', $methods));
             header('Access-Control-Allow-Headers: ' . implode(', ', $headers));
             return true;

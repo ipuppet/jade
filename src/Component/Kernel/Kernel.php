@@ -133,16 +133,16 @@ abstract class Kernel
             if ($this->config->has('cors') && !empty($this->config->get('cors'))) {
                 call_user_func([$controller[0], 'setCorsConfig'], new Config($this->config->get('cors')));
             }
+            // 验证是否可以跨域
+            $isPassCorsCheck = call_user_func([$controller[0], 'checkCors']);
+            if ($request->getMethod() === 'OPTIONS') { // 对OPTIONS请求进行处理
+                return Response::create('', $isPassCorsCheck ? Response::HTTP_204 : Response::HTTP_400);
+            }
             // 整理参数顺序，按照方法签名对齐
             $parameters = $controllerResolver->sortRequestParameters($controller, $request);
             // 调用控制器中对应的方法并获得Response
             $response = call_user_func_array($controller, $parameters);
             if ($response instanceof Response) {
-                // 必须等待$response取到值，因为cors设置在控制器中可能被修改
-                $isPassCorsCheck = call_user_func([$controller[0], 'checkCors']);
-                if ($request->getMethod() === 'OPTIONS') { // 对OPTIONS请求进行处理
-                    return Response::create('', $isPassCorsCheck ? Response::HTTP_204 : Response::HTTP_400);
-                }
                 return $response;
             } else {
                 $logger->error('The return value of Controller must need instance of Response.');
