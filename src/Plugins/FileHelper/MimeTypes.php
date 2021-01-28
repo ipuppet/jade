@@ -14,7 +14,7 @@ class MimeTypes
     /**
      * @var MimeTypes
      */
-    private static $instance;
+    private static self $instance;
 
     private function __construct()
     {
@@ -41,13 +41,13 @@ class MimeTypes
         return null;
     }
 
-    public function getAllExtensions($mime_type)
+    public function getAllExtensions($mime_type): array
     {
         $mime_type = $this->cleanInput($mime_type);
         if (isset($this->mapping['extensions'][$mime_type])) {
             return $this->mapping['extensions'][$mime_type];
         }
-        return array();
+        return [];
     }
 
     public function getMimeType($extension)
@@ -59,16 +59,16 @@ class MimeTypes
         return null;
     }
 
-    public function getAllMimeTypes($extension)
+    public function getAllMimeTypes($extension): array
     {
         $extension = $this->cleanInput($extension);
         if (isset($this->mapping['mimes'][$extension])) {
             return $this->mapping['mimes'][$extension];
         }
-        return array();
+        return [];
     }
 
-    private function cleanInput($input)
+    private function cleanInput($input): string
     {
         return strtolower(trim($input));
     }

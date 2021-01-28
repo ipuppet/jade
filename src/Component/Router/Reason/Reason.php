@@ -18,16 +18,16 @@ abstract class Reason implements ReasonInterface
 
     /**
      * Reason constructor.
-     * @param Config|null $config
-     * @param LoggerInterface|null $logger
+     * @param ?Config $config
+     * @param ?LoggerInterface $logger
      * @throws Exception
      */
     public function __construct(Config $config = null, LoggerInterface $logger = null)
     {
         if ($config !== null) {
-            $content = $config->get($this->getHttpStatus());
+            $content = $config->get('errorResponse')[$this->getHttpStatus()];
             if ($content[0] === '@') {
-                $content = str_replace('@', $config->get('root_dir'), $content);
+                $content = str_replace('@', $config->get('rootPath'), $content);
                 if (file_exists($content)) {
                     $this->content = file_get_contents($content);
                 } else {

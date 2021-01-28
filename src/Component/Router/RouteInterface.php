@@ -16,19 +16,6 @@ interface RouteInterface
     public function setPath(string $pattern): self;
 
     /**
-     * Returns the pattern for the host.
-     * @return string The host pattern
-     */
-    public function getHost(): string;
-
-    /**
-     * Sets the pattern for the host.
-     * @param string $pattern The host pattern
-     * @return $this
-     */
-    public function setHost(string $pattern): self;
-
-    /**
      * Returns the uppercased HTTP methods this route is restricted to.
      * So an empty array means that any method is allowed.
      * @return array The methods

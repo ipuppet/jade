@@ -14,11 +14,6 @@ class Route implements RouteInterface
     private string $path = '/';
 
     /**
-     * @var string
-     */
-    private string $host;
-
-    /**
      * @var array
      */
     private array $methods;
@@ -42,6 +37,7 @@ class Route implements RouteInterface
     private array $parameters = [];
 
     /**
+     * 用于存放例如控制器之类的信息
      * @var array
      */
     private array $options;
@@ -51,19 +47,17 @@ class Route implements RouteInterface
      */
     private array $placeholders = [];
 
-    public function __construct($path, array $defaults = [], array $tokens = [], array $options = [], $host = '', $methods = [])
+    public function __construct($path, array $defaults = [], array $tokens = [], array $options = [], $methods = [])
     {
         $this->setPath($path);
         $this->setDefaults($defaults);
         $this->setTokens($tokens);
         $this->setOptions($options);
-        $this->setHost($host);
         $this->setMethods($methods);
     }
 
     /**
      * Returns the pattern for the path.
-     *
      * @return string The path pattern
      */
     public function getPath(): string
@@ -73,9 +67,7 @@ class Route implements RouteInterface
 
     /**
      * Sets the pattern for the path.
-     *
      * @param string $pattern The path pattern
-     *
      * @return $this
      */
     public function setPath(string $pattern): self
@@ -83,38 +75,12 @@ class Route implements RouteInterface
         // A pattern must start with a slash and must not have multiple slashes at the beginning because the
         // generated path for this route would be confused with a network path, e.g. '//domain.com/path'.
         $this->path = '/' . ltrim(trim($pattern), '/');
-
-        return $this;
-    }
-
-    /**
-     * Returns the pattern for the host.
-     *
-     * @return string The host pattern
-     */
-    public function getHost(): string
-    {
-        return $this->host;
-    }
-
-    /**
-     * Sets the pattern for the host.
-     *
-     * @param string $pattern The host pattern
-     *
-     * @return $this
-     */
-    public function setHost(string $pattern): self
-    {
-        $this->host = (string)$pattern;
-
         return $this;
     }
 
     /**
      * Returns the uppercased HTTP methods this route is restricted to.
      * So an empty array means that any method is allowed.
-     *
      * @return array The methods
      */
     public function getMethods(): array
@@ -125,15 +91,12 @@ class Route implements RouteInterface
     /**
      * Sets the HTTP methods (e.g. 'POST') this route is restricted to.
      * So an empty array means that any method is allowed.
-     *
      * @param string|array $methods The method or an array of methods
-     *
      * @return $this
      */
     public function setMethods($methods): self
     {
         $this->methods = array_map('strtoupper', (array)$methods);
-
         return $this;
     }
 
@@ -152,14 +115,12 @@ class Route implements RouteInterface
         foreach ($parameters as $name => $parameter) {
             $this->parameters[$name] = $parameter;
         }
-
         return $this;
     }
 
     public function setParameter($name, $value): self
     {
         $this->parameters[$name] = $value;
-
         return $this;
     }
 
@@ -188,14 +149,12 @@ class Route implements RouteInterface
         foreach ($options as $name => $option) {
             $this->options[$name] = $option;
         }
-
         return $this;
     }
 
     public function setOption($name, $value): self
     {
         $this->options[$name] = $value;
-
         return $this;
     }
 
@@ -217,7 +176,6 @@ class Route implements RouteInterface
     public function setDefaults(array $defaults): self
     {
         $this->defaults = [];
-
         return $this->addDefaults($defaults);
     }
 
@@ -226,7 +184,6 @@ class Route implements RouteInterface
         foreach ($defaults as $name => $default) {
             $this->defaults[$name] = $default;
         }
-
         return $this;
     }
 
@@ -243,7 +200,6 @@ class Route implements RouteInterface
     public function setDefault($name, $default): self
     {
         $this->defaults[$name] = $default;
-
         return $this;
     }
 
@@ -264,7 +220,6 @@ class Route implements RouteInterface
         foreach ($tokens as $key => $regex) {
             $this->tokens[$key] = $this->sanitizeToken($key, $regex);
         }
-
         return $this;
     }
 
@@ -276,7 +231,6 @@ class Route implements RouteInterface
     public function setToken($key, $regex): self
     {
         $this->tokens[$key] = $this->sanitizeToken($key, $regex);
-
         return $this;
     }
 

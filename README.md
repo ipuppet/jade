@@ -1,10 +1,13 @@
 ## ipuppet/jade
+
 > A RESTful API framework.
 
 ### 安装
+
 `composer require ipuppet/jade`
 
 ### 创建项目
+
 使用`vendor/ipuppet/jade/src`目录下的`build`脚本创建新项目
 
 您可以在该脚本位置运行
@@ -16,6 +19,7 @@
 e.g. `php build.php -r /path/to/`
 
 在composer.json中更新如下内容：
+
 ```json
 {
     "autoload": {
@@ -26,28 +30,65 @@ e.g. `php build.php -r /path/to/`
     }
 }
 ```
+
 创建以后请运行`composer dump-autoload`以更新自动加载文件。
-
-
-### 基本配置
-
-项目创建完成后，您可以在`config/response.json`文件中设置如果请求发生错误该返回什么内容。(如请求方法不被允许、未匹配到结果等)
-
-该实现在`Component/Router/Reason/Reason.php`抽象类中，如果向构造函数传递一个`Config`对象则会尝试从其中读取数据
-
-若开头为符号`@`，则该值被视为路径且符号`@`将被自动替换成项目根目录（该路径是通过`AppKernel`中的`getRootDir()`方法获取的）
-
-若为其他内容则直接以字符串形式输出。
 
 ### 配置文件
 
-项目全局配置文件为`config/config.json`中
+> 配置文件均在`/config`目录中
 
-#### 内容说明
+#### `config.json`
+
+项目全局配置文件
+
+##### 内容说明
 
 | 名称 | 默认值 | 说明 |
 | --- | --- | --- |
-| logAccessError | false | 是否记录拒绝访问以及未匹配的路由 `true`表示记录 |
+| `logAccessError` | `false` | `Boolean` 是否记录拒绝访问以及未匹配的路由 `true`表示记录 |
+| `errorResponse` | 无 | `Object` 设置当请求发生错误时返回的内容。<br>若开头为符号`@`，则该值被视为路径且符号`@`将被自动替换成项目根目录（该路径是通过`AppKernel`中的`getRootDir()`方法获取的）若为其他内容则直接以字符串形式输出。 |
+| `cors` | 无 | `Object` 设置跨域。<br>属性：(以下属性的默认值只有在您设置了cors字段后才生效)<br>`hosts`: `Array` 允许跨域请求的协议+域名，如`http://a.example.com`<br>`methods`: `Array` 允许的方法，默认为`["get", "post", "put", "delete"]`<br>`headers`: `Array` 允许的方法，默认为`["Content-Type", "Authorization"]` |
+
+配置文件示例：
+
+```json
+{
+    "logAccessError": false,
+    "errorResponse": {
+        "404": "@/public/response/404.html"
+    },
+    "cors": {
+        "hosts": [
+            "https://a.example.com",
+            "https://b.example.com"
+        ]
+    }
+}
+```
+
+#### `routes.json`
+
+示例：
+
+```json
+[
+    {
+        "method": "get",
+        "name": "SayHello",
+        "path": "/say-hello/{like}/{name}/",
+        "controller": "App\\Controller\\SayHelloController::sayHelloAction"
+    },
+    {
+        "methods": [
+            "get",
+            "post"
+        ],
+        "name": "SayHello2",
+        "path": "/say-hello2/{like}/{name}/",
+        "controller": "App\\Controller\\SayHelloController::sayHelloTwoAction"
+    }
+]
+```
 
 ### 控制器
 
@@ -68,9 +109,7 @@ public function sayHelloAction($like, $name)
 
 ```json
 {
-    "methods": [
-        "get"
-    ],
+    "method": "get",
     "name": "SayHello",
     "path": "/say-hello/{like}/{name}/",
     "controller": "App\\Controller\\SayHelloController::sayHelloAction"
@@ -92,16 +131,9 @@ public function sayHelloAction($like, $name)
 ```php
 public function __construct(Request $req)
 {
-    if ($req->getMethod() === 'OPTIONS') {
-        $this->ignoreRequest();
-    }
+    var_dump($req);
 }
 ```
-
-`ignoreRequest()`方法可用来忽略一次请求，该方法在抽象类`Controller`中。
-
-与其共同工作的还有`setDefaultResponse()`方法，该方法接受一个`Response`型的变量，用来明确默认情况下该作何反应。
-若不调用将会返回一个状态为`204`的响应。
 
 ### API
 
