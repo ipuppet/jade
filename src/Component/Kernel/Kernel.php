@@ -22,7 +22,6 @@ use ReflectionException;
 
 abstract class Kernel
 {
-    private bool $isLogAccessError = false;
     /**
      * @var ?ConfigLoader
      */
@@ -149,7 +148,7 @@ abstract class Kernel
             }
         }
         // 响应错误信息
-        $reason = $router->getReason($this->config->get('isLogAccessError', false));
+        $reason = $router->getReason($this->config->get('logAccessError', false));
         return new Response($reason->getContent(), $reason->getHttpStatus());
     }
 
