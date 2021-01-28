@@ -29,6 +29,7 @@ class MatchByRegexPath extends Matcher implements MatcherInterface
         if ($this->isStrictMode()) {
             $tokenPath .= '$/u';
         } else {
+            $tokenPath = rtrim($tokenPath, '\/');
             $tokenPath .= '\/?$/u';
         }
         if (preg_match($tokenPath, urldecode($requestPath), $attributes)) {

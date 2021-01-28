@@ -114,7 +114,7 @@ abstract class Kernel
         // 实例化Router对象
         $logger->setName('Router')->setOutput($this->getLogPath());
         $router = new Router();
-        $matcher = new MatchByRegexPath();
+        $matcher = new MatchByRegexPath($this->config->get('routerStrictMode', false));
         $router->setRequest($request)
             ->setLogger($logger)
             ->setRouteContainer($this->getRouteContainer())
