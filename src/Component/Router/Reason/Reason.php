@@ -25,8 +25,10 @@ abstract class Reason implements ReasonInterface
     public function __construct(Config $config = null, LoggerInterface $logger = null)
     {
         if ($config !== null) {
-            $content = $config->get('errorResponse')[$this->getHttpStatus()];
-            if ($content[0] === '@') {
+            $errorResponse = $config->get('errorResponse', []);
+            $httpStatus = $this->getHttpStatus();
+            $content = array_key_exists($httpStatus, $errorResponse) ? $errorResponse[$httpStatus] : false;
+            if ($content && $content[0] === '@') {
                 $content = str_replace('@', $config->get('rootPath'), $content);
                 if (file_exists($content)) {
                     $this->content = file_get_contents($content);
