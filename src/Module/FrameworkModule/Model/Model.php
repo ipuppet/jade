@@ -14,7 +14,6 @@ use Ipuppet\Jade\Component\Kernel\Kernel;
 use Ipuppet\Jade\Component\Logger\Logger;
 use Ipuppet\Jade\Foundation\Parameter\Parameter;
 use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
-use Ipuppet\Jade\Foundation\Parser\JsonParser;
 use Ipuppet\Jade\Foundation\Path\Exception\PathException;
 use Psr\Log\LoggerInterface;
 
