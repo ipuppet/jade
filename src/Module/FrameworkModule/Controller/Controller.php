@@ -27,6 +27,8 @@ abstract class Controller
 
     public function checkCors(): bool
     {
+        // 未发送 HTTP_ORIGIN
+        if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) return false;
         if (null === $this->corsConfig) $this->corsConfig = new Config();
         $origin = $_SERVER['HTTP_ORIGIN'];
         // 判断是否允许跨域
