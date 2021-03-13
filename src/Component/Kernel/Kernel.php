@@ -137,6 +137,10 @@ abstract class Kernel
             if ($request->getMethod() === 'OPTIONS') { // 对OPTIONS请求进行处理
                 return Response::create('', $isPassCorsCheck ? Response::HTTP_204 : Response::HTTP_400);
             }
+            // 判断是否在控制器之前返回响应
+            if (call_user_func([$controller[0], 'isResponseBeforeController'])) {
+                return call_user_func([$controller[0], 'getResponse']);
+            }
             // 整理参数顺序，按照方法签名对齐
             $parameters = $controllerResolver->sortRequestParameters($controller, $request);
             // 调用控制器中对应的方法并获得Response

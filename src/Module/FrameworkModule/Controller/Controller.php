@@ -4,6 +4,7 @@
 namespace Ipuppet\Jade\Module\FrameworkModule\Controller;
 
 
+use Ipuppet\Jade\Component\Http\Response;
 use Ipuppet\Jade\Component\Kernel\Config\Config;
 
 abstract class Controller
@@ -12,6 +13,9 @@ abstract class Controller
      * @var ?Config
      */
     private ?Config $corsConfig = null;
+
+    public bool $isResponseBeforeController = false;
+    public Response $response;
 
     /**
      * @param Config $config
@@ -38,5 +42,27 @@ abstract class Controller
             return true;
         }
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isResponseBeforeController(): bool
+    {
+        return $this->isResponseBeforeController;
+    }
+
+    /**
+     * @return Response
+     */
+    public function getResponse(): Response
+    {
+        return $this->response;
+    }
+
+    protected function responseBeforeController(string $content, int $httpStatus): void
+    {
+        $this->isResponseBeforeController = true;
+        $this->response = Response::create($content, $httpStatus);
     }
 }

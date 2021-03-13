@@ -138,4 +138,14 @@ public function __construct(Request $req)
 
 ### API
 
+#### Controller
+
+##### __construct()
+
+- responseBeforeController
+  
+    `protected function responseBeforeController(string $content, int $httpStatus): void`
+    
+    在构造函数中就进行响应。通常用于身份验证未通过的情况下响应一个需要登录的 `Response`
+
 由于目前分身乏术，可能日后再进行更新，目前还请直接查看源码。
