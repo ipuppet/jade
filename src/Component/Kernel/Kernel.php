@@ -132,7 +132,7 @@ abstract class Kernel
             try {
                 $controller = $controllerResolver->getController($request);
             } catch (Exception $error) {
-                $response = Response::create('Error', Response::HTTP_400);
+                $response = Response::create('', Response::HTTP_400);
                 $response->send();
                 $logger->setName('ControllerResolver')->setOutput($this->getLogPath());
                 $logger->error((string)$error);
