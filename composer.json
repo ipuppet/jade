@@ -15,20 +15,21 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.0",
         "ext-pdo": "*",
         "ext-json": "*",
         "ext-iconv": "*",
         "ext-fileinfo": "*",
         "ext-mbstring": "*",
-        "psr/log": "^1.1"
+        "psr/log": "^1.1",
+        "ext-curl": "*"
     },
     "suggest": {
         "swiftmailer/swiftmailer": "安装后您可以使用插件中的邮件发送器以及验证码发送器",
         "phpoffice/phpspreadsheet": "安装后您可以使用插件对Office文件进行操作"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.5"
+        "phpunit/phpunit": "^9"
     },
     "autoload": {
         "psr-4": {
