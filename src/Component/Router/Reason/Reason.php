@@ -14,7 +14,9 @@ abstract class Reason implements ReasonInterface
     /**
      * @var string
      */
-    protected $content;
+    protected ?string $content;
+
+    private ?LoggerInterface $logger;
 
     /**
      * Reason constructor.
@@ -24,24 +26,34 @@ abstract class Reason implements ReasonInterface
      */
     public function __construct(Config $config = null, LoggerInterface $logger = null)
     {
+        if ($logger) $this->logger = $logger;
         if ($config !== null) {
-            $errorResponse = $config->get('errorResponse', []);
             $httpStatus = $this->getHttpStatus();
-            $content = array_key_exists($httpStatus, $errorResponse) ? $errorResponse[$httpStatus] : false;
-            if ($content && $content[0] === '@') {
-                $content = str_replace('@', $config->get('rootPath'), $content);
-                if (file_exists($content)) {
-                    $this->content = file_get_contents($content);
-                } else {
-                    $message = '您在response配置文件中设定的文件不存在，请检查。';
-                    if ($logger !== null) {
-                        $logger->warning($message);
-                    } else {
-                        throw new Exception($message);
-                    }
+            $content = $config->get($httpStatus, false);
+            if ($content) {
+                switch ($content[0]) {
+                    case '@': // 项目路径
+                        $content = str_replace('@', $config->get('rootPath'), $content);
+                        $this->setContent($this->getFileContent($content));
+                        break;
+                    default:
+                        $this->setContent($content);
                 }
+            }
+        }
+    }
+
+    private function getFileContent($path)
+    {
+        if (file_exists($path)) {
+            return file_get_contents($path);
+        } else {
+            $message = "您在response配置文件中设定的文件 [{$path}] 不存在，请检查。";
+            if ($this->logger) {
+                $this->logger->warning($message);
+                return false;
             } else {
-                $this->content = $content;
+                throw new Exception($message);
             }
         }
     }
