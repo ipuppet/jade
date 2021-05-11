@@ -18,21 +18,6 @@
 
 e.g. `php build.php -r /path/to/`
 
-在composer.json中更新如下内容：
-
-```json
-{
-    "autoload": {
-        "psr-4": {
-            "...": "您之前的内容",
-            "App\\": "app"
-        }
-    }
-}
-```
-
-创建以后请运行`composer dump-autoload`以更新自动加载文件。
-
 ### 配置文件
 
 > 配置文件均在`/config`目录中
