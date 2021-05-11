@@ -45,6 +45,7 @@ e.g. `php build.php -r /path/to/`
 
 | 名称 | 默认值 | 说明 |
 | --- | --- | --- |
+| `debug` | `false` | `Boolean` 是否打印相关错误信息 |
 | `logAccessError` | `false` | `Boolean` 是否记录拒绝访问以及未匹配的路由 `true`表示记录 |
 | `routerStrictMode` | `false` | `Boolean` 路由匹配是否可以忽略结尾斜杠 `false` 表示可以忽略 |
 | `errorResponse` | 无 | `Object` 设置当请求发生错误时返回的内容。<br>若开头为符号`@`，则该值被视为路径且符号`@`将被自动替换成项目根目录（该路径是通过`AppKernel`中的`getRootDir()`方法获取的）若为其他内容则直接以字符串形式输出。 |
@@ -137,5 +138,15 @@ public function __construct(Request $req)
 ```
 
 ### API
+
+#### Controller
+
+##### __construct()
+
+- responseBeforeController
+  
+    `protected function responseBeforeController(string $content, int $httpStatus): void`
+    
+    在构造函数中就进行响应。通常用于身份验证未通过的情况下响应一个需要登录的 `Response`
 
 由于目前分身乏术，可能日后再进行更新，目前还请直接查看源码。

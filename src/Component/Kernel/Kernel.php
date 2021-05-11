@@ -4,6 +4,7 @@
 namespace Ipuppet\Jade\Component\Kernel;
 
 
+use Exception;
 use Ipuppet\Jade\Component\Http\Request;
 use Ipuppet\Jade\Component\Http\Response;
 use Ipuppet\Jade\Component\Kernel\Config\Config;
@@ -103,6 +104,7 @@ abstract class Kernel
      * @throws PathException
      * @throws NoMatcherException
      * @throws ReflectionException
+     * @throws Exception
      */
     public function handle(Request $request): Response
     {
@@ -127,7 +129,15 @@ abstract class Kernel
         // 开始匹配路由
         if ($router->matchAll()) {
             $request = $router->getRequest();
-            $controller = $controllerResolver->getController($request);
+            try {
+                $controller = $controllerResolver->getController($request);
+            } catch (Exception $error) {
+                $response = Response::create('', Response::HTTP_400);
+                $response->send();
+                $logger->setName('ControllerResolver')->setOutput($this->getLogPath());
+                $logger->error((string)$error);
+                die($this->config->get('debug', false) ? (string)$error : '');
+            }
             // 判断配置文件内是否有跨域配置，若有则注入到控制器中
             if ($this->config->has('cors') && !empty($this->config->get('cors'))) {
                 call_user_func([$controller[0], 'setCorsConfig'], new Config($this->config->get('cors')));
@@ -136,6 +146,10 @@ abstract class Kernel
             $isPassCorsCheck = call_user_func([$controller[0], 'checkCors']);
             if ($request->getMethod() === 'OPTIONS') { // 对OPTIONS请求进行处理
                 return Response::create('', $isPassCorsCheck ? Response::HTTP_204 : Response::HTTP_400);
+            }
+            // 判断是否在控制器之前返回响应
+            if (call_user_func([$controller[0], 'isResponseBeforeController'])) {
+                return call_user_func([$controller[0], 'getResponse']);
             }
             // 整理参数顺序，按照方法签名对齐
             $parameters = $controllerResolver->sortRequestParameters($controller, $request);
