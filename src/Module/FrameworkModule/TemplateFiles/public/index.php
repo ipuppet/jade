@@ -8,6 +8,9 @@ use Ipuppet\Jade\Foundation\Path\Exception\PathException;
 
 include '../vendor/autoload.php';
 
+// jade autoload
+include 'autoload.php';
+
 date_default_timezone_set('PRC');
 
 $kernel = new AppKernel();

@@ -3,10 +3,9 @@
  * 用于创建新项目
  */
 
-
-//接收参数
+// 接收参数
 $param = getopt('r:');
-//项目根路径
+// 项目根路径
 if (isset($param['r'])) {
     $rootPath = $param['r'];
 } else {
@@ -16,21 +15,19 @@ if (isset($param['r'])) {
     }
 }
 
-//项目模板文件路径
+// 项目模板文件路径
 $templatePath = 'Module/FrameworkModule/TemplateFiles';
-//composer自动加载路径
+// composer 自动加载路径
 $autoload = $rootPath . '/vendor/autoload.php';
 include $autoload;
 
 $baseFiles = [
     'app' => [
-        'AppModule' => [
-            'Controller' => [
-                'HelloController.php'
-            ],
-            'Model' => [
-                'HelloModel.php'
-            ]
+        'Controller' => [
+            'HelloController.php'
+        ],
+        'Model' => [
+            'HelloModel.php'
         ],
         'AppKernel.php'
     ],
@@ -45,6 +42,7 @@ $baseFiles = [
             '404.html'
         ],
         '.htaccess',
+        'autoload.php',
         'index.php'
     ]
 ];
@@ -53,7 +51,6 @@ function createFiles($files, $rootPath, $templatePath)
 {
     foreach ($files as $path => $child) {
         $path = '/' . $path;
-
         if (is_array($child)) {
             if (!is_dir($rootPath . $path)) {
                 mkdir($rootPath . $path);
@@ -61,7 +58,6 @@ function createFiles($files, $rootPath, $templatePath)
             createFiles($child, $rootPath . $path, $templatePath . $path);
         } else {
             $child = '/' . $child;
-
             if (!file_exists($rootPath . $child)) {
                 $content = file_get_contents($templatePath . $child);
                 file_put_contents($rootPath . $child, $content);
