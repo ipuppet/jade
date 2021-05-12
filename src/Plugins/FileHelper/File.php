@@ -58,7 +58,8 @@ class File
      */
     public function setName(string $name): self
     {
-        $this->name = $name;
+        // 不可包含空白字符
+        $this->name = (string)preg_replace('/( |　|\s)*/', '', $name);
         return $this;
     }
 
