@@ -30,7 +30,7 @@ class HttpSender
         }
         curl_close($ch);
         if (!is_array($response)) {
-            $response = json_decode($response, true);
+            $response = json_decode($response, true) ?? [];
         }
         return $response;
     }

@@ -120,7 +120,7 @@ abstract class Kernel
         $router->setRequest($request)
             ->setLogger($logger)
             ->setRouteContainer($this->getRouteContainer())
-            ->setMatcher($matcher);
+            ->setMatcher($matcher->setLogger($logger));
         // 获取Config对象
         $config = new Config();
         if ($this->config->has('errorResponse')) $config->add($this->config->get('errorResponse'));

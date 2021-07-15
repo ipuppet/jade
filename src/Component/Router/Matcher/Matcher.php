@@ -5,6 +5,7 @@ namespace Ipuppet\Jade\Component\Router\Matcher;
 
 
 use Ipuppet\Jade\Component\Router\RouteInterface;
+use Psr\Log\LoggerInterface;
 
 abstract class Matcher implements MatcherInterface
 {
@@ -15,6 +16,8 @@ abstract class Matcher implements MatcherInterface
      */
     private bool $strictMode;
 
+    private LoggerInterface $logger;
+
     /**
      * @var array
      */
@@ -23,6 +26,12 @@ abstract class Matcher implements MatcherInterface
     public function __construct(bool $strictMode = false)
     {
         $this->strictMode = $strictMode;
+    }
+
+    public function setLogger(LoggerInterface $logger): MatcherInterface
+    {
+        $this->logger = $logger;
+        return $this;
     }
 
     public function strictMode(): MatcherInterface
@@ -49,7 +58,7 @@ abstract class Matcher implements MatcherInterface
      */
     public function getAttributes(): array
     {
-        return array_filter($this->attributes);
+        return $this->attributes;
     }
 
     /**
@@ -60,7 +69,7 @@ abstract class Matcher implements MatcherInterface
     {
         if ($route !== null) {
             array_walk($attributes, function (&$attribute, $name) use (&$route) {
-                if (empty($attribute)) {
+                if (!is_numeric($attribute) && empty($attribute)) {
                     if ($route->hasDefault($name)) {
                         $attribute = $route->getDefault($name);
                     } else {
