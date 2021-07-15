@@ -5,9 +5,16 @@ namespace Ipuppet\Jade\Component\Router\Matcher;
 
 
 use Ipuppet\Jade\Component\Router\RouteInterface;
+use Psr\Log\LoggerInterface;
 
 interface MatcherInterface
 {
+    /**
+     * @param LoggerInterface $logger
+     * @return MatcherInterface
+     */
+    public function setLogger(LoggerInterface $logger): MatcherInterface;
+
     /**
      * 匹配一次
      * @param RouteInterface $route
