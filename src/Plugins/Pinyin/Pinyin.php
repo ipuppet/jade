@@ -53,6 +53,17 @@ class Pinyin
         return ($ifUppercase ? $chineseSpells : strtolower($chineseSpells));
     }
 
+    private function asi2py($char)
+    {
+        $chineseSpells = $this->chineseSpellList;
+        foreach ($chineseSpells as $key => $chineseSpell) {
+            if (array_search($char, $chineseSpell) !== false) {
+                return $key;
+            }
+        }
+        return null;
+    }
+
     /**
      * 汉字转拼音 首字母
      * @param $chinese
@@ -79,16 +90,5 @@ class Pinyin
         }
         // 判断是否输出小写字符
         return ($ifUppercase ? $chineseSpells : strtolower($chineseSpells));
-    }
-
-    private function asi2py($char)
-    {
-        $chineseSpells = $this->chineseSpellList;
-        foreach ($chineseSpells as $key => $chineseSpell) {
-            if (array_search($char, $chineseSpell) !== false) {
-                return $key;
-            }
-        }
-        return null;
     }
 }

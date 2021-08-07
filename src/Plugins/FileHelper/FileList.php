@@ -20,6 +20,24 @@ class FileList
     }
 
     /**
+     * 是否需要递归获取子目录的列表
+     * @param $isRecursive
+     */
+    public function isRecursive($isRecursive)
+    {
+        $this->isRecursive = $isRecursive;
+    }
+
+    /**
+     * 重新生成列表
+     */
+    public function reCreate()
+    {
+        $this->fileList = $this->getList($this->path);
+        return $this->fileList;
+    }
+
+    /**
      * @param $path
      * @return array
      */
@@ -56,24 +74,6 @@ class FileList
             }
         }
         return $result;
-    }
-
-    /**
-     * 是否需要递归获取子目录的列表
-     * @param $isRecursive
-     */
-    public function isRecursive($isRecursive)
-    {
-        $this->isRecursive = $isRecursive;
-    }
-
-    /**
-     * 重新生成列表
-     */
-    public function reCreate()
-    {
-        $this->fileList = $this->getList($this->path);
-        return $this->fileList;
     }
 
     /**

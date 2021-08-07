@@ -20,26 +20,22 @@ use Psr\Log\LoggerInterface;
 abstract class Model
 {
     /**
-     * @var ?PdoDatabaseDriver
-     */
-    private ?PdoDatabaseDriver $pdo = null;
-
-    /**
-     * @var Kernel
-     */
-    private Kernel $kernel;
-
-    /**
-     * @var ConfigLoader
-     */
-    private ConfigLoader $configLoader;
-
-    /**
      * 数据库连接信息
      * @var ParameterInterface
      */
     protected ParameterInterface $database;
-
+    /**
+     * @var ?PdoDatabaseDriver
+     */
+    private ?PdoDatabaseDriver $pdo = null;
+    /**
+     * @var Kernel
+     */
+    private Kernel $kernel;
+    /**
+     * @var ConfigLoader
+     */
+    private ConfigLoader $configLoader;
     /**
      * @var LoggerInterface
      */

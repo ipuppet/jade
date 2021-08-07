@@ -30,7 +30,7 @@ class PdoDatabaseDriver
         $this->logger = $logger;
         try {
             //database默认值mysql
-            $config['database'] = isset($config['database']) ? $config['database'] : 'mysql';
+            $config['database'] = $config['database'] ?? 'mysql';
             $this->pdo = new PDO(
                 sprintf(
                     '%s:host=%s;dbname=%s;port=%s;charset=%s',
@@ -70,13 +70,13 @@ class PdoDatabaseDriver
 
     /**
      * @param string $sql
-     * @return false|int
+     * @return int
      */
-    public function exec(string $sql)
+    public function exec(string $sql): int
     {
         $line = 0;
         try {
-            $line = $this->pdo->exec($sql);
+            $line = (int)$this->pdo->exec($sql);
         } catch (PDOException $e) {
             $this->logger->error($e->getMessage());
         }
@@ -89,16 +89,28 @@ class PdoDatabaseDriver
         return $this;
     }
 
+    /**
+     * 开始事件
+     * @return bool
+     */
     function beginTransaction(): bool
     {
         return $this->pdo->beginTransaction();
     }
 
+    /**
+     * 提交事件
+     * @return bool
+     */
     function commit(): bool
     {
         return $this->pdo->commit();
     }
 
+    /**
+     * 回滚事件
+     * @return bool
+     */
     function rollback(): bool
     {
         return $this->pdo->rollback();

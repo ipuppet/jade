@@ -15,7 +15,7 @@ class Server extends Parameter implements ParameterInterface
         // CONTENT_* 无 HTTP_ 前缀
         $contentHeaders = ['CONTENT_LENGTH' => true, 'CONTENT_MD5' => true, 'CONTENT_TYPE' => true];
         foreach ($this->parameters as $key => $value) {
-            if (0 === strpos($key, 'HTTP_')) {
+            if (str_starts_with($key, 'HTTP_')) {
                 $headers[substr($key, 5)] = $value;
             } elseif (isset($contentHeaders[$key])) {
                 $headers[$key] = $value;
@@ -24,7 +24,7 @@ class Server extends Parameter implements ParameterInterface
 
         if (isset($this->parameters['PHP_AUTH_USER'])) {
             $headers['PHP_AUTH_USER'] = $this->parameters['PHP_AUTH_USER'];
-            $headers['PHP_AUTH_PW'] = isset($this->parameters['PHP_AUTH_PW']) ? $this->parameters['PHP_AUTH_PW'] : '';
+            $headers['PHP_AUTH_PW'] = $this->parameters['PHP_AUTH_PW'] ?? '';
         } else {
             /*
              * php-cgi under Apache does not pass HTTP Basic user/pass to PHP by default

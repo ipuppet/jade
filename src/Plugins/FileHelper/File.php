@@ -21,38 +21,6 @@ class File
     }
 
     /**
-     * @return string
-     */
-    public function getTmpName(): string
-    {
-        return $this->tmpName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    /**
-     * @return int
-     */
-    public function getError(): int
-    {
-        return $this->error;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSize(): int
-    {
-        return $this->size;
-    }
-
-    /**
      * @param string $name
      * @return $this
      */
@@ -61,6 +29,14 @@ class File
         // 不可包含空白字符
         $this->name = (string)preg_replace('/( |　|\s)*/', '', $name);
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTmpName(): string
+    {
+        return $this->tmpName;
     }
 
     /**
@@ -74,6 +50,14 @@ class File
     }
 
     /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
      * @param string $type
      * @return $this
      */
@@ -84,6 +68,14 @@ class File
     }
 
     /**
+     * @return int
+     */
+    public function getError(): int
+    {
+        return $this->error;
+    }
+
+    /**
      * @param int $error
      * @return $this
      */
@@ -91,6 +83,14 @@ class File
     {
         $this->error = $error;
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSize(): int
+    {
+        return $this->size;
     }
 
     /**

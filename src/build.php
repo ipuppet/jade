@@ -9,8 +9,10 @@ $param = getopt('r:');
 if (isset($param['r'])) {
     $rootPath = $param['r'];
 } else {
-    $rootPath = dirname(dirname(__DIR__));
-    while (!file_exists($rootPath . '/composer.json')) {
+    $rootPath = dirname(__DIR__, 2);
+    $max = 20;
+    while (!file_exists($rootPath . '/composer.json') && $max) {
+        $max--;
         $rootPath = dirname($rootPath);
     }
 }

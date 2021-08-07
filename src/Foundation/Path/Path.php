@@ -40,6 +40,11 @@ class Path implements PathInterface
         $this->path = str_replace('\\', '/', $path);
     }
 
+    public function __toString(): string
+    {
+        return $this->get();
+    }
+
     /**
      * @return string
      */
@@ -51,9 +56,16 @@ class Path implements PathInterface
         return $this->path . $this->file;
     }
 
-    public function __toString(): string
+    /**
+     * 将路径加入到当前路径后面
+     * @param null $path
+     * @return PathInterface
+     * @throws PathException
+     */
+    public function after($path = null): PathInterface
     {
-        return $this->get();
+        $this->path = (string)self::join($this, $path);
+        return $this;
     }
 
     /**
@@ -71,18 +83,6 @@ class Path implements PathInterface
             return new self($before . mb_substr($after, 1));
         }
         return new self($before . $after);
-    }
-
-    /**
-     * 将路径加入到当前路径后面
-     * @param null $path
-     * @return PathInterface
-     * @throws PathException
-     */
-    public function after($path = null): PathInterface
-    {
-        $this->path = (string)self::join($this, $path);
-        return $this;
     }
 
     /**

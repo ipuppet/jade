@@ -7,6 +7,30 @@ namespace Ipuppet\Jade\Plugins\HtmlProcessor;
 class HtmlSecuritySplit
 {
     /**
+     * 修复被切断的html
+     * @param $html
+     * @param int $len
+     * @param int $start
+     * @return string
+     */
+    public function repairHtml($html, int $len, int $start = 0): string
+    {
+        if ($len > strlen($html)) $len = strlen($html);
+        $html = mb_substr($html, $start, $len);
+        $html = mb_substr($html, $start, $len);
+        $incompleteTags = $this->getIncompleteTags($html);
+        foreach ($incompleteTags as $incompleteTag) {
+            if (mb_substr($incompleteTag, 0, 1) === '/') {
+                $newTags = mb_substr($incompleteTag, 1);
+                $html = "<$newTags>" . $html;
+            } else {
+                $html = $html . "</$incompleteTag>";
+            }
+        }
+        return $html;
+    }
+
+    /**
      * 判断标签闭合情况
      *
      * @param string $html
@@ -14,12 +38,12 @@ class HtmlSecuritySplit
      */
     private function getIncompleteTags($html): array
     {
-        $p = '/\<([^\s\>(hr)(br)]+)/';
+        $p = '/<([^\s>(hr)(br)]+)/';
         preg_match_all($p, $html, $tags);
         $tags = $tags[1];
         $len = count($tags);
         for ($i = 0; $i < $len; $i++) {
-            if (substr($tags[$i], 0, 1) === '/') {
+            if (str_starts_with($tags[$i], '/')) {
                 $endTag = substr($tags[$i], 1);
                 $index = $i - 1;
                 while (1) {
@@ -44,29 +68,5 @@ class HtmlSecuritySplit
             }
         }
         return $tags;
-    }
-
-    /**
-     * 修复被切断的html
-     * @param $html
-     * @param int $len
-     * @param int $start
-     * @return string
-     */
-    public function repairHtml($html, int $len, int $start = 0): string
-    {
-        if ($len > strlen($html)) $len = strlen($html);
-        $html = mb_substr($html, $start, $len);
-        $html = mb_substr($html, $start, $len);
-        $incompleteTags = $this->getIncompleteTags($html);
-        foreach ($incompleteTags as $incompleteTag) {
-            if (mb_substr($incompleteTag, 0, 1) === '/') {
-                $newTags = mb_substr($incompleteTag, 1);
-                $html = "<{$newTags}>" . $html;
-            } else {
-                $html = $html . "</{$incompleteTag}>";
-            }
-        }
-        return $html;
     }
 }

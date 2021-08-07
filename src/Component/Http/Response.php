@@ -47,6 +47,18 @@ class Response
         $this->headers = new Header($headers);
     }
 
+    public function setStatusCode(int $statusCode): self
+    {
+        $this->statusCode = $statusCode;
+        $this->statusText = self::$httpStatusText[$this->statusCode];
+        return $this;
+    }
+
+    public static function create($content = '', int $httpStatus = self::HTTP_200, array $headers = []): Response
+    {
+        return new static($content, $httpStatus, $headers);
+    }
+
     public function hasLogger(): bool
     {
         return $this->logger === null;
@@ -58,20 +70,9 @@ class Response
         return $this;
     }
 
-    public static function create($content = '', int $httpStatus = self::HTTP_200, array $headers = []): Response
-    {
-        return new static($content, $httpStatus, $headers);
-    }
-
     public function setHttpVersion(string $httpVersion): self
     {
         $this->httpVersion = $httpVersion;
-        return $this;
-    }
-
-    public function setContent(string $content): self
-    {
-        $this->content = $content;
         return $this;
     }
 
@@ -80,11 +81,16 @@ class Response
         return $this->content;
     }
 
-    public function setStatusCode(int $statusCode): self
+    public function setContent(string $content): self
     {
-        $this->statusCode = $statusCode;
-        $this->statusText = self::$httpStatusText[$this->statusCode];
+        $this->content = $content;
         return $this;
+    }
+
+    public function send()
+    {
+        $this->sendHeaders();
+        echo $this->content;
     }
 
     /**
@@ -104,11 +110,5 @@ class Response
         }
         header(sprintf('HTTP/%s %s %s', $this->httpVersion, $this->statusCode, $this->statusText), true, $this->statusCode);
         return $this;
-    }
-
-    public function send()
-    {
-        $this->sendHeaders();
-        echo $this->content;
     }
 }

@@ -24,6 +24,69 @@ class Header extends Parameter implements ParameterInterface
     }
 
     /**
+     * Adds new headers the current HTTP headers set.
+     * @param array $parameters An array of HTTP headers
+     * @return $this
+     */
+    public function add(array $parameters): self
+    {
+        foreach ($parameters as $key => $values) {
+            $this->set($key, $values);
+        }
+        return $this;
+    }
+
+    /**
+     * Sets a header by name.
+     * @param string $key The key
+     * @param string|string[] $value The value or an array of values
+     * @param bool $replace Whether to replace the actual value or not (true by default)
+     * @return $this
+     */
+    public function set(string $key, $value, bool $replace = true): self
+    {
+        $key = $this->parseKey($key);
+        if (is_array($value)) {
+            $value = array_values($value);
+            if (true === $replace || !isset($this->parameters[$key])) {
+                $this->parameters[$key] = $value;
+            } else {
+                $this->parameters[$key] = array_merge($this->parameters[$key], $value);
+            }
+        } else {
+            if (true === $replace || !isset($this->parameters[$key])) {
+                $this->parameters[$key] = [$value];
+            } else {
+                $this->parameters[$key][] = $value;
+            }
+        }
+        if ('cache-control' === $key) {
+            $this->cacheControl = $this->parseCacheControl(implode(', ', $this->parameters[$key]));
+        }
+        return $this;
+    }
+
+    protected function parseKey(string $key): string
+    {
+        return (string)str_replace('_', '-', strtolower($key));
+    }
+
+    /**
+     * Parses a Cache-Control HTTP header.
+     * @param string $header The value of the Cache-Control HTTP header
+     * @return array An array representing the attribute values
+     */
+    protected function parseCacheControl(string $header): array
+    {
+        $cacheControl = [];
+        preg_match_all('#([a-zA-Z][a-zA-Z_-]*)\s*(?:=(?:"([^"]*)"|([^ \t",;]*)))?#', $header, $matches, PREG_SET_ORDER);
+        foreach ($matches as $match) {
+            $cacheControl[strtolower($match[1])] = $match[3] ?? ($match[2] ?? true);
+        }
+        return $cacheControl;
+    }
+
+    /**
      * Returns the headers as a string.
      * @return string The headers
      */
@@ -45,32 +108,25 @@ class Header extends Parameter implements ParameterInterface
         return $content;
     }
 
-    protected function parseKey(string $key)
-    {
-        return str_replace('_', '-', strtolower($key));
-    }
-
     /**
-     * Adds new headers the current HTTP headers set.
-     * @param array $headers An array of HTTP headers
-     * @return $this
+     * Returns true if the given HTTP header contains the given value.
+     * @param string $key The HTTP header name
+     * @param string $value The HTTP value
+     * @return bool true if the value is contained in the header, false otherwise
      */
-    public function add(array $headers): self
+    public function contains(string $key, string $value): bool
     {
-        foreach ($headers as $key => $values) {
-            $this->set($key, $values);
-        }
-        return $this;
+        return in_array($value, $this->get($key, null, false));
     }
 
     /**
      * Returns a header value by name.
      * @param string $key The header name
-     * @param string|null $default The default value
+     * @param mixed $default The default value
      * @param bool $first Whether to return the first value or all header values
-     * @return string|string[]|null The first header value or default value if $first is true, an array of values otherwise
+     * @return mixed The first header value or default value if $first is true, an array of values otherwise
      */
-    public function get(string $key, $default = null, $first = true)
+    public function get(string $key, $default = null, bool $first = true): mixed
     {
         $key = $this->parseKey($key);
         $headers = $this->toArray();
@@ -93,36 +149,6 @@ class Header extends Parameter implements ParameterInterface
     }
 
     /**
-     * Sets a header by name.
-     * @param string $key The key
-     * @param string|string[] $values The value or an array of values
-     * @param bool $replace Whether to replace the actual value or not (true by default)
-     * @return $this
-     */
-    public function set(string $key, $values, bool $replace = true): self
-    {
-        $key = $this->parseKey($key);
-        if (is_array($values)) {
-            $values = array_values($values);
-            if (true === $replace || !isset($this->parameters[$key])) {
-                $this->parameters[$key] = $values;
-            } else {
-                $this->parameters[$key] = array_merge($this->parameters[$key], $values);
-            }
-        } else {
-            if (true === $replace || !isset($this->parameters[$key])) {
-                $this->parameters[$key] = [$values];
-            } else {
-                $this->parameters[$key][] = $values;
-            }
-        }
-        if ('cache-control' === $key) {
-            $this->cacheControl = $this->parseCacheControl(implode(', ', $this->parameters[$key]));
-        }
-        return $this;
-    }
-
-    /**
      * Returns true if the HTTP header is defined.
      * @param string $key The HTTP header
      * @return bool true if the parameter exists, false otherwise
@@ -130,17 +156,6 @@ class Header extends Parameter implements ParameterInterface
     public function has(string $key): bool
     {
         return array_key_exists($this->parseKey($key), $this->toArray());
-    }
-
-    /**
-     * Returns true if the given HTTP header contains the given value.
-     * @param string $key The HTTP header name
-     * @param string $value The HTTP value
-     * @return bool true if the value is contained in the header, false otherwise
-     */
-    public function contains(string $key, string $value): bool
-    {
-        return in_array($value, $this->get($key, null, false));
     }
 
     /**
@@ -181,39 +196,9 @@ class Header extends Parameter implements ParameterInterface
      * @param string $key The Cache-Control directive name
      * @param mixed $value The Cache-Control directive value
      */
-    public function addCacheControlDirective(string $key, $value = true)
+    public function addCacheControlDirective(string $key, mixed $value = true)
     {
         $this->cacheControl[$key] = $value;
-        $this->set('Cache-Control', $this->getCacheControlHeader());
-    }
-
-    /**
-     * Returns true if the Cache-Control directive is defined.
-     * @param string $key The Cache-Control directive
-     * @return bool true if the directive exists, false otherwise
-     */
-    public function hasCacheControlDirective(string $key): bool
-    {
-        return array_key_exists($key, $this->cacheControl);
-    }
-
-    /**
-     * Returns a Cache-Control directive value by name.
-     * @param string $key The directive name
-     * @return mixed|null The directive value if defined, null otherwise
-     */
-    public function getCacheControlDirective(string $key)
-    {
-        return array_key_exists($key, $this->cacheControl) ? $this->cacheControl[$key] : null;
-    }
-
-    /**
-     * Removes a Cache-Control directive.
-     * @param string $key The Cache-Control directive
-     */
-    public function removeCacheControlDirective(string $key)
-    {
-        unset($this->cacheControl[$key]);
         $this->set('Cache-Control', $this->getCacheControlHeader());
     }
 
@@ -235,17 +220,32 @@ class Header extends Parameter implements ParameterInterface
     }
 
     /**
-     * Parses a Cache-Control HTTP header.
-     * @param string $header The value of the Cache-Control HTTP header
-     * @return array An array representing the attribute values
+     * Returns true if the Cache-Control directive is defined.
+     * @param string $key The Cache-Control directive
+     * @return bool true if the directive exists, false otherwise
      */
-    protected function parseCacheControl(string $header): array
+    public function hasCacheControlDirective(string $key): bool
     {
-        $cacheControl = [];
-        preg_match_all('#([a-zA-Z][a-zA-Z_-]*)\s*(?:=(?:"([^"]*)"|([^ \t",;]*)))?#', $header, $matches, PREG_SET_ORDER);
-        foreach ($matches as $match) {
-            $cacheControl[strtolower($match[1])] = isset($match[3]) ? $match[3] : (isset($match[2]) ? $match[2] : true);
-        }
-        return $cacheControl;
+        return array_key_exists($key, $this->cacheControl);
+    }
+
+    /**
+     * Returns a Cache-Control directive value by name.
+     * @param string $key The directive name
+     * @return mixed The directive value if defined, null otherwise
+     */
+    public function getCacheControlDirective(string $key): mixed
+    {
+        return array_key_exists($key, $this->cacheControl) ? $this->cacheControl[$key] : null;
+    }
+
+    /**
+     * Removes a Cache-Control directive.
+     * @param string $key The Cache-Control directive
+     */
+    public function removeCacheControlDirective(string $key)
+    {
+        unset($this->cacheControl[$key]);
+        $this->set('Cache-Control', $this->getCacheControlHeader());
     }
 }

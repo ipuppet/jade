@@ -9,13 +9,12 @@ use Ipuppet\Jade\Component\Kernel\Config\Config;
 
 abstract class Controller
 {
+    public bool $isResponseBeforeController = false;
+    public Response $response;
     /**
      * @var ?Config
      */
     private ?Config $corsConfig = null;
-
-    public bool $isResponseBeforeController = false;
-    public Response $response;
 
     /**
      * @param Config $config

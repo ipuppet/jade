@@ -23,6 +23,11 @@ class Parameter implements ParameterInterface
         return array_keys($this->toArray());
     }
 
+    public function toArray(): array
+    {
+        return $this->parameters;
+    }
+
     public function set(string $key, $value): self
     {
         $this->parameters[$key] = $value;
@@ -46,19 +51,14 @@ class Parameter implements ParameterInterface
         return array_key_exists($key, $this->parameters);
     }
 
-    public function get(string $key, $default = null)
-    {
-        return array_key_exists($key, $this->parameters) ? $this->parameters[$key] : $default;
-    }
-
-    public function toArray(): array
-    {
-        return $this->parameters;
-    }
-
     public function getAlpha(string $key, $default = '')
     {
         return preg_replace('/[^[:alpha:]]/', '', $this->get($key, $default));
+    }
+
+    public function get(string $key, $default = null)
+    {
+        return array_key_exists($key, $this->parameters) ? $this->parameters[$key] : $default;
     }
 
     public function getAlnum(string $key, $default = '')
@@ -70,16 +70,6 @@ class Parameter implements ParameterInterface
     {
         // we need to remove - and + because they're allowed in the filter
         return str_replace(['-', '+'], '', $this->filter($key, $default, FILTER_SANITIZE_NUMBER_INT));
-    }
-
-    public function getInt(string $key, $default = 0): int
-    {
-        return (int)$this->get($key, $default);
-    }
-
-    public function getBoolean(string $key, $default = false): bool
-    {
-        return $this->filter($key, $default, FILTER_VALIDATE_BOOLEAN);
     }
 
     public function filter(string $key, $default = null, $filter = FILTER_DEFAULT, $options = [])
@@ -94,6 +84,16 @@ class Parameter implements ParameterInterface
             $options['flags'] = FILTER_REQUIRE_ARRAY;
         }
         return filter_var($value, $filter, $options);
+    }
+
+    public function getInt(string $key, $default = 0): int
+    {
+        return (int)$this->get($key, $default);
+    }
+
+    public function getBoolean(string $key, $default = false): bool
+    {
+        return $this->filter($key, $default, FILTER_VALIDATE_BOOLEAN);
     }
 
     public function getIterator(): ArrayIterator

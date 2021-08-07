@@ -11,9 +11,9 @@ interface RouteInterface
     /**
      * Sets the pattern for the path.
      * @param string $pattern The path pattern
-     * @return $this
+     * @return RouteInterface
      */
-    public function setPath(string $pattern): self;
+    public function setPath(string $pattern): RouteInterface;
 
     /**
      * Returns the uppercased HTTP methods this route is restricted to.
@@ -26,9 +26,9 @@ interface RouteInterface
      * Sets the HTTP methods (e.g. 'POST') this route is restricted to.
      * So an empty array means that any method is allowed.
      * @param string|array $methods The method or an array of methods
-     * @return $this
+     * @return RouteInterface
      */
-    public function setMethods($methods): self;
+    public function setMethods($methods): RouteInterface;
 
     /**
      * @return array
@@ -37,22 +37,22 @@ interface RouteInterface
 
     /**
      * @param array $Parameters
-     * @return $this
+     * @return RouteInterface
      */
-    public function setParameters(array $Parameters): self;
+    public function setParameters(array $Parameters): RouteInterface;
 
     /**
      * @param array $parameters
-     * @return $this
+     * @return RouteInterface
      */
-    public function addParameters(array $parameters): self;
+    public function addParameters(array $parameters): RouteInterface;
 
     /**
      * @param $name
      * @param $value
-     * @return $this
+     * @return RouteInterface
      */
-    public function setParameter($name, $value): self;
+    public function setParameter($name, $value): RouteInterface;
 
     /**
      * @param $name
@@ -73,22 +73,22 @@ interface RouteInterface
 
     /**
      * @param array $options
-     * @return $this
+     * @return RouteInterface
      */
-    public function setOptions(array $options): self;
+    public function setOptions(array $options): RouteInterface;
 
     /**
      * @param array $options
-     * @return $this
+     * @return RouteInterface
      */
-    public function addOptions(array $options): self;
+    public function addOptions(array $options): RouteInterface;
 
     /**
      * @param $name
      * @param $value
-     * @return $this
+     * @return RouteInterface
      */
-    public function setOption($name, $value): self;
+    public function setOption($name, $value): RouteInterface;
 
     /**
      * @param $name
@@ -109,15 +109,15 @@ interface RouteInterface
 
     /**
      * @param array $defaults
-     * @return $this
+     * @return RouteInterface
      */
-    public function setDefaults(array $defaults): self;
+    public function setDefaults(array $defaults): RouteInterface;
 
     /**
      * @param array $defaults
-     * @return $this
+     * @return RouteInterface
      */
-    public function addDefaults(array $defaults): self;
+    public function addDefaults(array $defaults): RouteInterface;
 
     /**
      * @param $name
@@ -134,9 +134,9 @@ interface RouteInterface
     /**
      * @param $name
      * @param $default
-     * @return $this
+     * @return RouteInterface
      */
-    public function setDefault($name, $default): self;
+    public function setDefault($name, $default): RouteInterface;
 
     /**
      * @return array
@@ -145,15 +145,15 @@ interface RouteInterface
 
     /**
      * @param array $tokens
-     * @return $this
+     * @return RouteInterface
      */
-    public function setTokens(array $tokens): self;
+    public function setTokens(array $tokens): RouteInterface;
 
     /**
      * @param array $tokens
-     * @return $this
+     * @return RouteInterface
      */
-    public function addTokens(array $tokens): self;
+    public function addTokens(array $tokens): RouteInterface;
 
     /**
      * @param $key
@@ -164,9 +164,9 @@ interface RouteInterface
     /**
      * @param $key
      * @param $regex
-     * @return $this
+     * @return RouteInterface
      */
-    public function setToken($key, $regex): self;
+    public function setToken($key, $regex): RouteInterface;
 
     /**
      * @param $key

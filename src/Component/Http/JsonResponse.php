@@ -16,6 +16,13 @@ class JsonResponse extends Response
         parent::__construct($content, $httpStatus, $headers);
     }
 
+    /**
+     * 从数组创建
+     * @param array $content
+     * @param int $httpStatus
+     * @param array $headers
+     * @return JsonResponse
+     */
     public static function fromArray(array $content = [], int $httpStatus = self::HTTP_200, array $headers = []): JsonResponse
     {
         $response = new static('', $httpStatus, $headers);
@@ -23,31 +30,10 @@ class JsonResponse extends Response
         return $response;
     }
 
-    public static function fromJsonString(string $content = '{}', int $httpStatus = self::HTTP_200, array $headers = []): JsonResponse
-    {
-        return new static($content, $httpStatus, $headers);
-    }
-
-    public function getEncodingOptions(): int
-    {
-        return $this->encodingOptions;
-    }
-
-    public function setEncodingOptions(int $encodingOptions): self
-    {
-        $this->encodingOptions = $encodingOptions;
-        return $this->setContent(json_decode($this->content));
-    }
-
-    public function setJson(string $json): void
-    {
-        $this->content = $json;
-        // 防止覆盖自定义 Content-Type
-        if (!$this->headers->has('Content-Type') || 'text/javascript' === $this->headers->get('Content-Type')) {
-            $this->headers->set('Content-Type', 'application/json');
-        }
-    }
-
+    /**
+     * 设置数组内容
+     * @param array $content
+     */
     public function setArray(array $content): void
     {
         if (defined('HHVM_VERSION')) {
@@ -79,5 +65,46 @@ class JsonResponse extends Response
             throw new InvalidArgumentException(json_last_error_msg());
         }
         $this->setJson($content);
+    }
+
+    /**
+     * 设置Json字符串内容
+     * @param string $json
+     */
+    public function setJson(string $json): void
+    {
+        $this->content = $json;
+        // 防止覆盖自定义 Content-Type
+        if (!$this->headers->has('Content-Type') || 'text/javascript' === $this->headers->get('Content-Type')) {
+            $this->headers->set('Content-Type', 'application/json');
+        }
+    }
+
+    /**
+     * 从Json字符串创建
+     * @param string $content
+     * @param int $httpStatus
+     * @param array $headers
+     * @return JsonResponse
+     */
+    public static function fromJsonString(string $content = '{}', int $httpStatus = self::HTTP_200, array $headers = []): JsonResponse
+    {
+        return new static($content, $httpStatus, $headers);
+    }
+
+    public function getEncodingOptions(): int
+    {
+        return $this->encodingOptions;
+    }
+
+    /**
+     * 设置Json编码设置
+     * @param int $encodingOptions
+     * @return $this
+     */
+    public function setEncodingOptions(int $encodingOptions): self
+    {
+        $this->encodingOptions = $encodingOptions;
+        return $this->setContent(json_decode($this->content));
     }
 }

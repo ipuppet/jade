@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
 abstract class Reason implements ReasonInterface
 {
     /**
-     * @var string
+     * @var string|null
      */
     protected ?string $content;
 
@@ -43,24 +43,23 @@ abstract class Reason implements ReasonInterface
         }
     }
 
-    private function getFileContent($path)
+    public function getHttpStatus(): int
+    {
+        return Response::HTTP_200;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getFileContent($path): string
     {
         if (file_exists($path)) {
             return file_get_contents($path);
         } else {
-            $message = "您在response配置文件中设定的文件 [{$path}] 不存在，请检查。";
-            if ($this->logger) {
-                $this->logger->warning($message);
-                return false;
-            } else {
-                throw new Exception($message);
-            }
+            $message = "您在response配置文件中设定的文件 [$path] 不存在，请检查。";
+            $this->logger?->warning($message);
+            throw new Exception($message);
         }
-    }
-
-    public function setContent(string $content)
-    {
-        $this->content = $content;
     }
 
     public function getContent(): string
@@ -68,12 +67,12 @@ abstract class Reason implements ReasonInterface
         return $this->content ?? $this->getDefaultContent();
     }
 
-    abstract public function getDefaultContent(): string;
-
-    public function getHttpStatus(): int
+    public function setContent(string $content)
     {
-        return Response::HTTP_200;
+        $this->content = $content;
     }
+
+    abstract public function getDefaultContent(): string;
 
     public function getDescription(): string
     {

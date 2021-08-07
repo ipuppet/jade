@@ -9,7 +9,6 @@ use Ipuppet\Jade\Component\Http\Request;
 use Ipuppet\Jade\Component\Kernel\Config\Config;
 use Ipuppet\Jade\Component\Router\Exception\NoMatcherException;
 use Ipuppet\Jade\Component\Router\Matcher\MatcherInterface;
-use Ipuppet\Jade\Component\Router\Reason\HostNotAllow;
 use Ipuppet\Jade\Component\Router\Reason\MethodNotAllow;
 use Ipuppet\Jade\Component\Router\Reason\NoMatch;
 use Ipuppet\Jade\Component\Router\Reason\ReasonInterface;
@@ -93,6 +92,11 @@ class Router
         return $this;
     }
 
+    public function getRequest(): Request
+    {
+        return $this->request;
+    }
+
     /**
      * @param Request|null $request
      * @return $this
@@ -101,11 +105,6 @@ class Router
     {
         $this->request = $request;
         return $this;
-    }
-
-    public function getRequest(): Request
-    {
-        return $this->request;
     }
 
     /**
