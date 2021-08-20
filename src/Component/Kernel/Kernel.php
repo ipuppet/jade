@@ -24,24 +24,21 @@ use ReflectionException;
 abstract class Kernel
 {
     /**
-     * @var ?ConfigLoader
-     */
-    private ?ConfigLoader $configLoader = null;
-
-    /**
      * @var ?PathInterface
      */
     protected ?PathInterface $cachePath = null;
-
     /**
      * @var ?PathInterface
      */
     protected ?PathInterface $logPath = null;
-
     /**
      * @var ?PathInterface
      */
     protected ?PathInterface $rootPath = null;
+    /**
+     * @var ?ConfigLoader
+     */
+    private ?ConfigLoader $configLoader = null;
     /**
      * @var Config
      */
@@ -57,31 +54,18 @@ abstract class Kernel
     }
 
     /**
-     * 获取缓存目录
-     * @return PathInterface
+     * @return ConfigLoader
      * @throws PathException
      */
-    public function getCachePath(): PathInterface
+    public function getConfigLoader(): ConfigLoader
     {
-        if ($this->cachePath === null) {
-            $this->cachePath = new Path($this->getRootPath());
-            $this->cachePath->after('/var/cache');
+        if ($this->configLoader === null) {
+            $this->configLoader = new ConfigLoader();
+            $path = new Path($this->getRootPath());
+            $path->after('/config');
+            $this->configLoader->setPath($path)->setParser(new JsonParser());
         }
-        return $this->cachePath;
-    }
-
-    /**
-     * 获取日志目录
-     * @return PathInterface
-     * @throws PathException
-     */
-    public function getLogPath(): PathInterface
-    {
-        if ($this->logPath === null) {
-            $this->logPath = new Path($this->getRootPath());
-            $this->logPath->after('/var/log');
-        }
-        return $this->logPath;
+        return $this->configLoader;
     }
 
     /**
@@ -96,6 +80,20 @@ abstract class Kernel
             $this->rootPath = new Path($path);
         }
         return $this->rootPath;
+    }
+
+    /**
+     * 获取缓存目录
+     * @return PathInterface
+     * @throws PathException
+     */
+    public function getCachePath(): PathInterface
+    {
+        if ($this->cachePath === null) {
+            $this->cachePath = new Path($this->getRootPath());
+            $this->cachePath->after('/var/cache');
+        }
+        return $this->cachePath;
     }
 
     /**
@@ -167,6 +165,20 @@ abstract class Kernel
     }
 
     /**
+     * 获取日志目录
+     * @return PathInterface
+     * @throws PathException
+     */
+    public function getLogPath(): PathInterface
+    {
+        if ($this->logPath === null) {
+            $this->logPath = new Path($this->getRootPath());
+            $this->logPath->after('/var/log');
+        }
+        return $this->logPath;
+    }
+
+    /**
      * @return RouteContainer
      * @throws PathException
      */
@@ -178,20 +190,5 @@ abstract class Kernel
             ->loadFromFile()
             ->toArray();
         return RouteContainer::createByArray($routes);
-    }
-
-    /**
-     * @return ConfigLoader
-     * @throws PathException
-     */
-    public function getConfigLoader(): ConfigLoader
-    {
-        if ($this->configLoader === null) {
-            $this->configLoader = new ConfigLoader();
-            $path = new Path($this->getRootPath());
-            $path->after('/config');
-            $this->configLoader->setPath($path)->setParser(new JsonParser());
-        }
-        return $this->configLoader;
     }
 }

@@ -56,13 +56,13 @@ class Excel
         try {
             $spreadsheet = IOFactory::load($file);
         } catch (PhpOfficeReaderException $e) {
-            $this->logger->addError($e->getMessage());
+            $this->logger->error($e->getMessage());
             return false;
         }
         try {
             $sheet = $spreadsheet->getActiveSheet();
         } catch (PhpOfficeException $e) {
-            $this->logger->addError($e->getMessage());
+            $this->logger->error($e->getMessage());
             return false;
         }
         $res = array();
@@ -91,7 +91,7 @@ class Excel
         try {
             $objSheet = $excel->getActiveSheet();
         } catch (PhpOfficeException $e) {
-            $this->logger->addError($e->getMessage());
+            $this->logger->error($e->getMessage());
             return false;
         }  //获取当前操作sheet的对象
         $objSheet->setTitle($title);  //设置当前sheet的标题
@@ -107,7 +107,7 @@ class Excel
             try {
                 $excel->getActiveSheet()->getColumnDimension($columnDimension[$column])->setAutoSize(true);
             } catch (PhpOfficeException $e) {
-                $this->logger->addError($e->getMessage());
+                $this->logger->error($e->getMessage());
                 return false;
             }
         }
@@ -146,13 +146,13 @@ class Excel
         try {
             $objWriter = IOFactory::createWriter($excel, $type);
         } catch (Exception $e) {
-            $this->logger->addError($e->getMessage());
+            $this->logger->error($e->getMessage());
         }
 
         try {
             $objWriter->save('php://output');
         } catch (Exception $e) {
-            $this->logger->addError($e->getMessage());
+            $this->logger->error($e->getMessage());
         }
     }
 }

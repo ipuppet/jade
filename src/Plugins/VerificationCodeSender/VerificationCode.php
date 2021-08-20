@@ -6,19 +6,19 @@ namespace Ipuppet\Jade\Plugins\VerificationCodeSender;
 
 class VerificationCode
 {
-    private $target; //目标
-    private $code; //验证码
-    private $date; //生成日期
-    private $pov; //有效期
+    private string $target; // 目标
+    private int $code; // 验证码
+    private int $date; // 生成日期
+    private int $pov; // 有效期
 
     /**
      * VerificationCode constructor.
-     * @param $target
-     * @param $code
-     * @param $data
-     * @param $pov
+     * @param string $target
+     * @param int $code
+     * @param int $data
+     * @param int $pov
      */
-    public function __construct($target, $code, $data, $pov)
+    public function __construct(string $target, int $code, int $data, int $pov)
     {
         $this->target = $target;
         $this->code = $code;
@@ -26,22 +26,22 @@ class VerificationCode
         $this->pov = $pov;
     }
 
-    public function getCode()
+    public function getCode(): int
     {
         return $this->code;
     }
 
-    public function getDate()
+    public function getDate(): int
     {
         return $this->date;
     }
 
-    public function getTarget()
+    public function getTarget(): string
     {
         return $this->target;
     }
 
-    public function getPov()
+    public function getPov(): int
     {
         return $this->pov;
     }

@@ -14,41 +14,41 @@ use Swift_SmtpTransport;
 class EmailSender
 {
     /**
-     * @var LoggerInterface
+     * @var ?LoggerInterface
      */
-    private $logger;
+    private ?LoggerInterface $logger;
 
     /**
      * @var Email
      */
-    private $email;
+    private Email $email;
 
     /**
      * @var string
      */
-    private $username;
+    private string $username;
 
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @var string
      */
-    private $password;
+    private string $password;
 
     /**
      * @var string
      */
-    private $host;
+    private string $host;
 
     /**
      * EmailSender constructor.
      * @param LoggerInterface|null $logger
      * @throws Exception
      */
-    public function __construct(LoggerInterface $logger = null)
+    public function __construct(?LoggerInterface $logger = null)
     {
         if (!class_exists('Swift_Mailer') ||
             !class_exists('Swift_Message') ||
@@ -68,20 +68,17 @@ class EmailSender
     {
         if ($this->email === null) {
             $message = '是否忘记将邮件类放进来？调用setEmail传入一个Email实例';
-            if ($this->logger !== null)
-                $this->logger->error($message);
+            $this->logger?->error($message);
             throw new EmailSenderException($message);
         }
         if ($this->username === null) {
             $message = '邮箱服务器验证失败，请检查账号是否正确';
-            if ($this->logger !== null)
-                $this->logger->error($message);
+            $this->logger?->error($message);
             throw new EmailSenderException($message);
         }
         if ($this->password === null) {
             $message = '邮箱服务器验证失败，请检查密码是否正确';
-            if ($this->logger !== null)
-                $this->logger->error($message);
+            $this->logger?->error($message);
             throw new EmailSenderException($message);
         }
         // Create the Transport

@@ -10,22 +10,26 @@ use Psr\Log\LoggerInterface;
 abstract class Matcher implements MatcherInterface
 {
     /**
+     * @var array
+     */
+    protected array $attributes;
+
+    /**
      * 严格模式，默认关闭
      * 开启后路由结尾不能有'/'
      * @var bool
      */
     private bool $strictMode;
-
-    private LoggerInterface $logger;
-
-    /**
-     * @var array
-     */
-    protected array $attributes;
+    private ?LoggerInterface $logger = null;
 
     public function __construct(bool $strictMode = false)
     {
         $this->strictMode = $strictMode;
+    }
+
+    public function getLogger(): ?LoggerInterface
+    {
+        return $this->logger;
     }
 
     public function setLogger(LoggerInterface $logger): MatcherInterface

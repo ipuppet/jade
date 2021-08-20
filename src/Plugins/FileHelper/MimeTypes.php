@@ -7,14 +7,13 @@ namespace Ipuppet\Jade\Plugins\FileHelper;
 class MimeTypes
 {
     /**
-     * @var array
-     */
-    private $mapping;
-
-    /**
      * @var MimeTypes
      */
     private static self $instance;
+    /**
+     * @var array
+     */
+    private $mapping;
 
     private function __construct()
     {
@@ -39,6 +38,11 @@ class MimeTypes
             return $this->mapping['extensions'][$mime_type][0];
         }
         return null;
+    }
+
+    private function cleanInput($input): string
+    {
+        return strtolower(trim($input));
     }
 
     public function getAllExtensions($mime_type): array
@@ -66,10 +70,5 @@ class MimeTypes
             return $this->mapping['mimes'][$extension];
         }
         return [];
-    }
-
-    private function cleanInput($input): string
-    {
-        return strtolower(trim($input));
     }
 }

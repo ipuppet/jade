@@ -9,7 +9,6 @@ use Psr\Log\LoggerInterface;
 class HttpSender
 {
     private ?LoggerInterface $logger;
-    private string $error = "";
 
     public function __construct(LoggerInterface $logger = null)
     {
@@ -19,18 +18,6 @@ class HttpSender
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
-    }
-
-    private function exec($ch, $method): string
-    {
-        $response = curl_exec($ch);
-        if (curl_errno($ch)) {
-            $message = "Curl error: [{$method}] " . curl_error($ch);
-            $this->error = $message;
-            if ($this->logger) $this->logger->error($message);
-        }
-        curl_close($ch);
-        return (string)$response;
     }
 
     public function get(string $url, array $options = []): string
@@ -44,6 +31,17 @@ class HttpSender
             curl_setopt($ch, $option[0], $option[1]);
         }
         return $this->exec($ch, 'GET');
+    }
+
+    private function exec($ch, $method): string
+    {
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            $message = "Curl error: [$method] " . curl_error($ch);
+            $this->logger?->error($message);
+        }
+        curl_close($ch);
+        return (string)$response;
     }
 
     public function post(string $url, array $data = [], array $options = []): string

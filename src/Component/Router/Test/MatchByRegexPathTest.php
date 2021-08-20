@@ -30,8 +30,7 @@ class MatchByRegexPathTest extends TestCase
         $router->setRouteContainer($routeContainer)->setRequest($request);
         try {
             $this->assertEquals($expected, $router->matchAll());
-        } catch (NoMatcherException $e) {
-        } catch (Exception $e) {
+        } catch (NoMatcherException | Exception) {
         }
     }
 

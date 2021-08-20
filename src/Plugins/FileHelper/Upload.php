@@ -12,11 +12,11 @@ class Upload
     private static ?self $instance = null;
     private string $key = 'file';
     // 存放文件的路径
-    private Path $path;
+    private ?Path $path = null;
     // 单位MB
     private int $maxSize = 5;
     // TODO 格式化文件名
-    private string $formatName;
+    // private string $formatName;
     // 如果目录不存在，是否创建目录
     private bool $ifCreatDir = false;
     // 错误信息
@@ -35,13 +35,6 @@ class Upload
      * @var File[]
      */
     private array $files = [];
-
-    public static function getInstance($options = null): self
-    {
-        if (null == self::$instance)
-            self::$instance = new self($options);
-        return self::$instance;
-    }
 
     private function __construct($options = null)
     {
@@ -63,14 +56,49 @@ class Upload
         }
     }
 
+    public static function getInstance($options = null): self
+    {
+        if (null == self::$instance)
+            self::$instance = new self($options);
+        return self::$instance;
+    }
+
     /**
      * 获取设置
      * @param $key
      * @return mixed
      */
-    public function getAttr($key)
+    public function getAttr($key): mixed
     {
         return $this->$key;
+    }
+
+    /**
+     * 上传文件
+     */
+    public function uploadFiles(): void
+    {
+        // 获取文件信息
+        $this->getFileInfo();
+        // 循环移动文件
+        foreach ($this->files as $file) {
+            if ($this->check($file)) {
+                $moveState = move_uploaded_file($file->getTmpName(), $this->path . $file->getName());
+                if ($moveState) {
+                    $this->success[] = $file;
+                } else {
+                    $this->failed[] = [
+                        'errMsg' => "File '{$file->getName()}' move failed.",
+                        'file' => $file
+                    ];
+                }
+            } else {
+                $this->failed[] = [
+                    'errMsg' => $this->errMsg,
+                    'file' => $file
+                ];
+            }
+        }
     }
 
     /**
@@ -119,7 +147,7 @@ class Upload
             if (!is_dir($this->path))
                 mkdir($this->path, 0777, true);
         } elseif (!is_dir($this->path)) {
-            $this->errMsg = "目录'{$this->path}'不存在，如需创建请设置ifCreatDir属性为true";
+            $this->errMsg = "目录'$this->path'不存在，如需创建请设置ifCreatDir属性为true";
             return false;
         }
         // 检查是否存在上传错误
@@ -141,34 +169,6 @@ class Upload
             return false;
         }
         return true;
-    }
-
-    /**
-     * 上传文件
-     */
-    public function uploadFiles(): void
-    {
-        // 获取文件信息
-        $this->getFileInfo();
-        // 循环移动文件
-        foreach ($this->files as $file) {
-            if ($this->check($file)) {
-                $moveState = move_uploaded_file($file->getTmpName(), $this->path . $file->getName());
-                if ($moveState) {
-                    $this->success[] = $file;
-                } else {
-                    $this->failed[] = [
-                        'errMsg' => "File '{$file->getName()}' move failed.",
-                        'file' => $file
-                    ];
-                }
-            } else {
-                $this->failed[] = [
-                    'errMsg' => $this->errMsg,
-                    'file' => $file
-                ];
-            }
-        }
     }
 
     /**

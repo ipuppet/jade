@@ -9,17 +9,25 @@ class Email
     /**
      * @var string
      */
-    private $to;
+    private string $to;
 
     /**
      * @var string
      */
-    private $title;
+    private string $title;
 
     /**
      * @var string
      */
-    private $body;
+    private string $body;
+
+    /**
+     * @return string
+     */
+    public function getTo(): string
+    {
+        return $this->to;
+    }
 
     /**
      * @param $to
@@ -29,6 +37,14 @@ class Email
     {
         $this->to = $to;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
     }
 
     /**
@@ -42,6 +58,14 @@ class Email
     }
 
     /**
+     * @return string
+     */
+    public function getBody(): string
+    {
+        return $this->body;
+    }
+
+    /**
      * @param string $body
      * @return Email
      */
@@ -49,29 +73,5 @@ class Email
     {
         $this->body = $body;
         return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTo()
-    {
-        return $this->to;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBody(): string
-    {
-        return $this->body;
     }
 }

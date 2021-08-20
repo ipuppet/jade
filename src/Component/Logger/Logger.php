@@ -30,12 +30,12 @@ class Logger extends AbstractLogger
     /**
      * Logger constructor.
      * @param string $name
-     * @param $formatter
+     * @param callable|null $formatter
      */
-    public function __construct(string $name = 'Log', callable $formatter = null)
+    public function __construct(string $name = 'Log', ?callable $formatter = null)
     {
         $this->name = $name;
-        $this->formatter = $formatter ?: [$this, 'format'];
+        $this->formatter = $formatter ?? [$this, 'format'];
     }
 
     public function setName($name): self
@@ -64,14 +64,37 @@ class Logger extends AbstractLogger
         return $this;
     }
 
+    /**
+     * Logs with an arbitrary level.
+     * @param mixed $level
+     * @param $message
+     * @param array $context
+     * @return void
+     * @throws Exception
+     */
+    public function log($level, $message, array $context = [])
+    {
+        if (!$this->checkOutput()) {
+            throw new Exception('是否忘记调用 setOutput 方法了？');
+        }
+        $formatter = $this->formatter;
+        fwrite($this->handle, $formatter($level, $message, $context));
+    }
+
     public function checkOutput(): bool
     {
         return $this->outputStatus;
     }
 
-    private function format($level, $message, array $context = []): string
+    /**
+     * @param string $level
+     * @param string $message
+     * @param array $context
+     * @return string
+     */
+    private function format(string $level, string $message, array $context = []): string
     {
-        if ($context !== []) {
+        if (!empty($context)) {
             $replace = [];
             foreach ($context as $key => $val) {
                 if (null === $val || is_scalar($val) || (is_object($val) && method_exists($val, '__toString'))) {
@@ -90,35 +113,5 @@ class Logger extends AbstractLogger
         $date = new DateTime();
         $date->setTimezone(new DateTimeZone(self::DATE_TIME_ZONE));
         return sprintf('[%s] %s.%s %s', $date->format(self::DATE_FORMAT), $this->name, strtoupper($level), $message) . PHP_EOL;
-    }
-
-    public function print($message, array $context = [])
-    {
-        echo "outputStatus: {$this->outputStatus}\n";
-        echo "name: {$this->name}\n";
-        echo "message before format: {$message}\n";
-        echo "message after format: {$this->format($message, $context)}\n";
-        echo "context: \n";
-        foreach ($context as $key => $value) {
-            echo "    [{$key}] {$value}\n";
-        }
-    }
-
-    /**
-     * Logs with an arbitrary level.
-     *
-     * @param mixed $level
-     * @param $message
-     * @param array $context
-     * @return void
-     * @throws Exception
-     */
-    public function log($level, $message, array $context = [])
-    {
-        if (!$this->checkOutput()) {
-            throw new Exception('是否忘记调用 setOutput 方法了？');
-        }
-        $formatter = $this->formatter;
-        fwrite($this->handle, $formatter($level, $message, $context));
     }
 }

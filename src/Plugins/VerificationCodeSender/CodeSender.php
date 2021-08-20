@@ -8,32 +8,13 @@ use Ipuppet\Jade\Plugins\EmailSender\EmailSender;
 
 abstract class CodeSender
 {
-    protected $verificationCode;
-    protected $target;
-    protected $emailSender;
+    protected VerificationCode $verificationCode;
+    protected string $target;
+    protected EmailSender $emailSender;
 
     public function __construct(EmailSender $emailSender)
     {
         $this->emailSender = $emailSender;
-    }
-
-    private function createVerificationCode(): VerificationCode
-    {
-        $code = '';
-        $codeLength = 6;
-        $pov = 5;//有效期 分钟
-
-        for ($i = 0; $i < $codeLength; $i++) {
-            $code .= (string)rand(0, 9);
-        }
-        return new VerificationCode($this->target, $code, time(), $pov);
-    }
-
-    public function setTarget($target)
-    {
-        $this->target = $target;
-        $this->verificationCode = $this->createVerificationCode();
-        return $this;
     }
 
     /**
@@ -50,6 +31,25 @@ abstract class CodeSender
             }
         }
         return false;
+    }
+
+    public function setTarget($target): static
+    {
+        $this->target = $target;
+        $this->verificationCode = $this->createVerificationCode();
+        return $this;
+    }
+
+    private function createVerificationCode(): VerificationCode
+    {
+        $code = '';
+        $codeLength = 6;
+        $pov = 5; // 有效期 分钟
+
+        for ($i = 0; $i < $codeLength; $i++) {
+            $code .= rand(0, 9);
+        }
+        return new VerificationCode($this->target, $code, time(), $pov);
     }
 
     abstract function send($title);

@@ -26,7 +26,7 @@ class RequestFactory
             $post = $_POST;
         }
         $request = self::create($_GET, $post, [], $_COOKIE, $_FILES, $_SERVER);
-        if (0 === strpos($request->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
+        if (str_starts_with($request->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
             && in_array(strtoupper($request->server->get('REQUEST_METHOD', 'GET')), ['PUT', 'DELETE', 'PATCH'])
         ) {
             parse_str($request->getContent(), $data);

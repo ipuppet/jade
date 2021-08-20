@@ -6,12 +6,6 @@ namespace Ipuppet\Jade\Foundation\Path;
 
 interface PathInterface
 {
-    public function set(string $path);
-
-    public function get(): string;
-
-    public function __toString();
-
     /**
      * 合并两个路径
      * @param PathInterface|string $before
@@ -19,6 +13,12 @@ interface PathInterface
      * @return PathInterface
      */
     public static function join($before = null, $after = null): PathInterface;
+
+    public function set(string $path);
+
+    public function get(): string;
+
+    public function __toString();
 
     /**
      * 将路径加入到当前路径后面

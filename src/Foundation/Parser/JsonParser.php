@@ -40,6 +40,14 @@ class JsonParser implements ParserInterface
     }
 
     /**
+     * @return Parameter
+     */
+    public function loadAsParameter(): Parameter
+    {
+        return new Parameter($this->loadAsArray());
+    }
+
+    /**
      * @return array
      */
     public function loadAsArray(): array
@@ -48,14 +56,6 @@ class JsonParser implements ParserInterface
         $json = file_get_contents($file);
         $result = json_decode($json, JSON_OBJECT_AS_ARRAY);
         return $result ?? [];
-    }
-
-    /**
-     * @return Parameter
-     */
-    public function loadAsParameter(): Parameter
-    {
-        return new Parameter($this->loadAsArray());
     }
 
     public function fileExists(): bool

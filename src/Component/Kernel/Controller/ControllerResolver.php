@@ -6,7 +6,6 @@ namespace Ipuppet\Jade\Component\Kernel\Controller;
 
 use InvalidArgumentException;
 use Ipuppet\Jade\Component\Http\Request;
-use Ipuppet\Jade\Component\Logger\Logger;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
@@ -15,21 +14,24 @@ use ReflectionMethod;
 class ControllerResolver
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger)
     {
-        $this->logger = $logger->checkOutput() ? $logger : null;
+        $this->logger = $logger;
     }
 
-    public function getController(Request $request)
+    /**
+     * @param Request $request
+     * @return array|callable|false|object|string
+     * @throws ReflectionException
+     */
+    public function getController(Request $request): callable|object|bool|array|string
     {
         if (!$controller = $request->attributes->get('controller')) {
-            if (null !== $this->logger) {
-                $this->logger->warning('Unable to look for the controller as the "controller" parameter is missing.');
-            }
+            $this->logger?->warning('Unable to look for the controller as the "controller" parameter is missing.');
             return false;
         }
         if (is_array($controller)) {
@@ -41,7 +43,7 @@ class ControllerResolver
             }
             throw new InvalidArgumentException(sprintf('Controller "%s" for URI "%s" is not callable.', get_class($controller), $request->getPathInfo()));
         }
-        if (false === strpos($controller, ':')) {
+        if (!str_contains($controller, ':')) {
             if (method_exists($controller, '__invoke')) {
                 return $this->instantiateController($controller, $request);
             } elseif (function_exists($controller)) {
@@ -53,18 +55,6 @@ class ControllerResolver
             throw new InvalidArgumentException(sprintf('The controller for URI "%s" is not callable. %s', $request->getPathInfo(), $this->getControllerError($callable)));
         }
         return $callable;
-    }
-
-    protected function createController($controller, $request): array
-    {
-        if (false === strpos($controller, '::')) {
-            throw new InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
-        }
-        list($class, $method) = explode('::', $controller, 2);
-        if (!class_exists($class)) {
-            throw new InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
-        }
-        return array($this->instantiateController($class, $request), $method);
     }
 
     /**
@@ -92,10 +82,28 @@ class ControllerResolver
         return $reflectionClass->newInstanceArgs();
     }
 
+    /**
+     * @param $controller
+     * @param $request
+     * @return array
+     * @throws ReflectionException
+     */
+    protected function createController($controller, $request): array
+    {
+        if (!str_contains($controller, '::')) {
+            throw new InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
+        }
+        list($class, $method) = explode('::', $controller, 2);
+        if (!class_exists($class)) {
+            throw new InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+        }
+        return array($this->instantiateController($class, $request), $method);
+    }
+
     private function getControllerError($callable): string
     {
         if (is_string($callable)) {
-            if (false !== strpos($callable, '::')) {
+            if (str_contains($callable, '::')) {
                 $callable = explode('::', $callable);
             }
             if (class_exists($callable) && !method_exists($callable, '__invoke')) {
@@ -109,7 +117,7 @@ class ControllerResolver
             return sprintf('Invalid type for controller given, expected string or array, got "%s".', gettype($callable));
         }
         if (2 !== count($callable)) {
-            return sprintf('Invalid format for controller, expected array(controller, method) or controller::method.');
+            return 'Invalid format for controller, expected array(controller, method) or controller::method.';
         }
         list($controller, $method) = $callable;
         if (is_string($controller) && !class_exists($controller)) {
@@ -123,7 +131,7 @@ class ControllerResolver
         $alternatives = array();
         foreach ($collection as $item) {
             $lev = levenshtein($method, $item);
-            if ($lev <= strlen($method) / 3 || false !== strpos($item, $method)) {
+            if ($lev <= strlen($method) / 3 || str_contains($item, $method)) {
                 $alternatives[] = $item;
             }
         }
