@@ -37,9 +37,9 @@ abstract class Model
      */
     private ConfigLoader $configLoader;
     /**
-     * @var LoggerInterface
+     * @var Logger
      */
-    private LoggerInterface $logger;
+    private Logger $logger;
 
     /**
      * @var ?DateTime
