@@ -39,7 +39,9 @@ class PdoDatabaseDriver
                     $config['dbname'],
                     $config['port'],
                     $config['charset']
-                ), $config['username'], $config['password']
+                ),
+                $config['username'],
+                $config['password']
             );
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             //使数据类型对等

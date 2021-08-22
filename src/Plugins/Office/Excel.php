@@ -23,7 +23,8 @@ class Excel
      */
     private function __construct(LoggerInterface $logger = null)
     {
-        if (!class_exists('PhpOffice\PhpSpreadsheet\Exception') ||
+        if (
+            !class_exists('PhpOffice\PhpSpreadsheet\Exception') ||
             !class_exists('PhpOffice\PhpSpreadsheet\IOFactory') ||
             !class_exists('PhpOffice\PhpSpreadsheet\Reader\Exception') ||
             !class_exists('PhpOffice\PhpSpreadsheet\Spreadsheet') ||

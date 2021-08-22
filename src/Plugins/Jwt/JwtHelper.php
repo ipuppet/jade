@@ -124,8 +124,11 @@ class JwtHelper
         $base64header = $this->base64UrlEncode(json_encode($this->header, JSON_UNESCAPED_UNICODE));
         $base64payload = $this->base64UrlEncode(json_encode($this->payload, JSON_UNESCAPED_UNICODE));
         return $base64header . '.' . $base64payload . '.' .
-            $this->signature($base64header . '.' . $base64payload,
-                $this->keys[$this->header['alg']], $this->header['alg']);
+            $this->signature(
+                $base64header . '.' . $base64payload,
+                $this->keys[$this->header['alg']],
+                $this->header['alg']
+            );
     }
 
     /**
