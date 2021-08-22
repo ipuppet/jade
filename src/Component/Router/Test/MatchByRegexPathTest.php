@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 
 class MatchByRegexPathTest extends TestCase
 {
-
     /**
      * @param $name
      * @param $route

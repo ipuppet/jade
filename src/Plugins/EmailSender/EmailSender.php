@@ -50,7 +50,8 @@ class EmailSender
      */
     public function __construct(?LoggerInterface $logger = null)
     {
-        if (!class_exists('Swift_Mailer') ||
+        if (
+            !class_exists('Swift_Mailer') ||
             !class_exists('Swift_Message') ||
             !class_exists('Swift_SmtpTransport')
         ) {

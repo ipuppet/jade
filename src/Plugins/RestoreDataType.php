@@ -16,7 +16,7 @@ class RestoreDataType
                     if (stripos($value, '.') === false) {
                         $value = (int)$value;
                     } else {
-                        $value = (double)$value;
+                        $value = (float)$value;
                     }
                 } elseif ($value === 'true') {
                     $value = true;
@@ -25,7 +25,6 @@ class RestoreDataType
                 }
                 $data[$key] = $value;
             }
-
         }
         return $data;
     }

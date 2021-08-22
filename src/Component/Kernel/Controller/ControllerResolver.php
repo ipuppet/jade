@@ -163,9 +163,11 @@ class ControllerResolver
         $result = [];
         foreach ($parameters as $parameter) {
             //如果控制器方法存在网络请求没有的参数则去$global中寻找
-            if (!$request->has($parameter->getName()) && // request 中不存在同名参数
+            if (
+                !$request->has($parameter->getName()) && // request 中不存在同名参数
                 isset($global[$parameter->getName()]) && // global 中有定义
-                $global[$parameter->getName()]['type'] == (string)$parameter->getType()) {
+                $global[$parameter->getName()]['type'] == (string)$parameter->getType()
+            ) {
                 $result[$parameter->getPosition()] = $global[$parameter->getName()]['value'];
             } else {
                 $result[$parameter->getPosition()] = $request->get($parameter->getName());
