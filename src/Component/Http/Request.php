@@ -47,8 +47,8 @@ class Request
     protected string $requestUri;
     protected string $baseUrl;
     protected string $pathInfo;
-    protected string $basePath; // 请求方法，如get post put delete
-    protected string $method;
+    protected string $basePath;
+    protected string $method; // 请求方法，如get post put delete
     protected LoggerInterface $logger;
 
     public function __construct(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)

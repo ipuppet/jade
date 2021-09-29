@@ -31,6 +31,7 @@ class RouteContainer
                 $methods = [$route['method']];
             }
             $options['controller'] = $route['controller'];
+            $options['info'] = $route['info'] ?? [];
             //转换为Route对象
             $route = new Route($path, $defaults, $tokens, $options, $methods);
             $routeContainer->set($name, $route);
