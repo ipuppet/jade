@@ -85,7 +85,7 @@ class PdoDatabaseDriver
         return $line;
     }
 
-    function closeAutoCommit(): self
+    public function closeAutoCommit(): self
     {
         $this->pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, false);
         return $this;
@@ -95,7 +95,7 @@ class PdoDatabaseDriver
      * 开始事件
      * @return bool
      */
-    function beginTransaction(): bool
+    public function beginTransaction(): bool
     {
         return $this->pdo->beginTransaction();
     }
@@ -104,7 +104,7 @@ class PdoDatabaseDriver
      * 提交事件
      * @return bool
      */
-    function commit(): bool
+    public function commit(): bool
     {
         return $this->pdo->commit();
     }
@@ -113,8 +113,13 @@ class PdoDatabaseDriver
      * 回滚事件
      * @return bool
      */
-    function rollback(): bool
+    public function rollback(): bool
     {
         return $this->pdo->rollback();
+    }
+
+    public function getRealPdo(): PDO
+    {
+        return $this->pdo;
     }
 }
