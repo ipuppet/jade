@@ -137,7 +137,7 @@ class Router
             )) {
                 if ($this->afterMatch($route)) {
                     $this->request->request->add($this->matcher->getAttributes());
-                    $this->request->attributes->set('controller', $route->getOption('controller'));
+                    $this->request->attributes->add($route->getOptions());
                     return true;
                 }
             }
