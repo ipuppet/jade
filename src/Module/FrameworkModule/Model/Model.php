@@ -145,6 +145,7 @@ abstract class Model
         $data = file_get_contents($path);
         $lifeInfo = explode(substr($data, 0, strpos($data, '@')), '.');
         if (((int)$lifeInfo[0] + (int)$lifeInfo[1]) < time()) {
+            unlink($path);
             return false;
         }
         $json_arr = json_decode($data, 1);
