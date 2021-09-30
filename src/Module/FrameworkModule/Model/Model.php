@@ -135,4 +135,29 @@ abstract class Model
         }
         return $this->date->format($format);
     }
+
+    protected function getCache(string $name, $default = null)
+    {
+        $path = $this->getKernel()->getCachePath()->setFile($name . '.cache');
+        if (!file_exists($path)) {
+            return $default;
+        }
+        $data = file_get_contents($path);
+        $lifeInfo = explode(substr($data, 0, strpos($data, '@')), '.');
+        if (((int)$lifeInfo[0] + (int)$lifeInfo[1]) < time()) {
+            return false;
+        }
+        $json_arr = json_decode($data, 1);
+        if (json_last_error() === JSON_ERROR_NONE) $data = $json_arr;
+        return $data;
+    }
+
+    protected function setCache(string $name, $data, int $life_sec = 300): void
+    {
+        $path = $this->getKernel()->getCachePath()->setFile($name . '.cache');
+        if (is_array($data)) $data = json_encode($data);
+        if (!is_string($data)) $data = (string)$data;
+        $data = time() . ".$life_sec@" . $data;
+        file_put_contents($path, $data);
+    }
 }
