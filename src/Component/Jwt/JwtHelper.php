@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Ipuppet\Jade\Plugins\Jwt;
+namespace Ipuppet\Jade\Component\Jwt;
 
 
-use Ipuppet\Jade\Plugins\Jwt\Exception\PayloadException;
+use Ipuppet\Jade\Component\Jwt\Exception\PayloadException;
 
 class JwtHelper
 {
@@ -17,7 +17,7 @@ class JwtHelper
     private array $payload;
 
     //使用HMAC生成信息摘要时所使用的密钥
-    private array $keys = ["HS256" => "YourKey"];
+    private string $keys = "YourKey";
     private array $algConfig = ["HS256" => "sha256"];
 
     /**
@@ -38,12 +38,11 @@ class JwtHelper
 
     /**
      * @param string $key
-     * @param string $alg
      * @return static
      */
-    public function setKey(string $key, string $alg = 'HS256'): static
+    public function setKey(string $key): static
     {
-        $this->keys[$alg] = $key;
+        $this->keys = $key;
         return $this;
     }
 
@@ -70,23 +69,25 @@ class JwtHelper
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @param $value
      * @return static
      */
-    public function setHeader($key, $value): static
+    public function setHeader(string $key, $value): static
     {
         $this->header[$key] = $value;
         return $this;
     }
 
     /**
-     * @param string $alg
+     * @param string $key
+     * @param $data
+     * @param string $part registered public private
      * @return static
      */
-    public function setAlg(string $alg): static
+    public function setPayload(string $key, $data, string $part = 'public'): static
     {
-        $this->header['alg'] = $alg;
+        $this->payload[$part][$key] = $data;
         return $this;
     }
 
@@ -110,7 +111,7 @@ class JwtHelper
     public function addPayloads(array $data, string $part = 'public'): static
     {
         foreach ($data as $key => $datum) {
-            $this->payload[$part][$key] = $datum;
+            $this->setPayload($key, $datum, $part);
         }
         return $this;
     }
@@ -126,31 +127,9 @@ class JwtHelper
         return $base64header . '.' . $base64payload . '.' .
             $this->signature(
                 $base64header . '.' . $base64payload,
-                $this->keys[$this->header['alg']],
+                $this->keys,
                 $this->header['alg']
             );
-    }
-
-    /**
-     * base64UrlEncode   https://jwt.io/  中base64UrlEncode编码实现
-     * @param string $input 需要编码的字符串
-     * @return string
-     */
-    private function base64UrlEncode(string $input): string
-    {
-        return str_replace('=', '', strtr(base64_encode($input), '+/', '-_'));
-    }
-
-    /**
-     * HMAC-SHA256签名   https://jwt.io/  中HMAC-SHA256签名实现
-     * @param string $input 为base64UrlEncode(header).".".base64UrlEncode(payload)
-     * @param string $key
-     * @param string $alg 算法方式
-     * @return string
-     */
-    private function signature(string $input, string $key, string $alg): string
-    {
-        return $this->base64UrlEncode(hash_hmac($this->algConfig[$alg], $input, $key, true));
     }
 
     /**
@@ -174,7 +153,7 @@ class JwtHelper
             throw new PayloadException('alg为空');
         }
 
-        if ($this->signature($base64header . '.' . $base64payload, $this->keys[$base64decodeHeader['alg']], $base64decodeHeader['alg']) !== $sign) {
+        if ($this->signature($base64header . '.' . $base64payload, $this->keys, $base64decodeHeader['alg']) !== $sign) {
             throw new PayloadException('签名不一致');
         }
 
@@ -200,18 +179,6 @@ class JwtHelper
     }
 
     /**
-     * @param string $key
-     * @param $data
-     * @param string $part registered public private
-     * @return static
-     */
-    public function setPayload(string $key, $data, string $part = 'public'): static
-    {
-        $this->payload[$part][$key] = $data;
-        return $this;
-    }
-
-    /**
      * base64UrlEncode  https://jwt.io/  中base64UrlEncode解码实现
      * @param string $input 需要解码的字符串
      * @return string
@@ -224,5 +191,27 @@ class JwtHelper
             $input .= str_repeat('=', $addLen);
         }
         return base64_decode(strtr($input, '-_', '+/')) ?? '';
+    }
+
+    /**
+     * base64UrlEncode   https://jwt.io/  中base64UrlEncode编码实现
+     * @param string $input 需要编码的字符串
+     * @return string
+     */
+    private function base64UrlEncode(string $input): string
+    {
+        return str_replace('=', '', strtr(base64_encode($input), '+/', '-_'));
+    }
+
+    /**
+     * HMAC-SHA256签名   https://jwt.io/  中HMAC-SHA256签名实现
+     * @param string $input 为base64UrlEncode(header).".".base64UrlEncode(payload)
+     * @param string $key
+     * @param string $alg 算法方式
+     * @return string
+     */
+    private function signature(string $input, string $key, string $alg): string
+    {
+        return $this->base64UrlEncode(hash_hmac($this->algConfig[$alg], $input, $key, true));
     }
 }
