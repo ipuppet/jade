@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Ipuppet\Jade\Plugins\Jwt\Exception;
+namespace Ipuppet\Jade\Component\Jwt\Exception;
 
 
 use Exception;
