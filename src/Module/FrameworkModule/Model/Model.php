@@ -143,7 +143,7 @@ abstract class Model
             return $default;
         }
         $data = file_get_contents($path);
-        $lifeInfo = explode(substr($data, 0, strpos($data, '@')), '.');
+        $lifeInfo = explode('.', substr($data, 0, strpos($data, '@')));
         if (((int)$lifeInfo[0] + (int)$lifeInfo[1]) < time()) {
             unlink($path);
             return false;
