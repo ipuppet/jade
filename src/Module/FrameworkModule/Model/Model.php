@@ -143,11 +143,13 @@ abstract class Model
             return $default;
         }
         $data = file_get_contents($path);
-        $lifeInfo = explode(substr($data, 0, strpos($data, '@')), '.');
+        $posAt = strpos($data, '@');
+        $lifeInfo = explode('.', substr($data, 0, $posAt));
         if (((int)$lifeInfo[0] + (int)$lifeInfo[1]) < time()) {
             unlink($path);
             return false;
         }
+        $data = substr($data, $posAt + 1);
         $json_arr = json_decode($data, 1);
         if (json_last_error() === JSON_ERROR_NONE) $data = $json_arr;
         return $data;
