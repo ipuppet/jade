@@ -146,21 +146,54 @@ abstract class Model
         return file_exists($path);
     }
 
-    protected function getCache(string $name, $default = null)
+    /**
+     * 返回解析后的内容
+     * 返回内容以及缓存创建时的信息，包括有效期、创建时间等
+     * 结构如下
+     * [
+     *     'createdTime' => (int),
+     *     'life' => (int),
+     *     'autoDelete' => (int),
+     *     'content' => (string)
+     * ]
+     * @param string $name
+     * @return array
+     */
+    protected function getCacheContent(string $name): array
     {
         $path = $this->cachePath->setFile($name . '.cache');
         if (!$this->cacheExists($name)) {
-            return $default;
+            return [];
         }
         $data = file_get_contents($path);
         $posAt = strpos($data, '@');
         $lifeInfo = explode('.', substr($data, 0, $posAt));
-        if (((int)$lifeInfo[0] + (int)$lifeInfo[1]) < time()) {
-            if ((int)$lifeInfo[2]) unlink($path);
+        return [
+            'createdTime' => (int)$lifeInfo[0],
+            'life' => (int)$lifeInfo[1],
+            'autoDelete' => (int)$lifeInfo[2],
+            'content' => substr($data, $posAt + 1)
+        ];
+    }
+
+    /**
+     * 获取缓存
+     * 判断是否过期后决定是否内容，过期后返回 $default
+     * @param string $name
+     * @param [type] $default
+     * @return void
+     */
+    protected function getCache(string $name, $default = null)
+    {
+        $path = $this->cachePath->setFile($name . '.cache');
+        $cache = $this->getCacheContent($name);
+        if (empty($cache)) return $default;
+        if (($cache['createdTime'] + $cache['life']) < time()) {
+            if ($cache['autoDelete']) unlink($path);
             return $default;
         }
-        $data = substr($data, $posAt + 1);
-        $json_arr = json_decode($data, 1);
+        $data = $cache['content'];
+        $json_arr = json_decode($data, 1); // 解析为数组
         if (json_last_error() === JSON_ERROR_NONE) $data = $json_arr;
         return $data;
     }
