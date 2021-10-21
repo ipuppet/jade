@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 class HttpSender
 {
     private ?LoggerInterface $logger;
+    public $httpCode;
 
     public function __construct(LoggerInterface $logger = null)
     {
@@ -40,6 +41,7 @@ class HttpSender
             $message = "Curl error: [$method] " . curl_error($ch);
             $this->logger?->error($message);
         }
+        $this->httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         return (string)$response;
     }
