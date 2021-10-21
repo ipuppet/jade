@@ -157,7 +157,7 @@ abstract class Model
         $lifeInfo = explode('.', substr($data, 0, $posAt));
         if (((int)$lifeInfo[0] + (int)$lifeInfo[1]) < time()) {
             if ($del) unlink($path);
-            return false;
+            return $default;
         }
         $data = substr($data, $posAt + 1);
         $json_arr = json_decode($data, 1);
