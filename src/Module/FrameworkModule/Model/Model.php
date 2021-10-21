@@ -15,6 +15,7 @@ use Ipuppet\Jade\Component\Logger\Logger;
 use Ipuppet\Jade\Foundation\Parameter\Parameter;
 use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
 use Ipuppet\Jade\Foundation\Path\Exception\PathException;
+use Ipuppet\Jade\Foundation\Path\PathInterface;
 use Psr\Log\LoggerInterface;
 
 abstract class Model
@@ -46,6 +47,8 @@ abstract class Model
      */
     private ?DateTime $date = null;
 
+    private PathInterface $cachePath;
+
     /**
      * Model constructor.
      * @throws PathException
@@ -53,6 +56,7 @@ abstract class Model
     public function __construct()
     {
         $this->init();
+        $this->cachePath = $this->getKernel()->getCachePath();
     }
 
     /**
@@ -136,10 +140,16 @@ abstract class Model
         return $this->date->format($format);
     }
 
+    protected function cacheExists(string $name)
+    {
+        $path = $this->cachePath->setFile($name . '.cache');
+        return file_exists($path);
+    }
+
     protected function getCache(string $name, $default = null)
     {
-        $path = $this->getKernel()->getCachePath()->setFile($name . '.cache');
-        if (!file_exists($path)) {
+        $path = $this->cachePath->setFile($name . '.cache');
+        if (!$this->cacheExists($name)) {
             return $default;
         }
         $data = file_get_contents($path);
@@ -157,7 +167,7 @@ abstract class Model
 
     protected function setCache(string $name, $data, int $life_sec = 300): void
     {
-        $path = $this->getKernel()->getCachePath()->setFile($name . '.cache');
+        $path = $this->cachePath->setFile($name . '.cache');
         if (is_array($data)) $data = json_encode($data);
         if (!is_string($data)) $data = (string)$data;
         $data = time() . ".$life_sec@" . $data;
