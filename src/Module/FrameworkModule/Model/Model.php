@@ -156,8 +156,8 @@ abstract class Model
         $posAt = strpos($data, '@');
         $lifeInfo = explode('.', substr($data, 0, $posAt));
         if (((int)$lifeInfo[0] + (int)$lifeInfo[1]) < time()) {
-            unlink($path);
-            return false;
+            if ((int)$lifeInfo[2]) unlink($path);
+            return $default;
         }
         $data = substr($data, $posAt + 1);
         $json_arr = json_decode($data, 1);
@@ -165,12 +165,13 @@ abstract class Model
         return $data;
     }
 
-    protected function setCache(string $name, $data, int $life_sec = 300): void
+    protected function setCache(string $name, $data, int $life_sec = 300, $del = true): void
     {
         $path = $this->cachePath->setFile($name . '.cache');
         if (is_array($data)) $data = json_encode($data);
         if (!is_string($data)) $data = (string)$data;
-        $data = time() . ".$life_sec@" . $data;
+        $delFlag = $del ? '1' : '0';
+        $data = time() . ".$life_sec.$delFlag@" . $data;
         file_put_contents($path, $data);
     }
 }
