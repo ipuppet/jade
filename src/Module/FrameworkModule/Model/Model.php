@@ -146,7 +146,7 @@ abstract class Model
         return file_exists($path);
     }
 
-    protected function getCache(string $name, $default = null)
+    protected function getCache(string $name, $default = null, $del = true)
     {
         $path = $this->cachePath->setFile($name . '.cache');
         if (!$this->cacheExists($name)) {
@@ -156,7 +156,7 @@ abstract class Model
         $posAt = strpos($data, '@');
         $lifeInfo = explode('.', substr($data, 0, $posAt));
         if (((int)$lifeInfo[0] + (int)$lifeInfo[1]) < time()) {
-            unlink($path);
+            if ($del) unlink($path);
             return false;
         }
         $data = substr($data, $posAt + 1);
