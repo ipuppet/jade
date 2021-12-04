@@ -132,46 +132,47 @@ class JwtHelper
             );
     }
 
+    public function getPayload(string $token): array
+    {
+        $tokens = explode('.', $token);
+        if (count($tokens) != 3) {
+            throw new PayloadException('token不完整');
+        }
+        return json_decode($this->base64UrlDecode($tokens[1]), JSON_OBJECT_AS_ARRAY) ?? [];
+    }
+
     /**
      * 验证token，如果合法并可用则返回payload
-     * @param string $Token
+     * @param string $token
      * @param bool $withRegistered 是否携带注册声明
      * @return array
      * @throws PayloadException
      */
-    public function getPayload(string $Token, bool $withRegistered = true): array
+    public function testToken(string $token, bool $withRegistered = true): array
     {
-        $tokens = explode('.', $Token);
+        $tokens = explode('.', $token);
         if (count($tokens) != 3) {
             throw new PayloadException('token不完整');
         }
-
         list($base64header, $base64payload, $sign) = $tokens;
-
         $base64decodeHeader = json_decode($this->base64UrlDecode($base64header), JSON_OBJECT_AS_ARRAY);
         if (empty($base64decodeHeader['alg'])) {
             throw new PayloadException('alg为空');
         }
-
         if ($this->signature($base64header . '.' . $base64payload, $this->keys, $base64decodeHeader['alg']) !== $sign) {
             throw new PayloadException('签名不一致');
         }
-
         $payload = json_decode($this->base64UrlDecode($base64payload), JSON_OBJECT_AS_ARRAY) ?? [];
         $registered = $payload['registered'];
-
         if (isset($registered['iat']) && $registered['iat'] > time()) {
             throw new PayloadException('签发时间大于当前服务器时间（不可能的“未来的”签发）');
         }
-
         if (isset($registered['exp']) && $registered['exp'] < time()) {
             throw new PayloadException('token已过期');
         }
-
         if (isset($registered['nbf']) && $registered['nbf'] > time()) {
             throw new PayloadException('nbf时间之前不接收处理该Token');
         }
-
         if (!$withRegistered) {
             unset($payload['registered']);
         }
