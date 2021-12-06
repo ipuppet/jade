@@ -128,7 +128,7 @@ abstract class Kernel
         if ($router->matchAll()) {
             $request = $router->getRequest();
             try {
-                $controller = $controllerResolver->getController($request);
+                $controller = $controllerResolver->getController($this, $request);
             } catch (Exception $error) {
                 $response = Response::create('', Response::HTTP_400);
                 $response->send();

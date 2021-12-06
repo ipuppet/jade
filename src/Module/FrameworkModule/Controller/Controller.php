@@ -4,8 +4,10 @@
 namespace Ipuppet\Jade\Module\FrameworkModule\Controller;
 
 
+use Ipuppet\Jade\Component\Kernel\Kernel;
 use Ipuppet\Jade\Component\Http\Response;
 use Ipuppet\Jade\Component\Kernel\Config\Config;
+use Ipuppet\Jade\Component\Logger\Logger;
 
 abstract class Controller
 {
@@ -15,6 +17,22 @@ abstract class Controller
      * @var ?Config
      */
     private ?Config $corsConfig = null;
+    /**
+     * @var Kernel
+     */
+    protected Kernel $kernel;
+    /**
+     * @var Logger
+     */
+    protected Logger $logger;
+
+    public function __construct(Kernel $kernel)
+    {
+        $this->kernel = $kernel;
+        $this->logger = new Logger();
+        $this->logger->setName('Controller')
+            ->setOutput($this->kernel->getLogPath());
+    }
 
     /**
      * @param Config $config

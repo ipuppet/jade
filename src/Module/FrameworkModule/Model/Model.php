@@ -15,6 +15,7 @@ use Ipuppet\Jade\Component\Logger\Logger;
 use Ipuppet\Jade\Foundation\Parameter\Parameter;
 use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
 use Ipuppet\Jade\Foundation\Path\Exception\PathException;
+use Ipuppet\Jade\Foundation\Path\Path;
 use Ipuppet\Jade\Foundation\Path\PathInterface;
 use Psr\Log\LoggerInterface;
 
@@ -28,11 +29,11 @@ abstract class Model
     /**
      * @var ?PdoDatabaseDriver
      */
-    private ?PdoDatabaseDriver $pdo = null;
+    protected ?PdoDatabaseDriver $pdo = null;
     /**
      * @var Kernel
      */
-    private Kernel $kernel;
+    protected Kernel $kernel;
     /**
      * @var ConfigLoader
      */
@@ -40,7 +41,7 @@ abstract class Model
     /**
      * @var Logger
      */
-    private Logger $logger;
+    protected Logger $logger;
 
     /**
      * @var ?DateTime
@@ -56,7 +57,6 @@ abstract class Model
     public function __construct()
     {
         $this->init();
-        $this->cachePath = $this->getKernel()->getCachePath();
     }
 
     /**
@@ -73,6 +73,7 @@ abstract class Model
             ->setName('database')
             ->loadFromFile()
             ->toArray());
+        $this->cachePath = $this->kernel->getCachePath();
     }
 
     /**
@@ -174,6 +175,13 @@ abstract class Model
             'autoDelete' => (int)$lifeInfo[2],
             'content' => substr($data, $posAt + 1)
         ];
+    }
+
+    protected function getSubpathCacheContent(string $subpath, string $name): string
+    {
+        $path = new Path($this->cachePath);
+        $path->after($subpath)->setFile($name);
+        return file_get_contents($path);
     }
 
     /**
