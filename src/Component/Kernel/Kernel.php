@@ -24,9 +24,13 @@ use ReflectionException;
 abstract class Kernel
 {
     /**
-     * @var ?PathInterface
+     * @var ?ConfigLoader
      */
-    protected ?PathInterface $cachePath = null;
+    private ?ConfigLoader $configLoader = null;
+    /**
+     * @var Config
+     */
+    private Config $config;
     /**
      * @var ?PathInterface
      */
@@ -36,13 +40,13 @@ abstract class Kernel
      */
     protected ?PathInterface $rootPath = null;
     /**
-     * @var ?ConfigLoader
+     * @var ?PathInterface
      */
-    private ?ConfigLoader $configLoader = null;
+    protected ?PathInterface $cachePath = null;
     /**
-     * @var Config
+     * @var ?PathInterface
      */
-    private Config $config;
+    protected ?PathInterface $storagePath = null;
 
     /**
      * Kernel constructor.
