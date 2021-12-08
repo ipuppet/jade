@@ -15,7 +15,6 @@ use Ipuppet\Jade\Component\Logger\Logger;
 use Ipuppet\Jade\Foundation\Parameter\Parameter;
 use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
 use Ipuppet\Jade\Foundation\Path\Exception\PathException;
-use Ipuppet\Jade\Foundation\Path\Path;
 use Ipuppet\Jade\Foundation\Path\PathInterface;
 use Psr\Log\LoggerInterface;
 
@@ -74,6 +73,7 @@ abstract class Model
             ->loadFromFile()
             ->toArray());
         $this->cachePath = $this->kernel->getCachePath();
+        $this->storagePath = $this->kernel->getStoragePath();
     }
 
     /**
@@ -177,13 +177,6 @@ abstract class Model
         ];
     }
 
-    protected function getSubpathCacheContent(string $subpath, string $name): string
-    {
-        $path = new Path($this->cachePath);
-        $path->after($subpath)->setFile($name);
-        return file_get_contents($path);
-    }
-
     /**
      * 获取缓存
      * 判断是否过期后决定是否内容，过期后返回 $default
@@ -214,5 +207,17 @@ abstract class Model
         $delFlag = $del ? '1' : '0';
         $data = time() . ".$life_sec.$delFlag@" . $data;
         file_put_contents($path, $data);
+    }
+
+    protected function getStorageContent(string $name, string $default = ''): string
+    {
+        $path = $this->storagePath->setFile($name);
+        return file_get_contents($path) ?? $default;
+    }
+
+    protected function setStorageContent(string $name, $content): void
+    {
+        $path = $this->cachePath->setFile($name);
+        file_put_contents($path, $content);
     }
 }

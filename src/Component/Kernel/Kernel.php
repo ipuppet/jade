@@ -97,6 +97,20 @@ abstract class Kernel
     }
 
     /**
+     * 获取暂存文件目录
+     * @return PathInterface
+     * @throws PathException
+     */
+    public function getStoragePath(): PathInterface
+    {
+        if ($this->storagePath === null) {
+            $this->storagePath = new Path($this->getRootPath());
+            $this->storagePath->after('/var/storage');
+        }
+        return $this->storagePath;
+    }
+
+    /**
      * @param Request $request
      * @return Response
      * @throws PathException
