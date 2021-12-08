@@ -28,11 +28,11 @@ abstract class Model
     /**
      * @var ?PdoDatabaseDriver
      */
-    private ?PdoDatabaseDriver $pdo = null;
+    protected ?PdoDatabaseDriver $pdo = null;
     /**
      * @var Kernel
      */
-    private Kernel $kernel;
+    protected Kernel $kernel;
     /**
      * @var ConfigLoader
      */
@@ -40,7 +40,7 @@ abstract class Model
     /**
      * @var Logger
      */
-    private Logger $logger;
+    protected Logger $logger;
 
     /**
      * @var ?DateTime
@@ -56,7 +56,6 @@ abstract class Model
     public function __construct()
     {
         $this->init();
-        $this->cachePath = $this->getKernel()->getCachePath();
     }
 
     /**
@@ -73,6 +72,8 @@ abstract class Model
             ->setName('database')
             ->loadFromFile()
             ->toArray());
+        $this->cachePath = $this->kernel->getCachePath();
+        $this->storagePath = $this->kernel->getStoragePath();
     }
 
     /**
@@ -206,5 +207,17 @@ abstract class Model
         $delFlag = $del ? '1' : '0';
         $data = time() . ".$life_sec.$delFlag@" . $data;
         file_put_contents($path, $data);
+    }
+
+    protected function getStorageContent(string $name, string $default = ''): string
+    {
+        $path = $this->storagePath->setFile($name);
+        return file_get_contents($path) ?? $default;
+    }
+
+    protected function setStorageContent(string $name, $content): void
+    {
+        $path = $this->cachePath->setFile($name);
+        file_put_contents($path, $content);
     }
 }

@@ -6,6 +6,7 @@ namespace Ipuppet\Jade\Component\Kernel\Controller;
 
 use InvalidArgumentException;
 use Ipuppet\Jade\Component\Http\Request;
+use Ipuppet\Jade\Component\Kernel\Kernel;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
@@ -28,7 +29,7 @@ class ControllerResolver
      * @return array|callable|false|object|string
      * @throws ReflectionException
      */
-    public function getController(Request $request): callable|object|bool|array|string
+    public function getController(Kernel $kernel, Request $request): callable|object|bool|array|string
     {
         if (!$controller = $request->attributes->get('controller')) {
             $this->logger?->warning('Unable to look for the controller as the "controller" parameter is missing.');
@@ -45,12 +46,12 @@ class ControllerResolver
         }
         if (!str_contains($controller, ':')) {
             if (method_exists($controller, '__invoke')) {
-                return $this->instantiateController($controller, $request);
+                return $this->instantiateController($controller, $kernel, $request);
             } elseif (function_exists($controller)) {
                 return $controller;
             }
         }
-        $callable = $this->createController($controller, $request);
+        $callable = $this->createController($controller, $kernel, $request);
         if (!is_callable($callable)) {
             throw new InvalidArgumentException(sprintf('The controller for URI "%s" is not callable. %s', $request->getPathInfo(), $this->getControllerError($callable)));
         }
@@ -63,7 +64,7 @@ class ControllerResolver
      * @return object
      * @throws ReflectionException
      */
-    protected function instantiateController($class, $request): object
+    protected function instantiateController($class, $kernel, $request): object
     {
         $reflectionClass = new ReflectionClass($class);
         $constructor = $reflectionClass->getConstructor();
@@ -71,7 +72,9 @@ class ControllerResolver
             $parameters = $constructor->getParameters();
             $result = [];
             foreach ($parameters as $parameter) {
-                if ('Ipuppet\Jade\Component\Http\Request' === (string)$parameter->getType()) {
+                if ('Ipuppet\Jade\Component\Kernel\Kernel' === (string)$parameter->getType()) {
+                    $result[$parameter->getPosition()] = $kernel;
+                } elseif ('Ipuppet\Jade\Component\Http\Request' === (string)$parameter->getType()) {
                     $result[$parameter->getPosition()] = $request;
                 } else {
                     $result[$parameter->getPosition()] = $request->get($parameter->getName());
@@ -88,7 +91,7 @@ class ControllerResolver
      * @return array
      * @throws ReflectionException
      */
-    protected function createController($controller, $request): array
+    protected function createController($controller, $kernel, $request): array
     {
         if (!str_contains($controller, '::')) {
             throw new InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
@@ -97,7 +100,7 @@ class ControllerResolver
         if (!class_exists($class)) {
             throw new InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
-        return array($this->instantiateController($class, $request), $method);
+        return array($this->instantiateController($class, $kernel, $request), $method);
     }
 
     private function getControllerError($callable): string
