@@ -217,7 +217,7 @@ abstract class Model
 
     protected function setStorageContent(string $name, $content): void
     {
-        $path = $this->cachePath->setFile($name);
+        $path = $this->storagePath->setFile($name);
         file_put_contents($path, $content);
     }
 }
