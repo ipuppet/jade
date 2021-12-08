@@ -5,6 +5,7 @@ namespace Ipuppet\Jade\Component\Kernel;
 
 
 use Exception;
+use TypeError;
 use Ipuppet\Jade\Component\Http\Request;
 use Ipuppet\Jade\Component\Http\Response;
 use Ipuppet\Jade\Component\Kernel\Config\Config;
@@ -170,7 +171,11 @@ abstract class Kernel
             // 整理参数顺序，按照方法签名对齐
             $parameters = $controllerResolver->sortRequestParameters($controller, $request);
             // 调用控制器中对应的方法并获得Response
-            $response = call_user_func_array($controller, $parameters);
+            try {
+                $response = call_user_func_array($controller, $parameters);
+            } catch (TypeError $error) {
+                return Response::create('Invalid parameter', Response::HTTP_400);
+            }
             if ($response instanceof Response) {
                 return $response;
             } else {
@@ -179,7 +184,7 @@ abstract class Kernel
         }
         // 响应错误信息
         $reason = $router->getReason($this->config->get('logAccessError', false));
-        return new Response($reason->getContent(), $reason->getHttpStatus());
+        return Response::create($reason->getContent(), $reason->getHttpStatus());
     }
 
     /**
