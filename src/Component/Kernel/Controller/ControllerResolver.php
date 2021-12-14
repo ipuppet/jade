@@ -173,7 +173,12 @@ class ControllerResolver
             ) {
                 $result[$parameter->getPosition()] = $global[$parameter->getName()]['value'];
             } else {
-                $result[$parameter->getPosition()] = $request->get($parameter->getName());
+                $default = null;
+                try {
+                    $default = $parameter->getDefaultValue();
+                } catch (\Throwable $th) {
+                }
+                $result[$parameter->getPosition()] = $request->get($parameter->getName(), $default);
             }
         }
         return $result;
