@@ -8,7 +8,7 @@ use Ipuppet\Jade\Component\Http\Response;
 
 class MethodNotAllow extends Reason implements ReasonInterface
 {
-    public function getHttpStatus(): int
+    public function getDefaultHttpStatus(): int
     {
         return Response::HTTP_405;
     }

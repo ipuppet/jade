@@ -50,6 +50,39 @@ class Router
     {
         $this->request = $request;
         $this->routeContainer = $routeContainer;
+        $this->errorContentresolver = function (int $httpStatus): array {
+            $content = $this->config->get($httpStatus, false);
+            if ($content) {
+                $mode = $content[0];
+                $content = mb_substr($content, 1);
+                switch ($mode) {
+                    case '%': // 文件读取模式
+                        $path = str_replace([
+                            '{rootPath}', // 项目路径
+                            '{statusCode}'
+                        ], [
+                            $this->config->get('rootPath'),
+                            $httpStatus
+                        ], $content);
+                        if (file_exists($path)) {
+                            $content = file_get_contents($path);
+                        } else {
+                            $message = "配置文件中 `errorResponse` 路径 '$httpStatus': [$path] 不存在，请检查。";
+                            $this->logger?->warning($message);
+                            throw new Exception($message);
+                        }
+                        break;
+                    case '^': // 重定向
+                        $tmp = explode(" ", $content); // 使用空格隔开新状态码和内容
+                        $httpStatus = $tmp[0];
+                        $content = $tmp[1];
+                        break;
+                    default: // 不做修改
+                        break;
+                }
+            }
+            return [$httpStatus, $content];
+        };
     }
 
     /**
@@ -143,7 +176,7 @@ class Router
             }
         }
         // 未成功匹配
-        $this->reason = new NoMatch($this->config, $this->logger);
+        $this->reason = new NoMatch($this->errorContentresolver);
         return false;
     }
 
@@ -160,7 +193,7 @@ class Router
             !in_array($this->request->getMethod(), $route->getMethods()) &&
             $this->request->getMethod() !== 'OPTIONS' // 所有OPTIONS请求都跳过检查
         ) {
-            $this->reason = new MethodNotAllow($this->config, $this->logger);
+            $this->reason = new MethodNotAllow($this->errorContentresolver);
             return false;
         }
         return true;

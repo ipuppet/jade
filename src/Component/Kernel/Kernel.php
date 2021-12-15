@@ -184,7 +184,12 @@ abstract class Kernel
         }
         // 响应错误信息
         $reason = $router->getReason($this->config->get('logAccessError', false));
-        return Response::create($reason->getContent(), $reason->getHttpStatus());
+        $httpStatus = $reason->getHttpStatus();
+        if ($httpStatus === Response::HTTP_301 || $httpStatus === Response::HTTP_302) { // 重定向
+            header("Location: {$reason->getContent()}", true, $httpStatus);
+            die();
+        }
+        return Response::create($reason->getContent(), $httpStatus);
     }
 
     /**

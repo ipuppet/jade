@@ -4,74 +4,38 @@
 namespace Ipuppet\Jade\Component\Router\Reason;
 
 
-use Exception;
-use Ipuppet\Jade\Component\Http\Response;
-use Ipuppet\Jade\Component\Kernel\Config\Config;
-use Psr\Log\LoggerInterface;
-
 abstract class Reason implements ReasonInterface
 {
     /**
      * @var string|null
      */
     protected ?string $content;
-
-    private ?LoggerInterface $logger;
+    /**
+     * @var integer
+     */
+    protected int $httpStatus;
 
     /**
-     * Reason constructor.
-     * @param ?Config $config
-     * @param ?LoggerInterface $logger
-     * @throws Exception
+     * @param callable $resolver 解析器，需返回数组 [0 => 状态码, 1 => 内容]
      */
-    public function __construct(Config $config = null, LoggerInterface $logger = null)
+    public function __construct(callable $resolver)
     {
-        if ($logger) $this->logger = $logger;
-        if ($config !== null) {
-            $httpStatus = $this->getHttpStatus();
-            $content = $config->get($httpStatus, false);
-            if ($content) {
-                switch ($content[0]) {
-                    case '@': // 项目路径
-                        $content = str_replace('@', $config->get('rootPath'), $content);
-                        $this->setContent($this->getFileContent($content));
-                        break;
-                    default:
-                        $this->setContent($content);
-                }
-            }
-        }
+        $result = $resolver($this->getDefaultHttpStatus());
+        $this->httpStatus = $result[0];
+        $this->content = $result[1] ?? $this->getDefaultContent();
     }
 
     public function getHttpStatus(): int
     {
-        return Response::HTTP_200;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getFileContent($path): string
-    {
-        if (file_exists($path)) {
-            return file_get_contents($path);
-        } else {
-            $message = "您在response配置文件中设定的文件 [$path] 不存在，请检查。";
-            $this->logger?->warning($message);
-            throw new Exception($message);
-        }
+        return $this->httpStatus;
     }
 
     public function getContent(): string
     {
-        return $this->content ?? $this->getDefaultContent();
+        return $this->content;
     }
 
-    public function setContent(string $content)
-    {
-        $this->content = $content;
-    }
-
+    abstract public function getDefaultHttpStatus(): int;
     abstract public function getDefaultContent(): string;
 
     public function getDescription(): string
