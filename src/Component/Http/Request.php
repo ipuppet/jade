@@ -368,4 +368,35 @@ class Request
     {
         return 'XMLHttpRequest' === $this->headers->get('X-Requested-With');
     }
+
+    public static function getIP(): string
+    {
+        if (isset($_SERVER)) {
+            if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+                foreach ($arr as $ip) {
+                    $ip = trim($ip);
+                    if ($ip != 'unknown') {
+                        $realIP = $ip;
+                        break;
+                    }
+                }
+            } else if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+                $realIP = $_SERVER['HTTP_CLIENT_IP'];
+            } else if (isset($_SERVER['REMOTE_ADDR'])) {
+                $realIP = $_SERVER['REMOTE_ADDR'];
+            } else {
+                $realIP = '0.0.0.0';
+            }
+        } else if (getenv('HTTP_X_FORWARDED_FOR')) {
+            $realIP = getenv('HTTP_X_FORWARDED_FOR');
+        } else if (getenv('HTTP_CLIENT_IP')) {
+            $realIP = getenv('HTTP_CLIENT_IP');
+        } else {
+            $realIP = getenv('REMOTE_ADDR');
+        }
+        preg_match('/[\\d\\.]{7,15}/', $realIP, $onlineip);
+        $realIP = (!empty($onlineip[0]) ? $onlineip[0] : '0.0.0.0');
+        return $realIP;
+    }
 }
