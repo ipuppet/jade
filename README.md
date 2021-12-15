@@ -20,4 +20,6 @@ e.g. `php build.php -r /path/to/`
 
 ## [配置文件](docs/config.md)
 
+## [路由](docs/routes.md)
+
 ## [控制器](docs/controller.md)
