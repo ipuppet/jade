@@ -3,7 +3,7 @@
 
 namespace Ipuppet\Jade\Component\DatabaseDriver;
 
-
+use Error;
 use PDO;
 use PDOException;
 use Psr\Log\LoggerInterface;
@@ -47,7 +47,7 @@ class PdoDatabaseDriver
             //使数据类型对等
             $this->pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
             $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-        } catch (PDOException $e) {
+        } catch (PDOException | Error $e) {
             $this->logger->error($e->getMessage());
         }
     }
