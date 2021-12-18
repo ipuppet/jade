@@ -20,22 +20,29 @@
 
 - `errorResponse`
 
+    此属性可以使用一些预定义的变量，变量名应被大括号包裹。
+
+    如 `%{rootPath}/public/response/404.html` 会将 `{rootPath}` 替换为项目根目录。
+
+    可用变量如下：
+
+    - `rootPath`: 项目根目录。该路径是通过 `AppKernel` 中的 `getRootDir()` 方法获取的。
+    - `httpStatusCode`: 状态码，如：404
+    - `httpStatusCodeText`: 状态码，如：Not Found
+
     开头第一个字符设定模式，可用模式如下：
-    
+
     - `%`: 文件读取模式
 
-        该模式下将会替换被大括号包裹的字符串并尝试访问这个路径，如 `%{rootPath}/public/response/404.html` 会将 `{rootPath}` 替换为项目根目录。可用变量如下：
+        该模式下将会尝试访问这个文件路径并读取其内容进行输出。
 
-        - `rootPath`: 项目根目录。该路径是通过 `AppKernel` 中的 `getRootDir()` 方法获取的。
-        - `statusCode`: 状态码
+    - `^`: 重定向
 
-    其他未匹配的情况将原样输出字符串。
-
-    - `^`: 重写错误，常用于重定向
-
-        其后紧跟重写状态码，一个空格后跟内容
+        其后紧跟 3xx 状态码，一个空格后跟重定向地址
 
         `^301 https://github.com`
+
+    其他未匹配的情况将原样输出字符串。
 
 - `cors`
 

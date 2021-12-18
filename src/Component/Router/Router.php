@@ -6,6 +6,7 @@ namespace Ipuppet\Jade\Component\Router;
 
 use Exception;
 use Ipuppet\Jade\Component\Http\Request;
+use Ipuppet\Jade\Component\Http\Response;
 use Ipuppet\Jade\Component\Kernel\Config\Config;
 use Ipuppet\Jade\Component\Router\Exception\NoMatcherException;
 use Ipuppet\Jade\Component\Router\Matcher\MatcherInterface;
@@ -50,38 +51,41 @@ class Router
     {
         $this->request = $request;
         $this->routeContainer = $routeContainer;
-        $this->errorContentresolver = function (int $httpStatus): array {
-            $content = $this->config->get($httpStatus, false);
+        $this->errorContentresolver = function (int $httpStatusCode): array {
+            $content = $this->config->get($httpStatusCode, false);
             if ($content) {
                 $mode = $content[0];
                 $content = mb_substr($content, 1);
+                // 变量替换
+                $content = str_replace([
+                    '{rootPath}', // 项目路径
+                    '{httpStatusCode}',
+                    '{httpStatusCodeText}'
+                ], [
+                    $this->config->get('rootPath'),
+                    $httpStatusCode,
+                    Response::HttpStatusCodeText[$httpStatusCode]
+                ], $content);
                 switch ($mode) {
                     case '%': // 文件读取模式
-                        $path = str_replace([
-                            '{rootPath}', // 项目路径
-                            '{statusCode}'
-                        ], [
-                            $this->config->get('rootPath'),
-                            $httpStatus
-                        ], $content);
-                        if (file_exists($path)) {
-                            $content = file_get_contents($path);
+                        if (file_exists($content)) {
+                            $content = file_get_contents($content);
                         } else {
-                            $message = "配置文件中 `errorResponse` 路径 '$httpStatus': [$path] 不存在，请检查。";
+                            $message = "配置文件中 `errorResponse` 路径 '$httpStatusCode': [$content] 不存在，请检查。";
                             $this->logger?->warning($message);
                             throw new Exception($message);
                         }
                         break;
                     case '^': // 重定向
-                        $tmp = explode(" ", $content); // 使用空格隔开新状态码和内容
-                        $httpStatus = $tmp[0];
-                        $content = $tmp[1];
+                        $tmp = explode(" ", $content); // 使用空格隔开新状态码和内容 0: 3xx, 1: url
+                        header("Location: {$tmp[1]}", true, $tmp[0]);
+                        die();
                         break;
                     default: // 不做修改
                         break;
                 }
             }
-            return [$httpStatus, $content];
+            return [$httpStatusCode, $content];
         };
     }
 
