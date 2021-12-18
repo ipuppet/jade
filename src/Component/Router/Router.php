@@ -77,8 +77,9 @@ class Router
                         }
                         break;
                     case '^': // 重定向
-                        $tmp = explode(" ", $content); // 使用空格隔开新状态码和内容 0: 3xx, 1: url
-                        header("Location: {$tmp[1]}", true, $tmp[0]);
+                        $r_httpStatusCode = substr($content, 0, 3);
+                        $url = substr($content, 4);
+                        header("Location: $url", true, $r_httpStatusCode);
                         die();
                         break;
                     default: // 不做修改
