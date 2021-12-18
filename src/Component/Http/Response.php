@@ -19,7 +19,7 @@ class Response
     const HTTP_405 = 405;
     const HTTP_500 = 500;
 
-    protected static array $httpStatusText = [
+    const HttpStatusCodeText = [
         200 => 'OK',
         201 => 'Created',
         204 => 'No Content',
@@ -52,7 +52,7 @@ class Response
     public function setStatusCode(int $statusCode): self
     {
         $this->statusCode = $statusCode;
-        $this->statusText = self::$httpStatusText[$this->statusCode];
+        $this->statusText = self::HttpStatusCodeText[$this->statusCode];
         return $this;
     }
 
