@@ -161,7 +161,7 @@ class Header extends Parameter implements ParameterInterface
     /**
      * Removes a header.
      * @param string $key The HTTP header name
-     * @return Header
+     * @return $this
      */
     public function remove(string $key): self
     {

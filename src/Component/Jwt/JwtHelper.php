@@ -40,7 +40,7 @@ class JwtHelper
      * @param string $key
      * @return static
      */
-    public function setKey(string $key): static
+    public function setKey(string $key): self
     {
         $this->keys = $key;
         return $this;
@@ -51,7 +51,7 @@ class JwtHelper
      * @param string $hash
      * @return static
      */
-    public function setAlgConfig(string $alg, string $hash): static
+    public function setAlgConfig(string $alg, string $hash): self
     {
         $this->algConfig[$alg] = $hash;
         return $this;
@@ -62,7 +62,7 @@ class JwtHelper
      * @param int $exp 单位秒
      * @return static
      */
-    public function setExp(int $exp): static
+    public function setExp(int $exp): self
     {
         $this->payload['registered']['exp'] = time() + $exp;
         return $this;
@@ -73,7 +73,7 @@ class JwtHelper
      * @param $value
      * @return static
      */
-    public function setHeader(string $key, $value): static
+    public function setHeader(string $key, $value): self
     {
         $this->header[$key] = $value;
         return $this;
@@ -85,7 +85,7 @@ class JwtHelper
      * @param string $part registered public private
      * @return static
      */
-    public function setPayload(string $key, $data, string $part = 'public'): static
+    public function setPayload(string $key, $data, string $part = 'public'): self
     {
         $this->payload[$part][$key] = $data;
         return $this;
@@ -96,7 +96,7 @@ class JwtHelper
      * @param string $part registered public private
      * @return static
      */
-    public function setPayloads(array $data, string $part = 'public'): static
+    public function setPayloads(array $data, string $part = 'public'): self
     {
         $this->payload[$part] = $data;
         return $this;
@@ -108,7 +108,7 @@ class JwtHelper
      * @param string $part
      * @return static
      */
-    public function addPayloads(array $data, string $part = 'public'): static
+    public function addPayloads(array $data, string $part = 'public'): self
     {
         foreach ($data as $key => $datum) {
             $this->setPayload($key, $datum, $part);
