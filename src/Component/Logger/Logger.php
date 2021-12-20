@@ -8,7 +8,7 @@ use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Exception;
-use Ipuppet\Jade\Foundation\Path\PathInterface;
+use Ipuppet\Jade\Component\Path\PathInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\InvalidArgumentException;
 

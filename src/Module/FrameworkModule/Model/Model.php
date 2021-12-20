@@ -12,10 +12,10 @@ use Ipuppet\Jade\Component\DatabaseDriver\PdoDatabaseDriver;
 use Ipuppet\Jade\Component\Kernel\Config\ConfigLoader;
 use Ipuppet\Jade\Component\Kernel\Kernel;
 use Ipuppet\Jade\Component\Logger\Logger;
-use Ipuppet\Jade\Foundation\Parameter\Parameter;
-use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
-use Ipuppet\Jade\Foundation\Path\Exception\PathException;
-use Ipuppet\Jade\Foundation\Path\PathInterface;
+use Ipuppet\Jade\Component\Parameter\Parameter;
+use Ipuppet\Jade\Component\Parameter\ParameterInterface;
+use Ipuppet\Jade\Component\Path\Exception\PathException;
+use Ipuppet\Jade\Component\Path\PathInterface;
 use Psr\Log\LoggerInterface;
 
 abstract class Model

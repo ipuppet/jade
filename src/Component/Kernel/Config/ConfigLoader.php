@@ -5,8 +5,8 @@ namespace Ipuppet\Jade\Component\Kernel\Config;
 
 
 use Ipuppet\Jade\Component\Kernel\Config\Exception\ConfigLoadException;
-use Ipuppet\Jade\Foundation\Parser\ParserInterface;
-use Ipuppet\Jade\Foundation\Path\PathInterface;
+use Ipuppet\Jade\Component\Parser\ParserInterface;
+use Ipuppet\Jade\Component\Path\PathInterface;
 
 class ConfigLoader
 {

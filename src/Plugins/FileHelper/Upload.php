@@ -4,7 +4,7 @@
 namespace Ipuppet\Jade\Plugins\FileHelper;
 
 
-use Ipuppet\Jade\Foundation\Path\Path;
+use Ipuppet\Jade\Component\Path\Path;
 
 class Upload
 {

@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Model\HelloModel;
 use Ipuppet\Jade\Component\Http\Response;
-use Ipuppet\Jade\Foundation\Path\Exception\PathException;
+use Ipuppet\Jade\Component\Path\Exception\PathException;
 use Ipuppet\Jade\Module\FrameworkModule\Controller\Controller;
 
 class HelloController extends Controller

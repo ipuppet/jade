@@ -3,9 +3,9 @@
 namespace App;
 
 use Ipuppet\Jade\Component\Kernel\Kernel;
-use Ipuppet\Jade\Foundation\Path\Exception\PathException;
-use Ipuppet\Jade\Foundation\Path\Path;
-use Ipuppet\Jade\Foundation\Path\PathInterface;
+use Ipuppet\Jade\Component\Path\Exception\PathException;
+use Ipuppet\Jade\Component\Path\Path;
+use Ipuppet\Jade\Component\Path\PathInterface;
 
 class AppKernel extends Kernel
 {

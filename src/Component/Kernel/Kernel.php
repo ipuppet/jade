@@ -16,10 +16,10 @@ use Ipuppet\Jade\Component\Router\Exception\NoMatcherException;
 use Ipuppet\Jade\Component\Router\Matcher\MatchByRegexPath;
 use Ipuppet\Jade\Component\Router\RouteContainer;
 use Ipuppet\Jade\Component\Router\Router;
-use Ipuppet\Jade\Foundation\Parser\JsonParser;
-use Ipuppet\Jade\Foundation\Path\Exception\PathException;
-use Ipuppet\Jade\Foundation\Path\Path;
-use Ipuppet\Jade\Foundation\Path\PathInterface;
+use Ipuppet\Jade\Component\Parser\JsonParser;
+use Ipuppet\Jade\Component\Path\Exception\PathException;
+use Ipuppet\Jade\Component\Path\Path;
+use Ipuppet\Jade\Component\Path\PathInterface;
 use ReflectionException;
 
 abstract class Kernel
@@ -198,12 +198,7 @@ abstract class Kernel
         }
         // 响应错误信息
         $reason = $router->getReason($this->config->get('logAccessError', false));
-        $httpStatus = $reason->getHttpStatus();
-        if ($httpStatus === Response::HTTP_301 || $httpStatus === Response::HTTP_302) { // 重定向
-            header("Location: {$reason->getContent()}", true, $httpStatus);
-            die();
-        }
-        return Response::create($reason->getContent(), $httpStatus);
+        return Response::create($reason->getContent(), $reason->getHttpStatus());
     }
 
     /**
