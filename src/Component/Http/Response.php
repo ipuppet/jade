@@ -63,7 +63,7 @@ class Response
 
     public function hasLogger(): bool
     {
-        return $this->logger === null;
+        return isset($this->logger);
     }
 
     public function setLogger(LoggerInterface $logger): self

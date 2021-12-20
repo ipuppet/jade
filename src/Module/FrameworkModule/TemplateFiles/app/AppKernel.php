@@ -16,7 +16,7 @@ class AppKernel extends Kernel
      */
     public function getRootPath(): PathInterface
     {
-        if ($this->rootPath === null) {
+        if (!isset($this->rootPath)) {
             $this->rootPath = new Path(dirname(__DIR__));
         }
         return $this->rootPath;

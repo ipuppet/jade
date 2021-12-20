@@ -4,7 +4,7 @@
 namespace Ipuppet\Jade\Plugins;
 
 
-class RestoreDataType
+class SpeculateDataType
 {
     public static function getData($data)
     {

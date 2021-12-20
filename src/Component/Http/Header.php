@@ -5,8 +5,8 @@ namespace Ipuppet\Jade\Component\Http;
 
 
 use DateTime;
-use Ipuppet\Jade\Foundation\Parameter\Parameter;
-use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
+use Ipuppet\Jade\Component\Parameter\Parameter;
+use Ipuppet\Jade\Component\Parameter\ParameterInterface;
 use RuntimeException;
 
 class Header extends Parameter implements ParameterInterface

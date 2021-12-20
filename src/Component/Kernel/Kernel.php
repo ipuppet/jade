@@ -8,9 +8,6 @@ use Exception;
 use TypeError;
 use Ipuppet\Jade\Component\Http\Request;
 use Ipuppet\Jade\Component\Http\Response;
-use Ipuppet\Jade\Component\Kernel\Config\Config;
-use Ipuppet\Jade\Component\Kernel\Config\ConfigLoader;
-use Ipuppet\Jade\Component\Kernel\Controller\ControllerResolver;
 use Ipuppet\Jade\Component\Logger\Logger;
 use Ipuppet\Jade\Component\Router\Exception\NoMatcherException;
 use Ipuppet\Jade\Component\Router\Matcher\MatchByRegexPath;
@@ -20,34 +17,37 @@ use Ipuppet\Jade\Component\Parser\JsonParser;
 use Ipuppet\Jade\Component\Path\Exception\PathException;
 use Ipuppet\Jade\Component\Path\Path;
 use Ipuppet\Jade\Component\Path\PathInterface;
+use Ipuppet\Jade\Component\Parameter\Parameter;
+use Ipuppet\Jade\Component\Parameter\ParameterInterface;
 use ReflectionException;
 
 abstract class Kernel
 {
+    private static Kernel $instance;
     /**
      * @var ?ConfigLoader
      */
-    private ?ConfigLoader $configLoader = null;
+    private ?ConfigLoader $configLoader;
     /**
-     * @var Config
+     * @var ParameterInterface
      */
-    private Config $config;
-    /**
-     * @var ?PathInterface
-     */
-    protected ?PathInterface $rootPath = null;
+    private ?ParameterInterface $config;
     /**
      * @var ?PathInterface
      */
-    protected ?PathInterface $cachePath = null;
+    protected ?PathInterface $rootPath;
     /**
      * @var ?PathInterface
      */
-    protected ?PathInterface $storagePath = null;
+    protected ?PathInterface $cachePathl;
     /**
      * @var ?PathInterface
      */
-    protected ?PathInterface $logPath = null;
+    protected ?PathInterface $storagePath;
+    /**
+     * @var ?PathInterface
+     */
+    protected ?PathInterface $logPath;
 
     /**
      * Kernel constructor.
@@ -56,6 +56,15 @@ abstract class Kernel
     public function __construct()
     {
         $this->config = $this->getConfigLoader()->setName('config')->loadFromFile();
+        $this->config->add(['rootPath' => $this->getRootPath()]);
+    }
+
+    public static function getInstance(): static
+    {
+        if (!isset(static::$instance)) {
+            static::$instance = new static();
+        }
+        return static::$instance;
     }
 
     /**
@@ -64,7 +73,7 @@ abstract class Kernel
      */
     public function getConfigLoader(): ConfigLoader
     {
-        if ($this->configLoader === null) {
+        if (!isset($this->configLoader)) {
             $this->configLoader = new ConfigLoader();
             $path = new Path($this->getRootPath());
             $path->after('/config');
@@ -80,7 +89,7 @@ abstract class Kernel
      */
     public function getRootPath(): PathInterface
     {
-        if ($this->rootPath === null) {
+        if (!isset($this->rootPath)) {
             $path = substr(__DIR__, 0, strripos(__DIR__, 'vendor') - 1);
             $this->rootPath = new Path($path);
         }
@@ -94,7 +103,7 @@ abstract class Kernel
      */
     public function getCachePath(): PathInterface
     {
-        if ($this->cachePath === null) {
+        if (!isset($this->cachePath)) {
             $this->cachePath = new Path($this->getRootPath());
             $this->cachePath->after('/var/cache');
         }
@@ -108,7 +117,7 @@ abstract class Kernel
      */
     public function getStoragePath(): PathInterface
     {
-        if ($this->storagePath === null) {
+        if (!isset($this->storagePath)) {
             $this->storagePath = new Path($this->getRootPath());
             $this->storagePath->after('/var/storage');
         }
@@ -122,7 +131,7 @@ abstract class Kernel
      */
     public function getLogPath(): PathInterface
     {
-        if ($this->logPath === null) {
+        if (!isset($this->logPath)) {
             $this->logPath = new Path($this->getRootPath());
             $this->logPath->after('/var/log');
         }
@@ -141,10 +150,10 @@ abstract class Kernel
     {
         $request->headers->set('X-Php-Ob-Level', ob_get_level());
         $logger = new Logger();
-        // 实例化ControllerResolver
+        // 实例化 ControllerResolver
         $logger->setName('ControllerResolver')->setOutput($this->getLogPath());
         $controllerResolver = new ControllerResolver($logger);
-        // 实例化Router对象
+        // 实例化 Router 对象
         $logger->setName('Router')->setOutput($this->getLogPath());
         $router = new Router();
         $matcher = new MatchByRegexPath($this->config->get('routerStrictMode', false));
@@ -152,11 +161,7 @@ abstract class Kernel
             ->setLogger($logger)
             ->setRouteContainer($this->getRouteContainer())
             ->setMatcher($matcher->setLogger($logger));
-        // 获取Config对象
-        $config = new Config();
-        if ($this->config->has('errorResponse')) $config->add($this->config->get('errorResponse'));
-        $config->add(['rootPath' => $this->getRootPath()]);
-        $router->setConfig($config);
+        $router->setConfig($this->config);
         // 开始匹配路由
         if ($router->matchAll()) {
             $request = $router->getRequest();
@@ -171,11 +176,11 @@ abstract class Kernel
             }
             // 判断配置文件内是否有跨域配置，若有则注入到控制器中
             if ($this->config->has('cors') && !empty($this->config->get('cors'))) {
-                call_user_func([$controller[0], 'setCorsConfig'], new Config($this->config->get('cors')));
+                call_user_func([$controller[0], 'setCorsConfig'], new Parameter($this->config->get('cors')));
             }
             // 验证是否可以跨域
             $isPassCorsCheck = call_user_func([$controller[0], 'checkCors']);
-            if ($request->getMethod() === 'OPTIONS') { // 对OPTIONS请求进行处理
+            if ($request->getMethod() === 'OPTIONS') { // 对 OPTIONS 请求进行处理
                 return Response::create('', $isPassCorsCheck ? Response::HTTP_204 : Response::HTTP_400);
             }
             // 判断是否在控制器之前返回响应
@@ -184,11 +189,12 @@ abstract class Kernel
             }
             // 整理参数顺序，按照方法签名对齐
             $parameters = $controllerResolver->sortRequestParameters($controller, $request);
-            // 调用控制器中对应的方法并获得Response
+            // 调用控制器中对应的方法并获得 Response
             try {
                 $response = call_user_func_array($controller, $parameters);
             } catch (TypeError $error) {
-                return Response::create('Invalid parameter', Response::HTTP_400);
+                $logger->info($error->getMessage());
+                return Response::create('Invalid parameter.', Response::HTTP_400);
             }
             if ($response instanceof Response) {
                 return $response;

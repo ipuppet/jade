@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Ipuppet\Jade\Plugins\FileHelper;
+namespace Ipuppet\Jade\Plugins\MimeTypes;
 
 
 class MimeTypes

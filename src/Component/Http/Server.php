@@ -4,8 +4,8 @@
 namespace Ipuppet\Jade\Component\Http;
 
 
-use Ipuppet\Jade\Foundation\Parameter\Parameter;
-use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
+use Ipuppet\Jade\Component\Parameter\Parameter;
+use Ipuppet\Jade\Component\Parameter\ParameterInterface;
 
 class Server extends Parameter implements ParameterInterface
 {
@@ -37,9 +37,8 @@ class Server extends Parameter implements ParameterInterface
              * RewriteCond %{HTTP:Authorization} ^(.+)$
              * RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
              * RewriteCond %{REQUEST_FILENAME} !-f
-             * RewriteRule ^(.*)$ app.php [QSA,L]
+             * RewriteRule ^(.*)$ index.php [QSA,L]
              */
-
             $authorizationHeader = null;
             if (isset($this->parameters['HTTP_AUTHORIZATION'])) {
                 $authorizationHeader = $this->parameters['HTTP_AUTHORIZATION'];
@@ -48,17 +47,18 @@ class Server extends Parameter implements ParameterInterface
             }
 
             if (null !== $authorizationHeader) {
-                if (0 === stripos($authorizationHeader, 'basic ')) {
+                $type = substr($authorizationHeader, 0, strpos($authorizationHeader, ' '));
+                if ($type === 'Basic') {
                     // Decode AUTHORIZATION header into PHP_AUTH_USER and PHP_AUTH_PW when authorization header is basic
                     $exploded = explode(':', base64_decode(substr($authorizationHeader, 6)), 2);
                     if (count($exploded) == 2) {
                         list($headers['PHP_AUTH_USER'], $headers['PHP_AUTH_PW']) = $exploded;
                     }
-                } elseif (empty($this->parameters['PHP_AUTH_DIGEST']) && (0 === stripos($authorizationHeader, 'digest '))) {
+                } elseif (empty($this->parameters['PHP_AUTH_DIGEST']) && ($type === 'Digest')) {
                     // In some circumstances PHP_AUTH_DIGEST needs to be set
                     $headers['PHP_AUTH_DIGEST'] = $authorizationHeader;
                     $this->parameters['PHP_AUTH_DIGEST'] = $authorizationHeader;
-                } elseif (0 === stripos($authorizationHeader, 'bearer ')) {
+                } elseif ($type === 'Bearer') {
                     /*
                      * XXX: Since there is no PHP_AUTH_BEARER in PHP predefined variables,
                      *      I'll just set $headers['AUTHORIZATION'] here.

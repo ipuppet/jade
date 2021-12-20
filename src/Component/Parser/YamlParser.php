@@ -4,9 +4,9 @@
 namespace Ipuppet\Jade\Component\Parser;
 
 
-class JsonParser extends Parser implements ParserInterface
+class YamlParser extends Parser implements ParserInterface
 {
-    public string $type = 'json';
+    public string $type = 'yaml';
 
     /**
      * @return array
@@ -14,6 +14,6 @@ class JsonParser extends Parser implements ParserInterface
     public function loadAsArray(): array
     {
         $content = $this->getContent();
-        return json_decode($content, JSON_OBJECT_AS_ARRAY) ?? [];
+        return yaml_parse($content) ?? [];
     }
 }

@@ -13,7 +13,7 @@ class PdoDatabaseDriver
     /**
      * @var PDO
      */
-    private PDO $pdo;
+    public PDO $pdo;
 
     /**
      * @var LoggerInterface
@@ -116,10 +116,5 @@ class PdoDatabaseDriver
     public function rollback(): bool
     {
         return $this->pdo->rollback();
-    }
-
-    public function getRealPdo(): PDO
-    {
-        return $this->pdo;
     }
 }

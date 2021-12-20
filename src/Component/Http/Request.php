@@ -4,21 +4,24 @@
 namespace Ipuppet\Jade\Component\Http;
 
 
-use Ipuppet\Jade\Component\Logger\Logger;
-use Ipuppet\Jade\Foundation\Parameter\Parameter;
-use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
-use Psr\Log\LoggerInterface;
+use Ipuppet\Jade\Component\Parameter\Parameter;
+use Ipuppet\Jade\Component\Parameter\ParameterInterface;
 
 class Request
 {
+    /**
+     * 是否启用传递参数覆写 X-HTTP-METHOD-OVERRIDE
+     * 启用后 get 或 post 参数中添加键为 X-HTTP-METHOD-OVERRIDE 的属性即可
+     * @var boolean
+     */
     protected static bool $httpMethodParameterOverride = false;
     /**
-     * GET参数
+     * GET 参数
      * @var ParameterInterface
      */
     public ParameterInterface $query;
     /**
-     * POST请求，占位符参数也存放于此
+     * POST 请求，占位符参数也存放于此
      * @var ParameterInterface
      */
     public ParameterInterface $request;
@@ -28,9 +31,10 @@ class Request
      */
     public ParameterInterface $attributes;
     /**
-     * @var File
+     * 上传的文件
+     * @var Files
      */
-    public File $files;
+    public Files $files;
     /**
      * TODO Cookie
      */
@@ -49,22 +53,14 @@ class Request
     protected string $pathInfo;
     protected string $basePath;
     protected string $method; // 请求方法，如get post put delete
-    protected LoggerInterface $logger;
 
     public function __construct(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)
-    {
-        $this->init($query, $request, $attributes, $cookies, $files, $server, $content);
-        //日志记录器
-        $this->logger = new Logger('Request');
-    }
-
-    public function init(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)
     {
         $this->query = new Parameter($query);
         $this->request = new Parameter($request);
         $this->attributes = new Parameter($attributes);
         $this->cookies = new Parameter($cookies);
-        $this->files = new File($files);
+        $this->files = new Files($files);
         $this->server = new Server($server);
         $this->headers = new Header($this->server->getHeaders());
 
@@ -73,6 +69,34 @@ class Request
         $this->baseUrl = '';
         $this->basePath = '';
         $this->method = '';
+    }
+
+    public static function createFromSuperGlobals(): Request
+    {
+        $server = $_SERVER;
+        if ('cli-server' === PHP_SAPI) {
+            if (array_key_exists('HTTP_CONTENT_LENGTH', $_SERVER)) {
+                $server['CONTENT_LENGTH'] = $_SERVER['HTTP_CONTENT_LENGTH'];
+            }
+            if (array_key_exists('HTTP_CONTENT_TYPE', $_SERVER)) {
+                $server['CONTENT_TYPE'] = $_SERVER['HTTP_CONTENT_TYPE'];
+            }
+        }
+        if (array_key_exists('CONTENT_TYPE', $server) && in_array('application/json', explode(';', $server['CONTENT_TYPE']))) {
+            $post = file_get_contents('php://input');
+            $post = json_decode($post, JSON_OBJECT_AS_ARRAY);
+        } else {
+            $post = $_POST;
+        }
+        $request = new self($_GET, $post, [], $_COOKIE, $_FILES, $server);
+        if (
+            str_starts_with($request->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
+            && in_array(strtoupper($request->server->get('REQUEST_METHOD', 'GET')), ['PUT', 'DELETE', 'PATCH'])
+        ) {
+            parse_str($request->getContent(), $data);
+            $request->request = new Parameter($data);
+        }
+        return $request;
     }
 
     public static function enableHttpMethodParameterOverride(): void
@@ -105,8 +129,8 @@ class Request
     }
 
     /**
-     * 获取除BaseUri及get参数的信息
-     * 如/path/to
+     * 获取除 BaseUri 及 get 参数的信息
+     * 如 /path/to
      * @return string
      */
     public function getPathInfo(): string
@@ -117,7 +141,7 @@ class Request
         return $this->pathInfo;
     }
 
-    protected function preparePathInfo(): string
+    private function preparePathInfo(): string
     {
         $baseUrl = $this->getBaseUrl();
 
@@ -135,7 +159,6 @@ class Request
         } elseif (null === $baseUrl) {
             return $requestUri;
         }
-
         return $pathInfo;
     }
 
@@ -151,7 +174,7 @@ class Request
         return $this->baseUrl;
     }
 
-    protected function prepareBaseUrl(): string
+    private function prepareBaseUrl(): string
     {
         $filename = basename($this->server->get('SCRIPT_FILENAME'));
 
@@ -301,7 +324,7 @@ class Request
 
         $method = $this->headers->get('X-HTTP-METHOD-OVERRIDE');
         if (!$method && self::$httpMethodParameterOverride) {
-            $method = $this->request->get('_method', $this->query->get('_method', 'POST'));
+            $method = $this->request->get('X-HTTP-METHOD-OVERRIDE', $this->query->get('X-HTTP-METHOD-OVERRIDE', 'POST'));
         }
 
         if (!is_string($method)) {

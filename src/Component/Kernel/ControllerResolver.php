@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Ipuppet\Jade\Component\Kernel\Controller;
+namespace Ipuppet\Jade\Component\Kernel;
 
 
 use InvalidArgumentException;

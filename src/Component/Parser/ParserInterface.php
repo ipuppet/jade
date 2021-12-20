@@ -13,13 +13,15 @@ interface ParserInterface
      * @param string $name
      * @return ParserInterface
      */
-    public function setName(string $name): ParserInterface;
+    public function setFileName(string $fileName): ParserInterface;
 
     /**
      * @param PathInterface $path
      * @return ParserInterface
      */
-    public function setPath(PathInterface $path): ParserInterface;
+    public function setFilePath(PathInterface $filePath): ParserInterface;
+
+    public function setContent(string $content): ParserInterface;
 
     /**
      * @return array
@@ -34,5 +36,5 @@ interface ParserInterface
     /**
      * @return bool
      */
-    public function fileExists(): bool;
+    public function isEmpty(): bool;
 }
