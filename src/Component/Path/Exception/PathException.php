@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Ipuppet\Jade\Foundation\Path\Exception;
+namespace Ipuppet\Jade\Component\Path\Exception;
 
 
 use Exception;

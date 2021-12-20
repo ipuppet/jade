@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Ipuppet\Jade\Foundation\Parser;
+namespace Ipuppet\Jade\Component\Parser;
 
 
-use Ipuppet\Jade\Foundation\Parameter\Parameter;
-use Ipuppet\Jade\Foundation\Path\PathInterface;
+use Ipuppet\Jade\Component\Parameter\Parameter;
+use Ipuppet\Jade\Component\Path\PathInterface;
 
 class JsonParser implements ParserInterface
 {

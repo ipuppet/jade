@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Ipuppet\Jade\Foundation\Path;
+namespace Ipuppet\Jade\Component\Path;
 
 
-use Ipuppet\Jade\Foundation\Path\Exception\PathException;
+use Ipuppet\Jade\Component\Path\Exception\PathException;
 
 class Path implements PathInterface
 {

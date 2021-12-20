@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Ipuppet\Jade\Foundation\Path;
+namespace Ipuppet\Jade\Component\Path;
 
 
 interface PathInterface

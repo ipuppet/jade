@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Ipuppet\Jade\Foundation\Parameter;
+namespace Ipuppet\Jade\Component\Parameter;
 
 
 use ArrayIterator;
