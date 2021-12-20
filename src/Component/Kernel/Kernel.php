@@ -35,10 +35,6 @@ abstract class Kernel
     /**
      * @var ?PathInterface
      */
-    protected ?PathInterface $logPath = null;
-    /**
-     * @var ?PathInterface
-     */
     protected ?PathInterface $rootPath = null;
     /**
      * @var ?PathInterface
@@ -48,6 +44,10 @@ abstract class Kernel
      * @var ?PathInterface
      */
     protected ?PathInterface $storagePath = null;
+    /**
+     * @var ?PathInterface
+     */
+    protected ?PathInterface $logPath = null;
 
     /**
      * Kernel constructor.
@@ -113,6 +113,20 @@ abstract class Kernel
             $this->storagePath->after('/var/storage');
         }
         return $this->storagePath;
+    }
+
+    /**
+     * 获取日志目录
+     * @return PathInterface
+     * @throws PathException
+     */
+    public function getLogPath(): PathInterface
+    {
+        if ($this->logPath === null) {
+            $this->logPath = new Path($this->getRootPath());
+            $this->logPath->after('/var/log');
+        }
+        return $this->logPath;
     }
 
     /**
@@ -190,20 +204,6 @@ abstract class Kernel
             die();
         }
         return Response::create($reason->getContent(), $httpStatus);
-    }
-
-    /**
-     * 获取日志目录
-     * @return PathInterface
-     * @throws PathException
-     */
-    public function getLogPath(): PathInterface
-    {
-        if ($this->logPath === null) {
-            $this->logPath = new Path($this->getRootPath());
-            $this->logPath->after('/var/log');
-        }
-        return $this->logPath;
     }
 
     /**

@@ -29,7 +29,7 @@ class PdoDatabaseDriver
     {
         $this->logger = $logger;
         try {
-            //database默认值mysql
+            //database 默认值 mysql
             $config['database'] = $config['database'] ?? 'mysql';
             $this->pdo = new PDO(
                 sprintf(

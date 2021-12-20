@@ -157,7 +157,7 @@ class ControllerResolver
      */
     public function sortRequestParameters(array $controller, Request $request): array
     {
-        //$global定义通用参数，如获取request对象等
+        // $global 定义通用参数，如获取 request 对象等
         $global = [
             'request' => ['type' => 'Ipuppet\Jade\Component\Http\Request', 'value' => $request],
         ];
@@ -165,7 +165,7 @@ class ControllerResolver
         $parameters = $method->getParameters();
         $result = [];
         foreach ($parameters as $parameter) {
-            //如果控制器方法存在网络请求没有的参数则去$global中寻找
+            // 如果控制器方法存在网络请求没有的参数则去$global中寻找
             if (
                 !$request->has($parameter->getName()) && // request 中不存在同名参数
                 isset($global[$parameter->getName()]) && // global 中有定义
