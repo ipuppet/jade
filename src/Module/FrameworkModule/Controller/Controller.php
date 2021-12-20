@@ -6,17 +6,18 @@ namespace Ipuppet\Jade\Module\FrameworkModule\Controller;
 
 use Ipuppet\Jade\Component\Kernel\Kernel;
 use Ipuppet\Jade\Component\Http\Response;
-use Ipuppet\Jade\Component\Kernel\Config\Config;
 use Ipuppet\Jade\Component\Logger\Logger;
+use Ipuppet\Jade\Component\Parameter\Parameter;
+use Ipuppet\Jade\Component\Parameter\ParameterInterface;
 
 abstract class Controller
 {
     public bool $isResponseBeforeController = false;
     public Response $response;
     /**
-     * @var ?Config
+     * @var ?ParameterInterface
      */
-    private ?Config $corsConfig = null;
+    private ?ParameterInterface $corsConfig = null;
     /**
      * @var Kernel
      */
@@ -35,18 +36,18 @@ abstract class Controller
     }
 
     /**
-     * @param Config $config
+     * @param Parameter $config
      */
-    public function setCorsConfig(Config $config): void
+    public function setCorsConfig(Parameter $config): void
     {
-        $this->corsConfig === null ? $this->corsConfig = $config : $this->corsConfig->add($config->toArray());
+        isset($this->corsConfig) ? $this->corsConfig->add($config->toArray()) : $this->corsConfig = $config;
     }
 
     public function checkCors(): bool
     {
         // 未发送 HTTP_ORIGIN
         if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) return false;
-        if (null === $this->corsConfig) $this->corsConfig = new Config();
+        if (null === $this->corsConfig) $this->corsConfig = new Parameter();
         $origin = $_SERVER['HTTP_ORIGIN'];
         // 判断是否允许跨域
         if (in_array($origin, $this->corsConfig->get('hosts', []))) {

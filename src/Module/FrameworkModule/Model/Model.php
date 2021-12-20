@@ -9,13 +9,12 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use Ipuppet\Jade\Component\DatabaseDriver\PdoDatabaseDriver;
-use Ipuppet\Jade\Component\Kernel\Config\ConfigLoader;
+use Ipuppet\Jade\Component\Kernel\ConfigLoader;
 use Ipuppet\Jade\Component\Kernel\Kernel;
 use Ipuppet\Jade\Component\Logger\Logger;
-use Ipuppet\Jade\Foundation\Parameter\Parameter;
-use Ipuppet\Jade\Foundation\Parameter\ParameterInterface;
-use Ipuppet\Jade\Foundation\Path\Exception\PathException;
-use Ipuppet\Jade\Foundation\Path\PathInterface;
+use Ipuppet\Jade\Component\Parameter\ParameterInterface;
+use Ipuppet\Jade\Component\Path\Exception\PathException;
+use Ipuppet\Jade\Component\Path\PathInterface;
 use Psr\Log\LoggerInterface;
 
 abstract class Model
@@ -28,7 +27,7 @@ abstract class Model
     /**
      * @var ?PdoDatabaseDriver
      */
-    protected ?PdoDatabaseDriver $pdo = null;
+    protected ?PdoDatabaseDriver $pdo;
     /**
      * @var Kernel
      */
@@ -45,7 +44,7 @@ abstract class Model
     /**
      * @var ?DateTime
      */
-    private ?DateTime $date = null;
+    private ?DateTime $date;
 
     private PathInterface $cachePath;
 
@@ -63,15 +62,11 @@ abstract class Model
      */
     protected function init(): void
     {
-        $this->kernel = new AppKernel();
+        $this->kernel = AppKernel::getInstance();
         $this->configLoader = $this->kernel->getConfigLoader();
         $this->logger = new Logger();
         $this->logger->setName('PdoDatabaseDriver')
             ->setOutput($this->kernel->getLogPath());
-        $this->database = new Parameter($this->configLoader
-            ->setName('database')
-            ->loadFromFile()
-            ->toArray());
         $this->cachePath = $this->kernel->getCachePath();
         $this->storagePath = $this->kernel->getStoragePath();
     }
@@ -111,7 +106,12 @@ abstract class Model
      */
     protected function getPdo(string $dbname = '', string $username = '', string $password = ''): PdoDatabaseDriver
     {
-        if ($this->pdo === null) {
+        if (!isset($this->pdo)) {
+            if (!isset($this->database)) {
+                $this->database = $this->configLoader
+                    ->setName('database')
+                    ->loadFromFile();
+            }
             if ($dbname !== '') {
                 $this->database->set('dbname', $dbname);
             }
@@ -134,7 +134,7 @@ abstract class Model
      */
     protected function dateNow(string $format = 'Y-m-d H:i:s'): string
     {
-        if ($this->date === null) {
+        if (!isset($this->date)) {
             $this->date = new DateTime();
             $this->date->setTimezone(new DateTimeZone('PRC'));
         }

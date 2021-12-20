@@ -2,9 +2,8 @@
 
 use App\AppKernel;
 use Ipuppet\Jade\Component\Http\Request;
-use Ipuppet\Jade\Component\Http\RequestFactory;
 use Ipuppet\Jade\Component\Router\Exception\NoMatcherException;
-use Ipuppet\Jade\Foundation\Path\Exception\PathException;
+use Ipuppet\Jade\Component\Path\Exception\PathException;
 
 include '../vendor/autoload.php';
 
@@ -13,10 +12,10 @@ include 'autoload.php';
 
 date_default_timezone_set('PRC');
 
-$kernel = new AppKernel();
+$kernel = AppKernel::getInstance();
 
-Request::enableHttpMethodParameterOverride();
-$request = RequestFactory::createFromSuperGlobals();
+// Request::enableHttpMethodParameterOverride();
+$request = Request::createFromSuperGlobals();
 
 try {
     $response = $kernel->handle($request);

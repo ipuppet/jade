@@ -7,13 +7,13 @@ namespace Ipuppet\Jade\Component\Router;
 use Exception;
 use Ipuppet\Jade\Component\Http\Request;
 use Ipuppet\Jade\Component\Http\Response;
-use Ipuppet\Jade\Component\Kernel\Config\Config;
 use Ipuppet\Jade\Component\Router\Exception\NoMatcherException;
 use Ipuppet\Jade\Component\Router\Matcher\MatcherInterface;
 use Ipuppet\Jade\Component\Router\Reason\MethodNotAllow;
 use Ipuppet\Jade\Component\Router\Reason\NoMatch;
 use Ipuppet\Jade\Component\Router\Reason\ReasonInterface;
 use Psr\Log\LoggerInterface;
+use Ipuppet\Jade\Component\Parameter\ParameterInterface;
 
 class Router
 {
@@ -38,9 +38,9 @@ class Router
     private ReasonInterface $reason;
 
     /**
-     * @var Config
+     * @var ParameterInterface
      */
-    private Config $config;
+    private ParameterInterface $config;
 
     /**
      * @var MatcherInterface
@@ -101,10 +101,10 @@ class Router
     }
 
     /**
-     * @param Config $config
+     * @param ParameterInterface $config
      * @return $this
      */
-    public function setConfig(Config $config): self
+    public function setConfig(ParameterInterface $config): self
     {
         $this->config = $config;
         return $this;
@@ -164,7 +164,7 @@ class Router
      */
     public function matchAll(): bool
     {
-        if ($this->matcher === null)
+        if (!isset($this->matcher))
             throw new NoMatcherException('是否忘记调用setMatcher？');
         $routeNames = $this->routeContainer->names();
         foreach ($routeNames as $name) {

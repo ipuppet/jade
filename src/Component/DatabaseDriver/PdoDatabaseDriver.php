@@ -13,7 +13,7 @@ class PdoDatabaseDriver
     /**
      * @var PDO
      */
-    private PDO $pdo;
+    public PDO $pdo;
 
     /**
      * @var LoggerInterface
@@ -29,7 +29,7 @@ class PdoDatabaseDriver
     {
         $this->logger = $logger;
         try {
-            //database默认值mysql
+            //database 默认值 mysql
             $config['database'] = $config['database'] ?? 'mysql';
             $this->pdo = new PDO(
                 sprintf(
@@ -116,10 +116,5 @@ class PdoDatabaseDriver
     public function rollback(): bool
     {
         return $this->pdo->rollback();
-    }
-
-    public function getRealPdo(): PDO
-    {
-        return $this->pdo;
     }
 }
