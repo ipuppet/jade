@@ -5,6 +5,7 @@ namespace Ipuppet\Jade\Component\DatabaseDriver;
 
 use Error;
 use PDO;
+use PDOStatement;
 use PDOException;
 use Psr\Log\LoggerInterface;
 
@@ -52,22 +53,38 @@ class PdoDatabaseDriver
         }
     }
 
+    public function prepareAndQuery(string $sql, array $param, int $style = PDO::FETCH_ASSOC)
+    {
+        $query = $this->pdo->prepare($sql);
+        $query->execute($param);
+        return $query->fetchAll($style);
+    }
+
+    public function prepareAndExec(string $sql, array $param): int
+    {
+        $query = $this->pdo->prepare($sql);
+        $query->execute($param);
+        return $query->rowCount();
+    }
+
+    public function lastInsertId(?string $name = null)
+    {
+        return $this->pdo->lastInsertId($name);
+    }
+
     /**
      * @param string $sql
      * @return array
      */
-    public function query(string $sql): array
+    public function query(string $sql, int $style = PDO::FETCH_ASSOC): array
     {
-        $result = [];
         try {
             $rows = $this->pdo->query($sql);
-            foreach ($rows->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                $result[] = $row;
-            }
+            return $rows->fetchAll($style);
         } catch (PDOException $e) {
             $this->logger->error($e->getMessage());
+            throw $e;
         }
-        return $result;
     }
 
     /**
@@ -81,8 +98,14 @@ class PdoDatabaseDriver
             $line = (int)$this->pdo->exec($sql);
         } catch (PDOException $e) {
             $this->logger->error($e->getMessage());
+            throw $e;
         }
         return $line;
+    }
+
+    public function prepare(string $query, array $options = []): PDOStatement|false
+    {
+        return $this->pdo->prepare($query, $options);
     }
 
     public function closeAutoCommit(): self
@@ -93,10 +116,12 @@ class PdoDatabaseDriver
 
     /**
      * 开始事件
+     * 将会自动调用 closeAutoCommit
      * @return bool
      */
     public function beginTransaction(): bool
     {
+        $this->closeAutoCommit();
         return $this->pdo->beginTransaction();
     }
 
