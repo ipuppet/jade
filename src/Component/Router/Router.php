@@ -52,7 +52,7 @@ class Router
         $this->request = $request;
         $this->routeContainer = $routeContainer;
         $this->errorContentresolver = function (int $httpStatusCode): array {
-            $content = $this->config->get($httpStatusCode, false);
+            $content = $this->config->get('errorResponse', false)[$httpStatusCode] ?? false;
             if ($content) {
                 $mode = $content[0];
                 $content = mb_substr($content, 1);
