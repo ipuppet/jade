@@ -82,6 +82,11 @@ abstract class Kernel
         return $this->configLoader;
     }
 
+    public function getConfig(string $key, $default = null)
+    {
+        return $this->config->get($key, $default);
+    }
+
     /**
      * 获取项目根目录
      * @return PathInterface

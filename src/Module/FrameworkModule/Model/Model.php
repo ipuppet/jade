@@ -10,6 +10,7 @@ use DateTimeZone;
 use Exception;
 use Ipuppet\Jade\Component\DatabaseDriver\PdoDatabaseDriver;
 use Ipuppet\Jade\Component\Kernel\ConfigLoader;
+use Ipuppet\Jade\Component\Parser\Exception\ParserException;
 use Ipuppet\Jade\Component\Kernel\Kernel;
 use Ipuppet\Jade\Component\Logger\Logger;
 use Ipuppet\Jade\Component\Parameter\ParameterInterface;
@@ -65,10 +66,19 @@ abstract class Model
         $this->kernel = AppKernel::getInstance();
         $this->configLoader = $this->kernel->getConfigLoader();
         $this->logger = new Logger();
-        $this->logger->setName('PdoDatabaseDriver')
+        $this->logger->setName('DatabaseDriver')
             ->setOutput($this->kernel->getLogPath());
         $this->cachePath = $this->kernel->getCachePath();
         $this->storagePath = $this->kernel->getStoragePath();
+        try {
+            $this->database = $this->configLoader
+                ->setName('database')
+                ->loadFromFile();
+        } catch (ParserException $e) {
+            if ($this->kernel->getConfig('debug')) {
+                $this->logger->warning($e->getMessage());
+            }
+        }
     }
 
     /**
@@ -107,11 +117,6 @@ abstract class Model
     protected function getPdo(string $dbname = '', string $username = '', string $password = ''): PdoDatabaseDriver
     {
         if (!isset($this->pdo)) {
-            if (!isset($this->database)) {
-                $this->database = $this->configLoader
-                    ->setName('database')
-                    ->loadFromFile();
-            }
             if ($dbname !== '') {
                 $this->database->set('dbname', $dbname);
             }
