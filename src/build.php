@@ -23,9 +23,6 @@ if (isset($param['r'])) {
 
 // 项目模板文件路径
 $templatePath = 'Module/FrameworkModule/TemplateFiles';
-// composer 自动加载路径
-$autoload = $rootPath . '/vendor/autoload.php';
-include $autoload;
 
 $baseFiles = [
     'app' => [
