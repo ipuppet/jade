@@ -13,6 +13,9 @@ if (isset($param['r'])) {
     $rootPath = dirname(__DIR__, 2);
     $max = 20;
     while (!file_exists($rootPath . '/composer.json') && $max) {
+        if($max===1){
+            die("Cannot find `composer.json`\nPlease use the `-r` parameter to specify the absolute path of the project root path");
+        }
         $max--;
         $rootPath = dirname($rootPath);
     }
