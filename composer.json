@@ -5,6 +5,9 @@
     "keywords": [
         "jade"
     ],
+    "bin": [
+        "bin/build"
+    ],
     "license": "MIT",
     "authors": [
         {
