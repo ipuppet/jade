@@ -1,7 +1,7 @@
 {
     "name": "ipuppet/jade",
     "description": "A RESTful API framework.",
-    "type": "library",
+    "type": "project",
     "keywords": [
         "jade"
     ],
@@ -9,7 +9,7 @@
     "authors": [
         {
             "name": "ipuppet",
-            "email": "ipuppet@foxmail.com",
+            "email": "feedback@ipuppet.top",
             "homepage": "https://blog.ipuppet.top",
             "role": "Developer"
         }
