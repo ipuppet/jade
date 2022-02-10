@@ -13,7 +13,7 @@ if (isset($param['r'])) {
     $rootPath = dirname(__DIR__, 2);
     $max = 20;
     while (!file_exists($rootPath . '/composer.json') && $max) {
-        if($max===1){
+        if ($max === 1) {
             die("Cannot find `composer.json`\nPlease use the `-r` parameter to specify the absolute path of the project root path");
         }
         $max--;
@@ -21,34 +21,27 @@ if (isset($param['r'])) {
     }
 }
 
-// 项目模板文件路径
-$templatePath = 'Module/FrameworkModule/TemplateFiles';
-
-$baseFiles = [
-    'app' => [
-        'Controller' => [
-            'HelloController.php'
-        ],
-        'Model' => [
-            'HelloModel.php'
-        ],
-        'AppKernel.php'
-    ],
-    'config' => [
-        'response.json',
-        'routes.json',
-        'database.json',
-        'config.json'
-    ],
-    'public' => [
-        'response' => [
-            '404.html'
-        ],
-        '.htaccess',
-        'autoload.php',
-        'index.php'
-    ]
-];
+function getAllFiles(string $path, &$files)
+{
+    if (is_dir($path)) {
+        $dp = dir($path);
+        while ($file = $dp->read()) {
+            if ($file != "." && $file != "..") {
+                $filePath = $path . "/" . $file;
+                if (is_file($filePath)) {
+                    $files[] = $file;
+                } else {
+                    $files[$file] = [];
+                    getAllFiles($path . "/" . $file, $files[$file]);
+                }
+            }
+        }
+        $dp->close();
+    }
+    if (is_file($path)) {
+        $files[] =  $path;
+    }
+}
 
 function createFiles($files, $rootPath, $templatePath)
 {
@@ -69,4 +62,11 @@ function createFiles($files, $rootPath, $templatePath)
     }
 }
 
+// 项目模板文件路径
+$templatePath = dirname(__DIR__) . '/src/Module/FrameworkModule/TemplateFiles';
+
+$baseFiles = [];
+getAllFiles($templatePath, $baseFiles);
+
+// create files
 createFiles($baseFiles, $rootPath, $templatePath);
