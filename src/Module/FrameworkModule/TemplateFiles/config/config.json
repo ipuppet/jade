@@ -1,6 +1,6 @@
 {
     "logAccessError": false,
     "errorResponse": {
-        "404": "@/public/response/404.html"
+        "404": "%{rootPath}/public/response/404.html"
     }
 }

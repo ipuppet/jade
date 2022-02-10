@@ -13,6 +13,9 @@ if (isset($param['r'])) {
     $rootPath = dirname(__DIR__, 2);
     $max = 20;
     while (!file_exists($rootPath . '/composer.json') && $max) {
+        if($max===1){
+            die("Cannot find `composer.json`\nPlease use the `-r` parameter to specify the absolute path of the project root path");
+        }
         $max--;
         $rootPath = dirname($rootPath);
     }
@@ -20,9 +23,6 @@ if (isset($param['r'])) {
 
 // 项目模板文件路径
 $templatePath = 'Module/FrameworkModule/TemplateFiles';
-// composer 自动加载路径
-$autoload = $rootPath . '/vendor/autoload.php';
-include $autoload;
 
 $baseFiles = [
     'app' => [

@@ -16,6 +16,8 @@
 
 您可以添加 `-r` 参数来规定项目根目录（默认与您的composer.json以及vendor同级）
 
+注意：该参数需要接收绝对路径
+
 e.g. `php build.php -r /path/to/`
 
 ## [配置文件](docs/config.md)
