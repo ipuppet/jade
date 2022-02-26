@@ -1,12 +1,12 @@
 # ipuppet/jade
 
-> A RESTful API framework.
+> A web application framework.
 
-# 安装
+## 安装
 
 `composer require ipuppet/jade`
 
-# 创建项目
+## 创建项目
 
 使用 `vendor/ipuppet/jade/src` 目录下的 `build` 脚本创建新项目
 
@@ -20,8 +20,8 @@
 
 e.g. `php build.php -r /path/to/`
 
-## [配置文件](docs/config.md)
+*[配置文件](docs/config.md)*
 
-## [路由](docs/routes.md)
+*[路由](docs/routes.md)*
 
-## [控制器](docs/controller.md)
+*[控制器](docs/controller.md)*
