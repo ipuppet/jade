@@ -14,6 +14,7 @@ class Response
     const HTTP_301 = 301;
     const HTTP_302 = 302;
     const HTTP_400 = 400;
+    const HTTP_401 = 401;
     const HTTP_403 = 403;
     const HTTP_404 = 404;
     const HTTP_405 = 405;
